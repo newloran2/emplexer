@@ -8,8 +8,10 @@ class EmplexerConfig
 	const DEFAULT_PLEX_IP = "http://192.168.2.9:"; 
 	const DEFAULT_PLEX = "http://192.168.2.9:32400";
 
-	const USE_NFS = true; 
+	const USE_NFS = false; 
 	const USE_SMB = false; 
+
+    const USE_CACHE = false;
 
 
 

@@ -77,8 +77,8 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 				PluginRegularFolderItem::view_item_params =>
 				array
 				(
-					ViewItemParams::icon_path => EmplexerArchive::getInstance()->getFileFromArchive($caption),
-					ViewItemParams::item_detailed_icon_path => EmplexerArchive::getInstance()->getFileFromArchive($caption)
+					ViewItemParams::icon_path => EmplexerArchive::getInstance()->getFileFromArchive($caption, $url),
+					ViewItemParams::item_detailed_icon_path => EmplexerArchive::getInstance()->getFileFromArchive($caption, $url)
 					)
 				);
 

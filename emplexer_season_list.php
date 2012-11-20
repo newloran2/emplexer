@@ -77,7 +77,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen
 		{
 
 			// hd_print(__METHOD__ . ':' .  print_r($xml, true));
-			$thumb = is_null((string)$c->attributes()->thumb) ? (string)$c->attributes()->thumb : (string)$xml->attributes()->thumb;
+			$thumb = (string)$c->attributes()->thumb ? (string)$c->attributes()->thumb : (string)$xml->attributes()->thumb;
 			$url =  EmplexerConfig::DEFAULT_PLEX .'/photo/:/transcode?width=340&height=480&url=' . urlencode( EmplexerConfig::DEFAULT_PLEX . $thumb);
 			// $url =  EmplexerConfig::DEFAULT_PLEX .'/photo/:/transcode?width=150&height=222&url=' . EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb;
 			$urlb = EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb;

@@ -81,13 +81,16 @@ class EmplexerArchive implements Archive
 	
 	public function setFileToArchive($fileName, $fileUrl)	
 	{
-		//hd_print(__METHOD__ . " fileName=$fileName, fileUrl=$fileUrl");
-		$this->urls[$fileName] = $fileUrl ;
-		EmplexerFifoController::getInstance()->downloadToCache($fileName, $fileUrl);
+		//no cache
+		if(EmplexerConfig::USE_CACHE){
+			//hd_print(__METHOD__ . " fileName=$fileName, fileUrl=$fileUrl");
+			$this->urls[$fileName] = $fileUrl ;
+			EmplexerFifoController::getInstance()->downloadToCache($fileName, $fileUrl);
+		}
 	}
 
 	public function getFileFromArchive($fileName, $default_url ='missing://'){
-		// hd_print(__METHOD__);
+		
 		if (!isset($this->urls[$fileName])) {
 			return $default_url;
 		}
