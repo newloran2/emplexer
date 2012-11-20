@@ -7,7 +7,7 @@ class EmplexerConfig
 	const DEFAULT_PLEX_PORT = 32400; 
 	
 
-	const USE_NFS = true; 
+	const USE_NFS =  false; 
 	const USE_SMB = false; 
 
     const USE_CACHE = false;
