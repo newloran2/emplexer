@@ -8,7 +8,7 @@ if [[ ! -p $pipe ]]; then
     mkfifo $pipe
 fi
 
-current_dir=`pwd`
+current_dir=$1
 
 
 while true

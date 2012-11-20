@@ -30,7 +30,12 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 	
 	function __construct()
 	{
-
+		if (EmplexerConfig::CREATE_LOG_FOLDER){
+			if (file_exists('/D') && is_dir('/D')){
+				mkdir('/D/dune_plugin_logs/');
+				hd_print('log_dir created');
+			}
+		}
 		$this->vod = new EmplexerVod();
 		$this->add_screen(new EmplexerSetupScreen());
 		$this->add_screen(new EmplexerSectionScreen());

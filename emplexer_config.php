@@ -7,10 +7,10 @@ class EmplexerConfig
 	const DEFAULT_PLEX_PORT = 32400; 
 	
 
-	const USE_NFS =  false; 
-	const USE_SMB = false; 
-
-    const USE_CACHE = false;
+	const USE_NFS           =  false; 
+	const USE_SMB           =  false; 
+   const USE_CACHE         =  false;
+	const CREATE_LOG_FOLDER =  true;
 
 
 public static function getPlexBaseUrl(&$plugin_cookies, $handler){
