@@ -41,7 +41,8 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	{
 		
 		hd_print('get_all_folder_items em ' .  self::ID);	
-		$doc = HD::http_get_document( EmplexerConfig::DEFAULT_PLEX . '/library/sections/all');
+		// $doc = HD::http_get_document( EmplexerConfig::DEFAULT_PLEX . '/library/sections/all');
+		$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/all');
 
 		//hd_print($doc);
 

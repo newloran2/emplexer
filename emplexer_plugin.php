@@ -98,16 +98,12 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 
 		if ($user_input->control_id == 'stop')
 		{
-			// exec("kill -15 `ps ax|grep -i plex_notify|head -n 1|awk '{print $1}'`");
-			// hd_print("morto");		
 			EmplexerFifoController::getInstance()->killPlexNotify();
 		}
 
 		if ($user_input->control_id == 'time'){
 			$key = $user_input->key;
-			// exec("$plugin_dir/bin/plex_notify.sh $key 5 'http://192.168.2.9:32400/'&");
-			// hd_print("plex_notify iniciado.");			
-			EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , 'http://192.168.2.9:32400/');
+			EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this).'/');
 		}
 
 		if ($user_input->control_id == 'pop_up') {
@@ -116,7 +112,7 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 
 			$key = (string) $media_url->category_id;
 
-			$doc = HD::http_get_document( EmplexerConfig::DEFAULT_PLEX . '/library/sections/' . $key);
+			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
 			$pop_up_items =  array();
 			$xml = simplexml_load_string($doc);
 			foreach ($xml->Directory as $c){
@@ -146,6 +142,17 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 				return ActionFactory::vod_play();
 			}
 
+    	}
+
+
+    	if ($user_input->control_id == 'btnSalvar'){
+    		hd_print("botão salvar = $plugin_cookies" );
+    		$plugin_cookies->plexIp    = $user_input->plexIp;
+			$plugin_cookies->plexPort  = $user_input->plexPort;
+			$plugin_cookies->username = $user_input->plexPort;
+			hd_print(__METHOD__  . ': ' .  print_r($plugin_cookies, true));
+			return ActionFactory::show_title_dialog('Configuration successfully saved.');
+			
     	}
 
 		return null;

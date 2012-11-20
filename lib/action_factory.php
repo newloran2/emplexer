@@ -116,6 +116,7 @@ class ActionFactory
         return self::close_dialog_and_run(null);
     }
 
+
     public static function show_title_dialog($title, $post_action = null)
     {
         $defs = array();
@@ -221,6 +222,47 @@ class ActionFactory
     {
         hd_print("notify=$value");
     }
+
+    public static function show_configuration_modal($title, &$plugin_cookies, $post_action= null){
+      
+        $defs = array();
+
+        ControlFactory::add_text_field(
+            $defs, 
+            null, 
+            null,
+            $name            = 'plexIp', 
+            $title           = 'Plex IP',  
+            $initial_value   = $plugin_cookies->plexIp,
+            $numeric         = false, 
+            $password        = false, 
+            $has_osk         = false, 
+            $always_active   = 0, 
+            $width           = 500
+        );
+
+        ControlFactory::add_text_field(
+            $defs, 
+            null, 
+            null,
+            $name            = 'plexPort', 
+            $title           = 'Plex Port',  
+            $initial_value   = $plugin_cookies->plexIp ? $plugin_cookies->plexIp : 32400,
+            $numeric         = false, 
+            $password        = false, 
+            $has_osk         = false, 
+            $always_active   = 0, 
+            $width           = 500
+        );
+
+            ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
+            'btnSalvar', 'save', 200, $post_action);
+
+
+            return ActionFactory::show_dialog($title, $defs);
+    }
+
+
 }
 
 

@@ -27,6 +27,8 @@
       </actions>
       <ip_address_required>no</ip_address_required>
       <show_by_default>yes</show_by_default>
+      <show_default_value>yes</show_default_value>
+      <show_cookie_name>show_tv_entry_point</show_cookie_name>
     </entry_point>
   </entry_points>
   <type>php</type>

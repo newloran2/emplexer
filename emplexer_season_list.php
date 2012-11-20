@@ -46,12 +46,12 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen
 
 		// hd_print (__METHOD__ . ':' . print_r($media_url, true));
 		if (!isset($media_url->filter_name)){
-			$doc = HD::http_get_document(EmplexerConfig::DEFAULT_PLEX . $media_url->key );			
+			$doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $media_url->key );			
 		} else {
-			$doc = HD::http_get_document(EmplexerConfig::DEFAULT_PLEX . '/library/sections/' .  $media_url->key . '/' . $$media_url->filter_name );			
+			$doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' .  $media_url->key . '/' . $$media_url->filter_name );			
 		}
 
-		// $doc = HD::http_get_document(EmplexerConfig::DEFAULT_PLEX . $media_url->key );
+		// $doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $media_url->key );
 
 		$xml = simplexml_load_string($doc);
 
@@ -78,10 +78,10 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen
 
 			// hd_print(__METHOD__ . ':' .  print_r($xml, true));
 			$thumb = (string)$c->attributes()->thumb ? (string)$c->attributes()->thumb : (string)$xml->attributes()->thumb;
-			$url =  EmplexerConfig::DEFAULT_PLEX .'/photo/:/transcode?width=340&height=480&url=' . urlencode( EmplexerConfig::DEFAULT_PLEX . $thumb);
-			// $url =  EmplexerConfig::DEFAULT_PLEX .'/photo/:/transcode?width=150&height=222&url=' . EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb;
-			$urlb = EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb;
-			$bgImage = EmplexerConfig::DEFAULT_PLEX .  $c->attributes()->art;
+			$url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .'/photo/:/transcode?width=340&height=480&url=' . urlencode( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $thumb);
+			// $url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .'/photo/:/transcode?width=150&height=222&url=' . EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			$urlb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			$bgImage = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .  $c->attributes()->art;
 			$caption = (string) $c->attributes()->ratingKey . '.jpg';
 			
 			if ($thumb){
@@ -101,7 +101,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen
 				(
 					// ViewItemParams::icon_path => $url,
 					ViewItemParams::icon_path =>  EmplexerArchive::getInstance()->getFileFromArchive($caption, $url),
-					// ViewItemParams::item_detailed_icon_path => $urlb,
+					// ViewItemParams::item_detailed_icon_path => $url,
 					ViewItemParams::item_detailed_icon_path => EmplexerArchive::getInstance()->getFileFromArchive($caption, $url),
 					ViewItemParams::item_caption_wrap_enabled => false,
 				)

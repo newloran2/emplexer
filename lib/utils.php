@@ -138,9 +138,72 @@ class HD
         );
     }
 
+
+
+      public static function http_get_document($url, $opts = null)
+    {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    20);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,    true);
+        curl_setopt($ch, CURLOPT_TIMEOUT,           20);
+        curl_setopt($ch, CURLOPT_USERAGENT,         'DuneHD/1.0');
+        curl_setopt($ch, CURLOPT_URL,               $url);
+
+        // add dunehd_101 user-agent
+        // curl_setopt($ch, CURLOPT_USERAGENT, Config::MEGOGO_KEYWORD1);
+
+        if (isset($opts))
+        {
+            foreach ($opts as $k => $v)
+                curl_setopt($ch, $k, $v);
+        }
+
+        hd_print("HTTP fetching \nurl:'$url'...");
+
+        $content = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        $acceptedHeaders = array(200, 403);
+        if ( !in_array($http_code, $acceptedHeaders) )
+        {
+            $err_msg = "HTTP request failed ($http_code)";
+            hd_print($err_msg);
+            //throw new Exception($err_msg);
+            throw new DuneException(
+                'Error: "'.$err_msg.'"',
+                0,
+                ActionFactory::show_error(false, 'Error when obtaining xml of plex (The emplexer is configured?)')
+            );
+        }
+
+        hd_print("HTTP OK ($http_code)");
+
+        curl_close($ch);
+        
+        // in this specific example a 403 request indicates
+        // an expired session - handle it by returning 
+        // an informative response
+        
+        if ($http_code == 200) {
+            return $content;
+        } 
+        elseif ($http_code == 403)
+        {
+            $session_expired = array(
+                'result' => 'error',
+                'error' => 'Session expired',
+                'error_code' => '403'
+            );
+            return json_encode($session_expired);
+        }
+        
+    }
+
+
     
 
-    public static function http_get_document($url, $opts = null)
+  /*  public static function http_get_document($url, $opts = null)
     {
         $ch = curl_init();
 
@@ -172,7 +235,15 @@ class HD
         {
             $err_msg = "HTTP request failed ($http_code)";
             hd_print($err_msg);
-            throw new Exception($err_msg);
+
+            $err_msg = "HTTP request failed ($http_code)";
+            hd_print($err_msg);
+            //throw new Exception($err_msg);
+            throw new DuneException(
+                'Erro: "'.$err_msg.'"',
+                0,
+                ActionFactory::show_error(false, 'Сервер не отвечает - свяжитесь с провайдером.')
+            );
         }
 
         hd_print("HTTP OK ($http_code)");
@@ -180,7 +251,7 @@ class HD
         curl_close($ch);
 
         return $content;
-    }
+    }*/
 
     
 

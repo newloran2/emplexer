@@ -5,14 +5,32 @@
 class EmplexerConfig
 {
 	const DEFAULT_PLEX_PORT = 32400; 
-	const DEFAULT_PLEX_IP = "http://192.168.2.9:"; 
-	const DEFAULT_PLEX = "http://192.168.2.9:32400";
+	
 
-	const USE_NFS = false; 
+	const USE_NFS = true; 
 	const USE_SMB = false; 
 
     const USE_CACHE = false;
 
+
+public static function getPlexBaseUrl(&$plugin_cookies, $handler){
+    hd_print(__METHOD__ . ':' . print_r($plugin_cookies, true));
+    $plexIp   = $plugin_cookies->plexIp;
+    $plexPort = $plugin_cookies->plexPort;
+    if (!$plexIp || !$plexPort){
+
+        $btnSaveAction = UserInputHandlerRegistry::create_action($handler, 'btnSalvar');
+
+        throw new DuneException(
+            'Error: emplexer not configured, please go to setup and set ip and port' ,
+            0,
+            // ActionFactory::show_title_dialog('Configure your emplexer')
+            ActionFactory::show_configuration_modal('configure your emplexer.', $plugin_cookies, $btnSaveAction)
+            // ActionFactory::show_error(false, "emplexer not configured, please go to setup and set ip and port")
+        );
+    }
+    return "http://$plexIp:$plexPort";
+}
 
 
 public static function GET_SECTIONS_LIST_VIEW()
@@ -81,6 +99,48 @@ public static function GET_VIDEOS_LIST_VIEW(){
                 ViewItemParams::icon_scale_factor => 1.0,
                     ViewItemParams::icon_sel_scale_factor => 1.1, //1.2,
                     ),
+
+            PluginRegularFolderView::not_loaded_view_item_params => array
+            (
+                ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
+                ViewItemParams::item_detailed_icon_path => 'missing://',
+                ),
+            ),
+
+    // large icons view without details
+        array
+        (
+            PluginRegularFolderView::async_icon_loading => false,
+
+            PluginRegularFolderView::view_params => array
+            (
+                ViewParams::num_cols => 7,
+                ViewParams::num_rows => 2,
+                ViewParams::paint_sandwich => true,
+                ViewParams::sandwich_base => 'gui_skin://special_icons/sandwich_base.aai',
+                ViewParams::sandwich_mask => 'cut_icon://{name=sandwich_mask}',
+                ViewParams::sandwich_cover => 'cut_icon://{name=sandwich_cover}',
+                ViewParams::sandwich_width => 200, 
+                ViewParams::sandwich_height => 300, 
+                ViewParams::sandwich_icon_upscale_enabled => true,
+                ViewParams::sandwich_icon_keep_aspect_ratio => true,
+                    //ViewParams::icon_selection_box_width => 180, //150,
+                    //ViewParams::icon_selection_box_height => 333, //222,
+                ViewParams::paint_details => false,
+                ViewParams::zoom_detailed_icon => false,
+                ViewParams::paint_item_info_in_details => true
+                ),
+            PluginRegularFolderView::base_view_item_params => array
+            (
+                ViewItemParams::item_padding_top => 0,
+                ViewItemParams::item_padding_bottom => 0,
+                ViewItemParams::icon_valign => VALIGN_CENTER,
+                ViewItemParams::item_paint_caption => false,
+                    //ViewItemParams::icon_width => 180, //120,
+                    //ViewItemParams::icon_height => 245, //180,
+                ViewItemParams::icon_scale_factor => 1.0,
+                ViewItemParams::icon_sel_scale_factor => 1.1, //1.2,
+            ),
 
             PluginRegularFolderView::not_loaded_view_item_params => array
             (
@@ -205,8 +265,8 @@ public static function GET_EPISODES_LIST_VIEW(){
 
             PluginRegularFolderView::view_params => array
             (
-                ViewParams::num_cols => 1,
-                ViewParams::num_rows => 1,
+                ViewParams::num_cols => 7,
+                ViewParams::num_rows => 4,
                 ViewParams::paint_sandwich => true,
                 ViewParams::sandwich_base => 'gui_skin://special_icons/sandwich_base.aai',
                 ViewParams::sandwich_mask => 'cut_icon://{name=sandwich_mask}',
@@ -217,13 +277,13 @@ public static function GET_EPISODES_LIST_VIEW(){
                 ViewParams::icon_selection_box_height => 150,
                 ViewParams::paint_details => false,
                 ViewParams::zoom_detailed_icon => false ,
-                ViewParams::paint_path_box => false,
-                ViewParams::paint_help_line => true,
-                ViewParams::paint_scrollbar => false,
-                ViewParams::content_box_x =>0,
-                ViewParams::content_box_y =>816,
-                ViewParams::content_box_width =>1920,
-                ViewParams::content_box_height =>118,
+                // ViewParams::paint_path_box => false,
+                // ViewParams::paint_help_line => true,
+                // ViewParams::paint_scrollbar => false,
+                // ViewParams::content_box_x =>0,
+                // ViewParams::content_box_y =>816,
+                // ViewParams::content_box_width =>1920,
+                // ViewParams::content_box_height =>118,
             ),
                
             PluginRegularFolderView::base_view_item_params => array

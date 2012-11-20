@@ -64,9 +64,9 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
 		if (is_null ($media_url->filter_name)){
-			$doc = HD::http_get_document(EmplexerConfig::DEFAULT_PLEX. $media_url->key );
+			$doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
 		} else {
-			$doc = HD::http_get_document( EmplexerConfig::DEFAULT_PLEX . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
+			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
 		}
 
 		// $this->folder_views = $this->get_folder_views();
@@ -79,7 +79,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		// hd_print('get_media_url_str = '.  print_r($xml, true));
 
 		$items = array();
-		$bgImage = EmplexerConfig::DEFAULT_PLEX .  $xml->attributes()->art;
+		$bgImage = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .  $xml->attributes()->art;
 
 
 		/*
@@ -98,10 +98,10 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			// hd_print(print_r($xml, true));
 			foreach ($xml->Video as $c)
 			{
-				$thumb = EmplexerConfig::DEFAULT_PLEX . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb);
-				// $thumb = EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb;
-				$detailPhoto = EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb;
-				$httpVidelUrl = EmplexerConfig::DEFAULT_PLEX . (string)$c->Media->Part->attributes()->key;
+				$thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb);
+				// $thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+				$detailPhoto = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+				$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
 				$nfsVideoUrl = 'nfs://192.168.2.9:' . (string)$c->Media->Part->attributes()->file; 
 
 				$v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
@@ -120,7 +120,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 							'duration' => (string)$c->Media->attributes()->duration,
 							'summary' => (string)$c->attributes()->summary,
 							'name' => (string)$c->attributes()->title,
-							'thumb' => EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb,
+							'thumb' => EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb,
 							'title' => (string)$xml->attributes()->title1,
 							'key' =>  (string) $c->attributes()->ratingKey
 						)

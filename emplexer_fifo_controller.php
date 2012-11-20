@@ -18,7 +18,7 @@ class EmplexerFifoController
 	{
 		$plugin_dir = dirname(__FILE__);
 		if (!$this->isRuning()){
-			exec("$plugin_dir/bin/emplexer_fifo_controller.sh >> /tmp/fifo.txt 2>/dev/null &");	
+			exec("$plugin_dir/bin/emplexer_fifo_controller.sh '$plugin_dir/bin/' >> /tmp/fifo.txt 2>/dev/null &");	
 		}
 		
 		hd_print(__METHOD__ . ': iniciado fifo' );

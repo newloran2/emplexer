@@ -46,7 +46,7 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 		//hd_print(__METHOD__ . ':' . print_r($media_url, true));
 
 		$doc = HD::http_get_document( 
-			EmplexerConfig::DEFAULT_PLEX . 
+			EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . 
 			'/library/sections/' . 
 			$media_url->category_id . 
 			'/' . $media_url->filter_name 
@@ -59,9 +59,9 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 		foreach ($xml->Directory as $c)
 		{
 			$thumb =(string)$c->attributes()->thumb;
-			$url =  EmplexerConfig::DEFAULT_PLEX . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::DEFAULT_PLEX. $thumb);
-			// $urlb = EmplexerConfig::DEFAULT_PLEX . (string)$c->attributes()->thumb;
-			$bgImage = EmplexerConfig::DEFAULT_PLEX .  $c->attributes()->art;
+			$url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $thumb);
+			// $urlb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			$bgImage = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .  $c->attributes()->art;
 			
 			$caption = (string) $c->attributes()->ratingKey . '.jpg';
 
