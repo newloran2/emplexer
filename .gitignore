@@ -1,0 +1,7 @@
+# Ignorar arquivos específicos
+.DS_Store
+# Use curingas como
+*~
+*.swp
+*.sublime*
+
