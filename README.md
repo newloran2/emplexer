@@ -3,7 +3,7 @@ emplexer
 
 This is a work in progress plugin to integrate Dune Media Player with PLex Media Server.
 
-To use this plugin, your dune must be 120531_2200_beta firmware or newer.
+To use this plugin, your dune must be 120531\_2200\_beta firmware or newer.
 System storage is required to install plugins see at <a href="http://dune-hd.com/firmware/usb_flash_drive/">Initialize System Storage</a>.
 
 ###Install and configure Plex Media Server
@@ -39,6 +39,7 @@ To install PMS all you need is at <a href="http://www.plexapp.com/help/">Plex</a
 ###Using emplexer
 
 + If you see the section screen, emplexer and plex working.
++ If section screen is empty, you don't configure sections in PLex.
 + When you enter in a section this is equivalent to filter all in plex.
 + If you need a specific filter from plex, press __pop up menu button__ on remote when a section is selected in section screen.
 + A pop up like below should be appear:

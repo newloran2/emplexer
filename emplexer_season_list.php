@@ -81,8 +81,9 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen
 			$url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .'/photo/:/transcode?width=340&height=480&url=' . urlencode( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $thumb);
 			// $url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .'/photo/:/transcode?width=150&height=222&url=' . EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			$urlb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
-			$bgImage = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .  $c->attributes()->art;
-			$caption = (string) $c->attributes()->ratingKey . '.jpg';
+			$bgImage = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .  $c->attributes()->art;			
+			$ratingKey = $c->attributes()->ratingKey ? (string) $c->attributes()->ratingKey : (string)$xml->attributes()->key;
+			$caption = $ratingKey . '.jpg';
 			
 			if ($thumb){
 				EmplexerArchive::getInstance()->setFileToArchive($caption, $url );			

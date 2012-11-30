@@ -23,6 +23,7 @@ require_once 'emplexer_video_list.php';
 require_once 'emplexer_movie_list.php';
 require_once 'emplexer_archive.php';
 require_once 'emplexer_fifo_controller.php';
+require_once 'emplexer_popup.php';
 
 
 class Emplexer extends DefaultDunePlugin implements UserInputHandler
@@ -36,6 +37,17 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 				hd_print('log_dir created');
 			}
 		}
+
+		//se não existir o diretorio de cache devo criar
+		if (EmplexerConfig::USE_CACHE){
+			$cache_dir='/persistfs/plugins_archive/emplexer/emplexer_default_archive';
+			if (!file_exists($cache_dir)){
+				 $result = mkdir($cache_dir);
+				 hd_print("criação de diretório de cache em $cache_dir [" . $result ? 'OK' : 'FAIL' . "]" );
+			}
+		}
+
+
 		$this->vod = new EmplexerVod();
 		$this->add_screen(new EmplexerSetupScreen());
 		$this->add_screen(new EmplexerSectionScreen());
@@ -57,7 +69,8 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 		
 		$media_url = MediaURL::decode($media_url_str);
 
-		$params = array('key' => $media_url->key);
+
+		$params = array('key' => $media_url->key, 'back_screen_id' => $media_url->back_screen_id , 'back_key' => $media_url->back_key, 'back_filter_name' => $media_url->back_filter_name);
 		$stop_action = UserInputHandlerRegistry::create_action($this, 'stop', $params);
 		$time_action = UserInputHandlerRegistry::create_action($this, 'time', $params);
 
@@ -89,13 +102,13 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 
 			);
 
-		hd_print(print_r($toBeReturned, true));
+		// hd_print(print_r($toBeReturned, true));
 		return $toBeReturned;
 	}
 
 	public function handle_user_input(&$user_input, &$plugin_cookies)
 	{
-		hd_print( __METHOD__ . ' handle_user_input:');
+		hd_print( __METHOD__ . ' handle_user_input:' , $user_input);
 		foreach ($user_input as $key => $value)
 			hd_print("$key => $value");
 		
@@ -103,7 +116,21 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 
 		if ($user_input->control_id == 'stop')
 		{
+			hd_print(print_r($user_input, true));
+			if (isset($user_input->back_screen_id) && $user_input->back_screen_id == "emplexer_movie_list"){
+				$media_url = EmplexerMovieList::get_media_url_str($user_input->back_key, $user_input->back_filter_name);
+			} else {
+				$media_url = EmplexerVideoList::get_media_url_str($user_input->back_key, $user_input->back_filter_name);
+			}
+
 			EmplexerFifoController::getInstance()->killPlexNotify();
+
+			$action =  ActionFactory::invalidate_folders(
+	                        array(
+	                            $media_url,
+	                        )
+                    	);
+			return $action;
 		}
 
 		if ($user_input->control_id == 'time'){
@@ -112,10 +139,13 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 		}
 
 		if ($user_input->control_id == 'pop_up') {
-			hd_print("pop_up = $user_input" );
 			$media_url = MediaURL::decode($user_input->selected_media_url);
 
 			$key = (string) $media_url->category_id;
+
+ 			$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key;
+ 			/*$popUp = new EmplexerPopUp(4);
+ 			$action = $popUp->showPopUpMenu($url);*/
 
 			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
 			$pop_up_items =  array();
@@ -127,38 +157,36 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 					$pop_up_items[] = array(
 						GuiMenuItemDef::caption=> (string)$c->attributes()->title,
 						GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url($media_url, $key), $key)
-					);
+						);
 				}
 			}
 
 			$action = ActionFactory::show_popup_menu($pop_up_items);	
-			hd_print(__METHOD__ . ': ' . print_r($action, true));
+			// hd_print(__METHOD__ . ': ' . print_r($action, true));
 			return $action;
 			
 		}
 		if ($user_input->control_id == 'play'){
-    		hd_print('playAction');
-    		$media_url = MediaURL::decode($user_input->selected_media_url);
-    		if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
+			$media_url = MediaURL::decode($user_input->selected_media_url);
+
+			hd_print('play -> media_url = ' .  print_r($media_url, true));
+			if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
 				$url = dirname($media_url->video_url);
-				hd_print("URL=$url");
 				return ActionFactory::dvd_play($url);
 			}else {
 				return ActionFactory::vod_play();
 			}
 
-    	}
+		}
 
 
-    	if ($user_input->control_id == 'btnSalvar'){
-    		hd_print("botão salvar = $plugin_cookies" );
-    		$plugin_cookies->plexIp    = $user_input->plexIp;
+		if ($user_input->control_id == 'btnSalvar'){
+			$plugin_cookies->plexIp    = $user_input->plexIp;
 			$plugin_cookies->plexPort  = $user_input->plexPort;
 			$plugin_cookies->username = $user_input->plexPort;
-			hd_print(__METHOD__  . ': ' .  print_r($plugin_cookies, true));
 			return ActionFactory::show_title_dialog('Configuration successfully saved.');
 			
-    	}
+		}
 
 		return null;
 	}
@@ -169,13 +197,34 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 		$season = array('all','recentlyViewedShows','unwatched');
 		
 		if (in_array($filter_name , $episodes)){			
-			hd_print( __METHOD__ . ':episode ');
 			return EmplexerVideoList::get_media_url_str($media_url->category_id, $filter_name);
 		} else {
-			hd_print( __METHOD__ . ':season');
-			// return EmplexerSeasonList::get_media_url_str($media_url->category_id, $filter_name);
 			return EmplexerRootList::get_media_url_str($media_url->category_id, $filter_name);
 		}
+	}
+
+	private function open_popup_for_filter($current_url, $key){
+		$key = (string) $media_url->category_id;
+
+		$doc = HD::http_get_document( $current_url . '/' . $key);
+		$pop_up_items =  array();
+		$xml = simplexml_load_string($doc);
+		foreach ($xml->Directory as $c){
+			$key = (string)$c->attributes()->key;
+			$prompt = (string)$c->attributes()->prompt;
+			if ($key != 'all' &&  $key != 'folder' && !$prompt ){
+				$pop_up_items[] = array(
+					GuiMenuItemDef::caption=> (string)$c->attributes()->title,
+					GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url($media_url, $key), $key)
+					);
+			}
+		}
+
+		$action = ActionFactory::show_popup_menu($pop_up_items);		
+	}
+	private function is_filfer($filter_name){
+		$filter = array('firstCharacter','genre','year','contentRating','folder');
+		return in_array($filter_name, $filter);
 	}
 
 }

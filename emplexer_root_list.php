@@ -44,7 +44,6 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
 		
 		//hd_print(__METHOD__ . ':' . print_r($media_url, true));
-
 		$doc = HD::http_get_document( 
 			EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . 
 			'/library/sections/' . 
@@ -91,6 +90,7 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 	{
 		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');
 		$season = array('all','recentlyViewedShows');
+		
 
 		if (in_array($media_url->filter_name , $episodes)){			
 			return EmplexerVideoList::get_media_url_str((string)$node->attributes()->key);

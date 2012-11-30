@@ -7,6 +7,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 {
 	const ID = "emplexer_video_list";
 	static $type;
+	private $last_media_url;
 
 	function __construct($id=null,$folder_views=null)
 	{
@@ -47,8 +48,6 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public static function get_media_url_str($key, $filter_name =null, $type='show')
 	{
-		hd_print("key: $key" );
-		
 		self::$type = $type;
 
 		return MediaURL::encode(
@@ -63,6 +62,9 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 	}
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
+		hd_print(__METHOD__ . ': ' . print_r($media_url, true));
+		hd_print(__METHOD__ . ': ' . $media_url->get_raw_string());
+
 		if (is_null ($media_url->filter_name)){
 			$doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
 		} else {
@@ -70,7 +72,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		}
 
 		// $this->folder_views = $this->get_folder_views();
-		hd_print("folder_views = " . print_r($this->folder_views));
+		// hd_print("folder_views = " . print_r($this->folder_views));
 
 		//hd_print($doc);
 
@@ -112,17 +114,21 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				// EmplexerArchive::getInstance()->setFileToArchive($detailPhotoCacheKey, $detailPhoto );
 
 
+				// $back_media_url = $this->get_media_url_str($media_url->key, $media_url->filter_name);
 				$media = MediaURL::encode(
 					array(
 							'movie_id'=>(string)$c->attributes()->index, 
 							'video_url' => $v,
 							'viewOffset' => (string)$c->attributes()->viewOffset,
 							'duration' => (string)$c->Media->attributes()->duration,
-							'summary' => (string)$c->attributes()->summary,
+							'summary' => str_replace('"', '' , (string)$c->attributes()->summary),
 							'name' => (string)$c->attributes()->title,
 							'thumb' => EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb,
 							'title' => (string)$xml->attributes()->title1,
-							'key' =>  (string) $c->attributes()->ratingKey
+							'key' =>  (string) $c->attributes()->ratingKey,
+							'back_screen_id' => $media_url->screen_id,
+							'back_key' => $media_url->key,
+							'back_filter_name' => $media_url->filter_name,
 						)
 				);
 
@@ -140,7 +146,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 						)
 					);
 			}
-			// hd_print(print_r($items, true));
+				hd_print(print_r($items, true));
 			return $items;
 		}
 

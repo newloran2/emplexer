@@ -94,9 +94,13 @@ class EmplexerArchive implements Archive
 		if (!isset($this->urls[$fileName])) {
 			return $default_url;
 		}
-		if (file_exists("/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName")){
+		$file_path = "/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName";
+		// $file_path = "/D/emplexer/emplexer_default_archive/$fileName";
+		if (file_exists($file_path)){
+
 			// hd_print ("arquivo /persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName exite" );
-			return 'plugin_archive://' . $this->arquiveName . '/' . $fileName;
+			// return 'plugin_archive://' . $this->arquiveName . '/' . $fileName;
+			return $file_path;
 			// return '/persistfs/plugins_archive/emplexer/emplexer_default_archive/' . $this->arquiveName . '/' . $fileName;			
 		} else {
 			// hd_print ("arquivo /persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName não exite" );

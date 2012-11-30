@@ -18,10 +18,10 @@ class EmplexerFifoController
 	{
 		$plugin_dir = dirname(__FILE__);
 		if (!$this->isRuning()){
-			exec("$plugin_dir/bin/emplexer_fifo_controller.sh '$plugin_dir/bin/' >> /tmp/fifo.txt 2>/dev/null &");	
+			exec("$plugin_dir/bin/emplexer_fifo_controller.sh '$plugin_dir/bin/' >> /D/dune_plugin_logs/fifo.txt 2>/dev/null &");	
 		}
 		
-		hd_print(__METHOD__ . ': iniciado fifo' );
+//		hd_print(__METHOD__ . ': iniciado fifo' );
 	}
 
 	public function __destruct()
@@ -29,7 +29,7 @@ class EmplexerFifoController
 		$this->open();
 		fwrite($this->fileDescriptor, "quit\n");
 		fclose($this->fileDescriptor);
-		hd_print(__METHOD__ . ': já fechei fileDescriptor veja '  .$this->fileDescriptor);
+//		hd_print(__METHOD__ . ': já fechei fileDescriptor veja '  .$this->fileDescriptor);
 	}
 
 	public function isRuning(){
@@ -43,14 +43,17 @@ class EmplexerFifoController
 		if (is_null($this->fileDescriptor)){
 			$this->fileDescriptor = fopen('/tmp/emplexer.fifo', 'r+');
 			stream_set_blocking($this->fileDescriptor, true);	
-			hd_print(__METHOD__ . 'fileDescriptor : ' . $this->fileDescriptor );
+//			hd_print(__METHOD__ . 'fileDescriptor : ' . $this->fileDescriptor );
 		}		
 		
 	}
+
 	public function downloadToCache($fileName, $fileUrl){
 		
 		// fwrite($this->fileDescriptor, "c|$fileName|$fileUrl");
-		if (!file_exists("/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName")){
+		$file_path = "/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName";
+		// $file_path = "/D/emplexer/emplexer_default_archive/$fileName";
+		if (!file_exists($file_path)){
 			//$this->open();
 			// exec("echo 'c|$fileName|$fileUrl' > /tmp/emplexer.fifo");
 			//fwrite($this->fileDescriptor, "c|$fileName|$fileUrl\n");
@@ -60,7 +63,7 @@ class EmplexerFifoController
 				CURLOPT_HEADER =>false,
 			);
 			$doc = HD::http_get_document($fileUrl, $opts);
-			$file = fopen("/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName", 'x');
+			$file = fopen($file_path, 'x');
 			fwrite($file, $doc);
 			fclose($file);
 			unset($doc);
@@ -74,13 +77,13 @@ class EmplexerFifoController
 		$this->open();
 		fwrite($this->fileDescriptor, "s|$id|$pooling|$url\n");
 		// exec("echo 's|$id|$pooling|$url' > /tmp/emplexer.fifo");
-		hd_print(__METHOD__ . " Escrevi com s|$id|$pooling|$url" );
+//		hd_print(__METHOD__ . " Escrevi com s|$id|$pooling|$url" );
 	}
 	public function killPlexNotify(){
 		$this->open();
 		// exec("echo 'kill' > /tmp/emplexer.fifo");	
 		fwrite($this->fileDescriptor, "kill\n");
-		hd_print(__METHOD__ . " Escrevi com kill" );
+//		hd_print(__METHOD__ . " Escrevi com kill" );
 
 	}
 

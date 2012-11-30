@@ -4,17 +4,16 @@
 */
 class EmplexerConfig
 {
-	const DEFAULT_PLEX_PORT = 32400; 
-	
-
-	const USE_NFS           =  false; 
-	const USE_SMB           =  false; 
-   const USE_CACHE         =  false;
-	const CREATE_LOG_FOLDER =  true;
+    const DEFAULT_PLEX_PORT              = 32400; 
+    const USE_NFS                        = false; 
+    const USE_SMB                        = false; 
+    const USE_CACHE                      = true;
+    const CREATE_LOG_FOLDER              = true;
+    const CREATE_CACHE_FOLDER_ON_MAIN_HD = false;
 
 
 public static function getPlexBaseUrl(&$plugin_cookies, $handler){
-    hd_print(__METHOD__ . ':' . print_r($plugin_cookies, true));
+//    hd_print(__METHOD__ . ':' . print_r($plugin_cookies, true));
     $plexIp   = $plugin_cookies->plexIp;
     $plexPort = $plugin_cookies->plexPort;
     if (!$plexIp || !$plexPort){
