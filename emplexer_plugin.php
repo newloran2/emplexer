@@ -24,9 +24,11 @@ require_once 'emplexer_movie_list.php';
 require_once 'emplexer_archive.php';
 require_once 'emplexer_fifo_controller.php';
 require_once 'emplexer_popup.php';
+require_once 'emplexer_movie_description_screen.php';
+require_once 'emplexer_base_channel.php';
 
-
-class Emplexer extends DefaultDunePlugin implements UserInputHandler
+//implements UserInputHandler
+class Emplexer extends DefaultDunePlugin 
 {
 	
 	function __construct()
@@ -47,7 +49,6 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 			}
 		}
 
-
 		$this->vod = new EmplexerVod();
 		$this->add_screen(new EmplexerSetupScreen());
 		$this->add_screen(new EmplexerSectionScreen());
@@ -55,7 +56,8 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 		$this->add_screen(new EmplexerSeasonList());
 		$this->add_screen(new EmplexerVideoList());
 		$this->add_screen(new EmplexerMovieList());
-
+		$this->add_screen(new EmplexerMovieDescriptionScreen());
+		$this->add_screen(new EmplexerBaseChannel('video'));
 
 		EmplexerFifoController::getInstance(); // inicia o fifo
 	}
@@ -69,10 +71,12 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 		
 		$media_url = MediaURL::decode($media_url_str);
 
+		$handler = $media_url->back_screen_id == EmplexerVideoList::ID ? EmplexerVideoList::ID : EmplexerMovieList::ID;
+
 
 		$params = array('key' => $media_url->key, 'back_screen_id' => $media_url->back_screen_id , 'back_key' => $media_url->back_key, 'back_filter_name' => $media_url->back_filter_name);
-		$stop_action = UserInputHandlerRegistry::create_action($this, 'stop', $params);
-		$time_action = UserInputHandlerRegistry::create_action($this, 'time', $params);
+		$stop_action = UserInputHandlerRegistry::create_action($this->get_screen_by_id($handler) , 'stop', $params);
+		$time_action = UserInputHandlerRegistry::create_action($this->get_screen_by_id($handler), 'time', $params);
 
 		
 		
@@ -98,99 +102,12 @@ class Emplexer extends DefaultDunePlugin implements UserInputHandler
 				GUI_EVENT_PLAYBACK_STOP => $stop_action,
 				GUI_EVENT_TIMER => $time_action
 				)
-			
-
 			);
 
-		// hd_print(print_r($toBeReturned, true));
+		hd_print(print_r($toBeReturned, true));
 		return $toBeReturned;
 	}
 
-	public function handle_user_input(&$user_input, &$plugin_cookies)
-	{
-		hd_print( __METHOD__ . ' handle_user_input:' , $user_input);
-		foreach ($user_input as $key => $value)
-			hd_print("$key => $value");
-		
-		$plugin_dir = dirname(__FILE__);
-
-		if ($user_input->control_id == 'stop')
-		{
-			hd_print(print_r($user_input, true));
-			if (isset($user_input->back_screen_id) && $user_input->back_screen_id == "emplexer_movie_list"){
-				$media_url = EmplexerMovieList::get_media_url_str($user_input->back_key, $user_input->back_filter_name);
-			} else {
-				$media_url = EmplexerVideoList::get_media_url_str($user_input->back_key, $user_input->back_filter_name);
-			}
-
-			EmplexerFifoController::getInstance()->killPlexNotify();
-
-			$action =  ActionFactory::invalidate_folders(
-	                        array(
-	                            $media_url,
-	                        )
-                    	);
-			return $action;
-		}
-
-		if ($user_input->control_id == 'time'){
-			$key = $user_input->key;
-			EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this).'/');
-		}
-
-		if ($user_input->control_id == 'pop_up') {
-			$media_url = MediaURL::decode($user_input->selected_media_url);
-
-			$key = (string) $media_url->category_id;
-
- 			$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key;
- 			/*$popUp = new EmplexerPopUp(4);
- 			$action = $popUp->showPopUpMenu($url);*/
-
-			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
-			$pop_up_items =  array();
-			$xml = simplexml_load_string($doc);
-			foreach ($xml->Directory as $c){
-				$key = (string)$c->attributes()->key;
-				$prompt = (string)$c->attributes()->prompt;
-				if ($key != 'all' &&  $key != 'folder' && !$prompt ){
-					$pop_up_items[] = array(
-						GuiMenuItemDef::caption=> (string)$c->attributes()->title,
-						GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url($media_url, $key), $key)
-						);
-				}
-			}
-
-			$action = ActionFactory::show_popup_menu($pop_up_items);	
-			// hd_print(__METHOD__ . ': ' . print_r($action, true));
-			return $action;
-			
-		}
-		if ($user_input->control_id == 'play'){
-			$media_url = MediaURL::decode($user_input->selected_media_url);
-
-			hd_print('play -> media_url = ' .  print_r($media_url, true));
-			if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
-				$url = dirname($media_url->video_url);
-				return ActionFactory::dvd_play($url);
-			}else {
-				return ActionFactory::vod_play();
-			}
-
-		}
-
-
-		if ($user_input->control_id == 'btnSalvar'){
-			$plugin_cookies->plexIp    = $user_input->plexIp;
-			$plugin_cookies->plexPort  = $user_input->plexPort;
-			$plugin_cookies->username = $user_input->plexPort;
-			return ActionFactory::show_title_dialog('Configuration successfully saved.');
-			
-		}
-
-		return null;
-	}
-	
 	private function get_right_media_url(MediaURL $media_url,$filter_name)
 	{
 		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');

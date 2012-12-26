@@ -30,12 +30,6 @@ class EmplexerMovieList extends  EmplexerVideoList
 			);
 	}
 
-/*	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
-		$ret = parent::get_all_folder_items($media_url, $plugin_cookies);
-		hd_print('get_folder_views = ' . $this->get_folder_views());
-		hd_print('folder_views = ' . $this->folder_views);
-
-	}*/
 	public  function get_folder_views()
 	{
 		return EmplexerConfig::GET_VIDEOS_LIST_VIEW();

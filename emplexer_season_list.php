@@ -3,7 +3,7 @@
 /**
 * 
 */
-class EmplexerSeasonList extends AbstractPreloadedRegularScreen
+class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserInputHandler
 {
 	const ID = "emplexer_season_list"; 
 
@@ -12,7 +12,8 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen
 	function __construct()
 	{
 		// hd_print(__METHOD__);
-		parent::__construct(self::ID, $this->get_folder_views());			
+		parent::__construct(self::ID, $this->get_folder_views());	
+		UserInputHandlerRegistry::get_instance()->register_handler($this);
 
 	}
 
@@ -29,18 +30,34 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen
 	}
 
 
+	public function get_handler_id(){
+		return self::ID;
+	}
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
+
 		$enter_action = ActionFactory::open_folder();
+		$pop_up_action = UserInputHandlerRegistry::create_action($this, 'pop_up', null,'Filtos');
+
 
 		return array
 		(
 			GUI_EVENT_KEY_ENTER => $enter_action,
 			GUI_EVENT_KEY_PLAY => $enter_action,
+			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action,
 			);
 	}
 
+
+	public function handle_user_input(&$user_input, &$plugin_cookies){
+		hd_print(print_r($user_input, true));		
+		$media_url = MediaURL::decode($user_input->selected_media_url);
+		
+		if ($user_input->control_id == 'pop_up'){
+
+		}
+	}
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
 

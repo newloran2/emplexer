@@ -149,10 +149,21 @@ class HD
         curl_setopt($ch, CURLOPT_TIMEOUT,           20);
         curl_setopt($ch, CURLOPT_USERAGENT,         'DuneHD/1.0');
         curl_setopt($ch, CURLOPT_URL,               $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,    true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS,         10);
 
-        // add dunehd_101 user-agent
-        // curl_setopt($ch, CURLOPT_USERAGENT, Config::MEGOGO_KEYWORD1);
 
+
+        $emplexerClientHeaders = array(
+            'X-Plex-Client-Capabilities' => 'protocols=shoutcast,webkit,http-video;videoDecoders=h264{profile:high&resolution:1080&level:51};audioDecoders=mp3,aac',
+            'X-Plex-Client-Identifier' => 'b6d41f8a-e5ad-4987-a74b-ca12b143b0e0',
+            'X-Plex-Client-Platform' => 'Dune',
+            'X-Plex-Language' => 'en',
+            'X-Plex-Version' => 'abc'
+        );
+
+
+        
         if (isset($opts))
         {
             foreach ($opts as $k => $v)
@@ -199,61 +210,6 @@ class HD
         }
         
     }
-
-
-    
-
-  /*  public static function http_get_document($url, $opts = null)
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,    true);
-        curl_setopt($ch, CURLOPT_TIMEOUT,           5);
-        curl_setopt($ch, CURLOPT_USERAGENT,         'DuneHD/1.0');
-        curl_setopt($ch, CURLOPT_URL,               $url);
-
-        if (isset($opts))
-        {
-            foreach ($opts as $k => $v)
-                curl_setopt($ch, $k, $v);
-        }
-
-        hd_print("HTTP fetching '$url'...");
-
-        $content = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if($content === false)
-        {
-            $err_msg = "HTTP error: $http_code (" . curl_error($ch) . ')';
-            hd_print($err_msg);
-            throw new Exception($err_msg);
-        }
-
-        if ($http_code != 200)
-        {
-            $err_msg = "HTTP request failed ($http_code)";
-            hd_print($err_msg);
-
-            $err_msg = "HTTP request failed ($http_code)";
-            hd_print($err_msg);
-            //throw new Exception($err_msg);
-            throw new DuneException(
-                'Erro: "'.$err_msg.'"',
-                0,
-                ActionFactory::show_error(false, 'Сервер не отвечает - свяжитесь с провайдером.')
-            );
-        }
-
-        hd_print("HTTP OK ($http_code)");
-
-        curl_close($ch);
-
-        return $content;
-    }*/
-
-    
 
     public static function http_post_document($url, $post_data)
     {
@@ -361,6 +317,51 @@ class HD
         }
     }
     
+
+
+     public static function getPlexServers($timeout=2){
+
+        phpinfo();
+        
+        $broadcast_string="M-SEARCH * HTTP/1.1\r\n\r\n";
+        $port = 32414;
+        $ip='255.255.255.255';
+
+        $response_buffer_len=4096;
+
+        $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP); 
+        socket_set_option($sock, SOL_SOCKET, SO_BROADCAST, 1); 
+        socket_sendto($sock, $broadcast_string, strlen($broadcast_string), 0, '255.255.255.255', $port); 
+        $servers = array();
+
+        
+        for(;;){
+            $a= $sock;
+            $read = array($a);
+            $z = socket_select($read, $write = NULL, $except = NULL, 1 );
+            if ($z >0){
+                socket_recvfrom($sock,$buf,$response_buffer_len,0,$ip,$port);
+                $data = explode("\n", $buf);
+                $server = array();
+                $server['Ip' ] = $ip;
+                foreach ($data as $line ) {
+                    if ($line != "" && $line != "\n" && (strpos($line, 'HTTP') === false)){
+                //echo "$line\n";
+                        $a= explode(':', $line);
+
+                        if (count($a) >1){
+                            $server[$a[0]] = $a[1]; 
+                        }
+                    }
+                }
+                $servers[] =$server; 
+            }else {
+                break;
+            }   
+        }    
+        socket_close($sock);
+        return $servers;
+    }
 }
 
 

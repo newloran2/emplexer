@@ -72,10 +72,10 @@ class EmplexerFifoController
 		}
 	}
 
-	public function startPlexNotify($id, $pooling, $url){
+	public function startPlexNotify($id, $pooling, $url, $timeToMark=DEFAULT_TIME_TO_MARK){
 		// s|id do arquivo no plex|tempo do pooling|url base do plex (http://192.168.2.9:32400/)"
 		$this->open();
-		fwrite($this->fileDescriptor, "s|$id|$pooling|$url\n");
+		fwrite($this->fileDescriptor, "s|$id|$pooling|$url|$timeToMark\n");
 		// exec("echo 's|$id|$pooling|$url' > /tmp/emplexer.fifo");
 //		hd_print(__METHOD__ . " Escrevi com s|$id|$pooling|$url" );
 	}

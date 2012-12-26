@@ -37,14 +37,25 @@ do
 
         if [[ $type == 's' ]]; then 
         	#start plexNotify
-        	#s|id do arquivo no plex|tempo do pooling|url base do plex (http://192.168.2.9:32400/)"
-        	url=${line#*|*|*|} #somente o ultimo campo (url)
-        	tmp=${line%|*}
-        	sleepTime=${tmp#*|*|} #somente o tempo
-        	tmp=${line%|*|*}
-        	key=${tmp#*|} #somente a chave
-        	echo "iniciando plex_notify com comando plex_notify.sh $key $sleepTime '$url' & "
-        	sh $current_dir/plex_notify.sh $key $sleepTime "$url" &
+        	#s|id do arquivo no plex|tempo do pooling|url base do plex (http://192.168.2.9:32400/)|tempo para marcar como visto"
+            IFS="|"
+            read -ra splitedLine <<< "$line"  
+            echo ${splitedLine[@]}
+            # markTime=${line#*|*|*|*|} #somente o ultimo campo (url)
+            # tmp=${line#*|*|*|} #pega os dois ultimos campos
+            # url=${tmp%*|*} #somente o ultimo campo (url)
+        	# tmp=${line%|*}
+        	# sleepTime=${tmp#*|*|} #somente o tempo
+        	# tmp=${line%|*|*}
+        	# key=${tmp#*|} #somente a chave
+           
+            key=${splitedLine[1]}
+            sleepTime=${splitedLine[2]}
+            url=${splitedLine[3]}
+            markTime=${splitedLine[4]}
+
+        	echo "iniciando plex_notify com comando plex_notify.sh $key $sleepTime '$url' $markTime & "
+        	sh $current_dir/plex_notify.sh $key $sleepTime "$url" $markTime &
         	echo `pidof plex_notify.sh`
         fi
 

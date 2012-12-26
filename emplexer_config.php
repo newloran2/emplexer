@@ -1,34 +1,45 @@
 <?php 
-/**
-* 
-*/
+
+define('HTTP_CONNECTION_TYPE', 'HTTP');
+define('NFS_CONNECTION_TYPE' , 'NFS');
+define('SMB_CONNECTION_TYPE' , 'SMB');
+define('DEFAULT_TIME_TO_MARK', 40);
+
+
+
 class EmplexerConfig
 {
     const DEFAULT_PLEX_PORT              = 32400; 
-    const USE_NFS                        = false; 
+    const USE_NFS                        = true; 
     const USE_SMB                        = false; 
     const USE_CACHE                      = true;
     const CREATE_LOG_FOLDER              = true;
     const CREATE_CACHE_FOLDER_ON_MAIN_HD = false;
 
+    //static $currentPlexBaseUR='';
 
 public static function getPlexBaseUrl(&$plugin_cookies, $handler){
 //    hd_print(__METHOD__ . ':' . print_r($plugin_cookies, true));
-    $plexIp   = $plugin_cookies->plexIp;
-    $plexPort = $plugin_cookies->plexPort;
-    if (!$plexIp || !$plexPort){
+    // if ($currentPlexBaseUR) {
+    //     return $currentPlexBaseUR;
+    // }else {
 
-        $btnSaveAction = UserInputHandlerRegistry::create_action($handler, 'btnSalvar');
+        $plexIp   = $plugin_cookies->plexIp;
+        $plexPort = $plugin_cookies->plexPort;
+        if (!$plexIp || !$plexPort){
 
-        throw new DuneException(
-            'Error: emplexer not configured, please go to setup and set ip and port' ,
-            0,
-            // ActionFactory::show_title_dialog('Configure your emplexer')
-            ActionFactory::show_configuration_modal('configure your emplexer.', $plugin_cookies, $btnSaveAction)
-            // ActionFactory::show_error(false, "emplexer not configured, please go to setup and set ip and port")
-        );
-    }
-    return "http://$plexIp:$plexPort";
+            $btnSaveAction = UserInputHandlerRegistry::create_action($handler, 'btnSalvar');
+
+            throw new DuneException(
+                'Error: emplexer not configured, please go to setup and set ip and port' ,
+                0,
+                // ActionFactory::show_title_dialog('Configure your emplexer')
+                ActionFactory::show_configuration_modal('configure your emplexer.', $plugin_cookies, $btnSaveAction)
+                // ActionFactory::show_error(false, "emplexer not configured, please go to setup and set ip and port")
+            );
+        }
+        return "http://$plexIp:$plexPort";
+    // }
 }
 
 
@@ -237,6 +248,8 @@ public static function GET_EPISODES_LIST_VIEW(){
                 ViewParams::icon_selection_box_height => 150,
                 ViewParams::paint_details => true,
                 ViewParams::zoom_detailed_icon => true,
+                ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+                ViewParams::item_detailed_info_title_color => 6 #FFE040 ,
             ),
                
             PluginRegularFolderView::base_view_item_params => array
@@ -276,6 +289,7 @@ public static function GET_EPISODES_LIST_VIEW(){
                 ViewParams::icon_selection_box_height => 150,
                 ViewParams::paint_details => false,
                 ViewParams::zoom_detailed_icon => false ,
+                ViewParams::item_detailed_info_title_color => 6 #FFE040 ,
                 // ViewParams::paint_path_box => false,
                 // ViewParams::paint_help_line => true,
                 // ViewParams::paint_scrollbar => false,

@@ -5,7 +5,7 @@ key=$1
 sleep_time=$2
 plex_base_url=$3
 
-time_to_stop=20
+time_to_stop=$4
 playback_duration=`grep -i playback_duration  /tmp/run/ext_command.state |awk -F= '{print $2}'`
 compare_duration=$((playback_duration*1000))
 last_playback_position=0

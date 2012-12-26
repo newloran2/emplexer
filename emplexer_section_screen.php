@@ -2,15 +2,18 @@
 
 /**
 * Section Screen
-Show all section has created on Plex
+*Show all section has created on Plex
 */
 class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements UserInputHandler
 {
 
 	const ID = "emplexer_section_secreen"; 	
-	function __construct()
+	private $servers;
+
+	function __construct($servers)
 	{
 		parent::__construct(self::ID, $this->get_folder_views());
+		$this->servers = $servers;
 	}
 
 	public function get_handler_id()
@@ -24,8 +27,10 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 		// hd_print(__METHOD__ . ': ' .  print_r($media_url, true));
 
 		UserInputHandlerRegistry::get_instance()->register_handler($this);
-		$stop_action = UserInputHandlerRegistry::create_action($this, 'pop_up', null,'Filtos');
+		$pop_up_action = UserInputHandlerRegistry::create_action($this, 'pop_up', null,'Filtos');
 
+
+		hd_print(__METHOD__ . ':' . print_r($pop_up_action, true));
 		$enter_action = ActionFactory::open_folder();
 
 	
@@ -33,7 +38,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 		(
 			GUI_EVENT_KEY_ENTER => $enter_action,
 			GUI_EVENT_KEY_PLAY => $enter_action,
-			GUI_EVENT_KEY_POPUP_MENU => $stop_action
+			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action
 		);
 	}
 
@@ -41,24 +46,43 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	{
 		
 		hd_print('get_all_folder_items em ' .  self::ID);	
-		// $doc = HD::http_get_document( EmplexerConfig::DEFAULT_PLEX . '/library/sections/all');
-		$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/all');
-
-		//hd_print($doc);
-
-		$xml = simplexml_load_string($doc);
-
-		//hd_print(print_r($xml, true));
 
 		$items = array();
-		
-		foreach ($xml->Directory as $c)			
-		{
+		// foreach ($this->servers as $server ) {
+			// print_r($server);
+			// $doc = HD::http_get_document( EmplexerConfig::DEFAULT_PLEX . '/library/sections/all');
+			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/all');
+			// $doc = HD::http_get_document( "http://" . $server['Ip'].  ';' . $server['Port'] . "/library/sections/all");
+
+			//hd_print($doc);
+
+			$xml = simplexml_load_string($doc);
+
+			//hd_print(print_r($xml, true));
+
+			
+			
+			foreach ($xml->Directory as $c)			
+			{
+				$items[] = array
+				(
+					 // EmplexerRootList::get_media_url_str((string)$c->attributes()->key, null), 
+					PluginRegularFolderItem::media_url =>  $this->get_right_media_url((string)$c->attributes()->type,(string)$c->attributes()->key),
+					PluginRegularFolderItem::caption => (string) $c->attributes()->title,
+					PluginRegularFolderItem::view_item_params =>
+					array
+					(
+						ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
+					)
+				);
+
+			}
+
 			$items[] = array
 			(
 				 // EmplexerRootList::get_media_url_str((string)$c->attributes()->key, null), 
-				PluginRegularFolderItem::media_url =>  $this->get_right_media_url((string)$c->attributes()->type,(string)$c->attributes()->key),
-				PluginRegularFolderItem::caption => (string) $c->attributes()->title,
+				PluginRegularFolderItem::media_url =>  EmplexerBaseChannel::get_media_url_str('video'),
+				PluginRegularFolderItem::caption => 'Video Channels',
 				PluginRegularFolderItem::view_item_params =>
 				array
 				(
@@ -66,7 +90,9 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				)
 			);
 
-		}
+
+
+		// }
 
 
 		// hd_print(print_r($items, true));
@@ -75,24 +101,60 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
+		hd_print(__METHOD__ . ":" . print_r($user_input, true));
 
-		// hd_print(__METHOD__ . ': ' . $user_input);
 		if ($user_input->control_id == 'pop_up') {
-			$action = ActionFactory::show_popup_menu($this->pop_up_items);	
+			$media_url = MediaURL::decode($user_input->selected_media_url);
+
+			$key = (string) $media_url->category_id;
+
+ 			$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key;
+ 			/*$popUp = new EmplexerPopUp(4);
+ 			$action = $popUp->showPopUpMenu($url);*/
+
+			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
+			$pop_up_items =  array();
+			$xml = simplexml_load_string($doc);
+			foreach ($xml->Directory as $c){
+				$key = (string)$c->attributes()->key;
+				$prompt = (string)$c->attributes()->prompt;
+				if ($key != 'all' &&  $key != 'folder' && !$prompt ){
+					$pop_up_items[] = array(
+						GuiMenuItemDef::caption=> (string)$c->attributes()->title,
+						GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url_for_pop_up($media_url, $key), $key)
+						);
+				}
+			}
+
+			$action = ActionFactory::show_popup_menu($pop_up_items);	
+			// hd_print(__METHOD__ . ': ' . print_r($action, true));
+			return $action;
 			
-		}
-		return $action;
-		
+		}	
 	}
+
+
+	private function get_right_media_url_for_pop_up(MediaURL $media_url,$filter_name)
+	{
+		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');
+		$season = array('all','recentlyViewedShows','unwatched');
+		
+		if (in_array($filter_name , $episodes)){			
+			return EmplexerVideoList::get_media_url_str($media_url->category_id, $filter_name);
+		} else {
+			return EmplexerRootList::get_media_url_str($media_url->category_id, $filter_name);
+		}
+	}
+
 
 	private function get_right_media_url($type, $key)
 	{
 		
 		if ($type == "movie"){			
-			hd_print ("key =$key type=$type  movie");
+			// hd_print ("key =$key type=$type  movie");
 			return EmplexerMovieList::get_media_url_str($key, 'all', 'movie');
 		} else {
-			hd_print ("key =$key type=$type  show");
+			// hd_print ("key =$key type=$ddtype  show");
 			return EmplexerRootList::get_media_url_str($key); //all
 		}
 	}

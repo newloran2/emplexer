@@ -78,8 +78,8 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 				(
 					ViewItemParams::icon_path => EmplexerArchive::getInstance()->getFileFromArchive($caption, $url),
 					ViewItemParams::item_detailed_icon_path => EmplexerArchive::getInstance()->getFileFromArchive($caption, $url)
-					)
-				);
+				)
+			);
 
 		}
 		// hd_print(__METHOD__ .':'. print_r($items, true));
