@@ -14,7 +14,13 @@ class EmplexerMovieDescriptionScreen implements Screen  {
 
  	public static function get_media_url_str()
     {
-        return MediaURL::encode(array('screen_id' => self::ID));
+        return MediaURL::encode(
+            array
+            (
+                'screen_id' => self::ID,
+            )
+        );
+        
     }
 
     public function get_action_map(MediaURL $media_url, &$plugin_cookies){

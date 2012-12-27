@@ -78,7 +78,7 @@ public static function GET_VIDEOS_LIST_VIEW(){
             // large icons view
         array
         (
-            PluginRegularFolderView::async_icon_loading => false,
+            PluginRegularFolderView::async_icon_loading => true,
 
             PluginRegularFolderView::view_params => array
             (
@@ -112,15 +112,18 @@ public static function GET_VIDEOS_LIST_VIEW(){
 
             PluginRegularFolderView::not_loaded_view_item_params => array
             (
-                ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
+                ViewItemParams::icon_path => 'missing://',
                 ViewItemParams::item_detailed_icon_path => 'missing://',
+                ViewItemParams::item_paint_caption_within_icon => true,
+                ViewItemParams::item_caption_within_icon_color => 'white',
+                ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL
                 ),
             ),
 
     // large icons view without details
         array
         (
-            PluginRegularFolderView::async_icon_loading => false,
+            PluginRegularFolderView::async_icon_loading => true,
 
             PluginRegularFolderView::view_params => array
             (
@@ -162,7 +165,7 @@ public static function GET_VIDEOS_LIST_VIEW(){
             // normal icons view
 array
 (
-    PluginRegularFolderView::async_icon_loading => false,
+    PluginRegularFolderView::async_icon_loading => true,
 
     PluginRegularFolderView::view_params => array
     (
@@ -201,7 +204,7 @@ array
             // list view
 array
 (
-    PluginRegularFolderView::async_icon_loading => false,
+    PluginRegularFolderView::async_icon_loading => true,
 
     PluginRegularFolderView::view_params => array
     (
@@ -232,7 +235,7 @@ public static function GET_EPISODES_LIST_VIEW(){
         // normal icons view
         array
         (
-            PluginRegularFolderView::async_icon_loading => false,
+            PluginRegularFolderView::async_icon_loading => true,
 
             PluginRegularFolderView::view_params => array
             (
@@ -266,14 +269,18 @@ public static function GET_EPISODES_LIST_VIEW(){
 
             PluginRegularFolderView::not_loaded_view_item_params => array
             (
-                ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
+                ViewItemParams::icon_path => 'missing://',
                 ViewItemParams::item_detailed_icon_path => 'missing://',
+                ViewItemParams::item_paint_caption_within_icon => true,
+                ViewItemParams::item_caption_within_icon_color => 'white',
+                ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL
+
             ),
         ),
 
         array
         (
-            PluginRegularFolderView::async_icon_loading => false,
+            PluginRegularFolderView::async_icon_loading => true,
 
             PluginRegularFolderView::view_params => array
             (
@@ -314,8 +321,11 @@ public static function GET_EPISODES_LIST_VIEW(){
 
             PluginRegularFolderView::not_loaded_view_item_params => array
             (
-                ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
+                ViewItemParams::icon_path => 'missing://',
                 ViewItemParams::item_detailed_icon_path => 'missing://',
+                ViewItemParams::item_paint_caption_within_icon => true,
+                ViewItemParams::item_caption_within_icon_color => 'white',
+                ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL
             ),
         ),
 
@@ -324,7 +334,7 @@ public static function GET_EPISODES_LIST_VIEW(){
                 // list view
         array
         (
-            PluginRegularFolderView::async_icon_loading => false,
+            PluginRegularFolderView::async_icon_loading => true,
 
             PluginRegularFolderView::view_params => array
             (
@@ -345,7 +355,13 @@ public static function GET_EPISODES_LIST_VIEW(){
                 ViewItemParams::item_caption_font_size => FONT_SIZE_NORMAL
             ),
 
-            PluginRegularFolderView::not_loaded_view_item_params => array(),
+            PluginRegularFolderView::not_loaded_view_item_params => array(
+                ViewItemParams::icon_path => 'missing://',
+                ViewItemParams::item_detailed_icon_path => 'missing://',
+                ViewItemParams::item_paint_caption_within_icon => true,
+                ViewItemParams::item_caption_within_icon_color => 'white',
+                ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL
+            ),
         )
     );
     

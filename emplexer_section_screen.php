@@ -102,6 +102,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
 		hd_print(__METHOD__ . ":" . print_r($user_input, true));
+		
 
 		if ($user_input->control_id == 'pop_up') {
 			$media_url = MediaURL::decode($user_input->selected_media_url);
@@ -125,7 +126,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 						);
 				}
 			}
-
+			hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );		
 			$action = ActionFactory::show_popup_menu($pop_up_items);	
 			// hd_print(__METHOD__ . ': ' . print_r($action, true));
 			return $action;

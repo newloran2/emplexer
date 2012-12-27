@@ -75,8 +75,11 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 			$pop_up_items[] = array(
 				GuiMenuItemDef::caption=> $was_seen ? 'mark as unread' : 'mark as read' ,
+				// GuiMenuItemDef::caption=> 'mark as unread'  ,
 				GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'mark', $params)
 			);
+
+			hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );		
 			return ActionFactory::show_popup_menu($pop_up_items);
 		}
 

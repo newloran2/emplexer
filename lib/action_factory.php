@@ -29,9 +29,24 @@ class ActionFactory
     {
         return array
         (
-            GuiAction::handler_string_id => PLUGIN_VOD_PLAY_ACTION_ID,            
+            GuiAction::handler_string_id => PLUGIN_VOD_PLAY_ACTION_ID,
         );
     }
+
+    public static function vod_play_with_vod_info($vod_info)
+    {
+        $a= array
+        (
+            GuiAction::handler_string_id => PLUGIN_VOD_PLAY_ACTION_ID,
+            GuiAction::data => 
+            array (
+                PluginVodPlayActionData::vod_info =>$vod_info
+            )
+        );
+
+        return $a;
+    }
+
 
     public static function dvd_play($url)
     {
