@@ -28,15 +28,16 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
     	$media_url = MediaURL::decode($user_input->selected_media_url);
     	// hd_print(print_r($media_url, true));
     	HD::print_backtrace();
+    	$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);	
 
     	if ($user_input->control_id == 'enter'){
 
     		hd_print("-----Entrou porra ------- type =" . print_r($media_url, true));
-	    	if ($media_url->type == TYPE_DIRECTORY  || !$media_url->video_media_array){
-	    		hd_print("entrei no if media_url->type=" . $media_url->type);
+	    	if ($media_url->type == TYPE_DIRECTORY ){
+	    		hd_print("entrei no if de dirctory media_url->type=" . $media_url->type);
 		    	return ActionFactory::open_folder($user_input->selected_media_url);	
 	    	} else  if ($media_url->type == TYPE_VIDEO){
-	    		hd_print("----------entrei em else---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+	    		hd_print("----------entrei em else de video---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 	    		$pop_up_items = array();
 	    		foreach ($media_url->video_media_array as $m) {
 	    			$name = $m->width . 'x' . $m->height;
@@ -62,10 +63,15 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	    		if (count($pop_up_items) > 0){	    			
 					return ActionFactory::show_popup_menu($pop_up_items);
 	    		}
-	    	} else if ($media_url->type =  TYPE_TRACK){
-	    		hd_print("----------entrei em else---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+	    	} else if ($media_url->type ==  TYPE_TRACK){
+	    		hd_print("----------entrei em else de track---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 	    		return ActionFactory::launch_media_url($media_url->video_media_array->key, $media_url->video_media_array->title);
-	    	}   
+	    	}  else if ($media_url->type == TYPE_CONF){
+
+	    		hd_print("----------entrei em else de conf---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+
+	    		return $this->showPrefScreen($media_url->key, $plugin_cookies);
+	    	}
 
 	    } else if ($user_input->control_id == 'play') 	{
 	    	$url = $user_input->url;
@@ -110,7 +116,18 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
                 )
         	);
 			return $action;
-		} 
+		} else if ($user_input->control_id == 'savePrefs'){
+			$url = "$base_url/:/plugins/".$user_input->identifier . "/prefs/set?";
+			$notValidKeys =  array('identifier', 'handler_id', 'control_id', 'selected_control_id', 'parent_media_url', 'selected_media_url', 'sel_ndx');
+			foreach ($user_input as $key => $value) {
+				if (!in_array($key, $notValidKeys)){
+					$url .= "&key=$value";
+				}
+			}
+			$url =  str_replace('?&', '?', $url);
+			hd_print("url = $url");
+			HD::http_get_document($url);
+		}
 
     }
 
@@ -256,7 +273,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$params['title']   = $title;
 			$params['thumb']   = $thumb;
 			$params['key']     = $key;
-			// $params['summary'] = $summary;
+			// $params['summary'] = $cairo_ps_surface_dsc_comment(surface, comment)ary;
  
  			$items[] = array
 			(
@@ -292,6 +309,9 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$summary	     = (string)$c->attributes()->summary;
 			$url             = $base_url . $key;
 			$cache_file_name = "channel_$title.jpg";
+			$settings        = (string)$c->attributes()->settings;
+
+			$type = !$settings ? TYPE_DIRECTORY : TYPE_CONF;
 
 
 			hd_print("base_url=$base_url, title=$title, summary=$summary, url=$url, cache_file_name=$cache_file_name, key=$key");
@@ -303,7 +323,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 			$items[] = array
 			(
-				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_DIRECTORY),
+				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, $type),
 				PluginRegularFolderItem::caption          => $title,
 				PluginRegularFolderItem::view_item_params =>
 				array
@@ -329,12 +349,15 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 
 	public function showPrefScreen($key, &$plugin_cookies){
-		$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $key;
+		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+		$url = $base_url . $key;
 		$xml = HD::getAndParseXmlFromUrl($url);
+		$identifier = (string)$xml->attributes()->identifier;
+
 		$defs = array();
 
 
-
+		hd_print(__METHOD__ . ':' . print_r($xml, true));
 
 		foreach ($xml as $setting) {
 			$secture  = (bool)$setting->attributes()->secture;
@@ -354,9 +377,9 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		            null,
 		            $name            = $id, 
 		            $title           = $label,  
-		            $initial_value   = $default,
+		            $initial_value   = $value,
 		            $numeric         = false, 
-		            $password        = $secture, 
+		            $password        = ($option == 'hidden'), 
 		            $has_osk         = false, 
 		            $always_active   = 0, 
 		            $width           = 500
@@ -370,7 +393,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 					null,
 					$name 					=  $id,
 					$title 					=  $label,
-					$initial_value			=  $default,
+					$initial_value			=  $value == "true" ? 0 : 1  ,
 					$value_caption_pairs 	=  array('true', 'false'),
 					$width					=  500,
 					$need_confirm			=  false,
@@ -379,21 +402,34 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			}
 
 			if ($type == 'enum'){
-				$values = split('|', $values);
+
+				$values = explode('|', $values);
 				ControlFactory::add_combobox(
 					$defs,
 					null,
 					null,
 					$name 					=  $id,
 					$title 					=  $label,
-					$initial_value			=  $default,
+					$initial_value			=  $value,
 					$value_caption_pairs 	=  $values,
 					$width					=  500,
 					$need_confirm			=  false,
 					$need_apply				=  false
 				);	
-			}
+			}			
 		}
+		
+		$params['identifier'] = $identifier;
+		$savePrefsAction = UserInputHandlerRegistry::create_action($this, 'savePrefs', $params);
+
+		 ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
+            'btnSavePrefs', 'save', 200, $savePrefsAction);
+
+		$a =  ActionFactory::show_dialog('Prefs', $defs);
+
+		hd_print(__METHOD__ . ':' . print_r($a, true));
+
+		return $a;
 
 	}
 }

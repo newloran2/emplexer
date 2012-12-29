@@ -9,6 +9,8 @@ define('TYPE_DIRECTORY', 'directory');
 define('TYPE_VIDEO', 'video');
 define('TYPE_TRACK', 'track');
 define('TYPE_PHOTO', 'photo');
+define('TYPE_SEARCH', 'search');
+define('TYPE_CONF', 'conf');
 
 
 
