@@ -24,32 +24,34 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
-		hd_print(__METHOD__ . '   teste :' .  print_r($user_input, true));
+		// hd_print(__METHOD__ . '   teste :' .  print_r($user_input, true));
 		$media_url = MediaURL::decode($user_input->selected_media_url);
     	// hd_print(print_r($media_url, true));
-		HD::print_backtrace();
+		// HD::print_backtrace();
 		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);	
 
 		if ($user_input->control_id == 'enter'){
 
-			hd_print("-----Entrou porra ------- type =" . print_r($media_url, true));
+			// hd_print("-----Entrou porra ------- type =" . print_r($media_url, true));
 			if ($media_url->type == TYPE_DIRECTORY ){
-				hd_print("entrei no if de dirctory media_url->type=" . $media_url->type);
+				// hd_print("entrei no if de dirctory media_url->type=" . $media_url->type);
 				return ActionFactory::open_folder($user_input->selected_media_url);	
 			} else  if ($media_url->type == TYPE_VIDEO){
-				hd_print("----------entrei em else de video---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+				// hd_print("----------entrei em else de video---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 				$pop_up_items = array();
+				$index = 0;
 				foreach ($media_url->video_media_array as $m) {
 					$name = $m->width . 'x' . $m->height;
 					if ($m->bitrate){
 						$name .= '-' . $m->bitrate;
 					}
-					$params ['indirect'] = $m->indirect;
+					/*$params ['indirect'] = $m->indirect;
 					$params ['url'] = $m->container == 'mp4' ? str_replace('http://', 'http://mp4://', $m->url) : $m->url ;
 					$params ['title'] = $m->title;
 					$params ['summary'] =  $m->summary;
 					$params ['thumb'] = $m->thumb;
-					$params ['container'] = $m->container;
+					$params ['container'] = $m->container;*/
+					$params ['index'] = $index++;
 	    			//$params ['selected_media_url'] = $user_input->parent_media_url;
 
 					$pop_up_items[] = array(
@@ -58,58 +60,27 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 						);
 
 				}
-
 	    		// hd_print('show popup =' . print_r($pop_up_items, true));
 				if (count($pop_up_items) > 0){	    			
 					return ActionFactory::show_popup_menu($pop_up_items);
 				}
 			} else if ($media_url->type ==  TYPE_TRACK){
-				hd_print("----------entrei em else de track---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+				// hd_print("----------entrei em else de track---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 				return ActionFactory::launch_media_url($media_url->video_media_array->key, $media_url->video_media_array->title);
 			}  else if ($media_url->type == TYPE_CONF){
 
-				hd_print("----------entrei em else de conf---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+				// hd_print("----------entrei em else de conf---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 
 				return $this->showPrefScreen($media_url->key, $plugin_cookies);
 			} else if ($media_url->type == TYPE_SEARCH){
-				hd_print("----------entrei em else de search---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+				// hd_print("----------entrei em else de search---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 				return $this->showSearchScreen($media_url->key , 'teste', $plugin_cookies);
 			} 
 
 		}
 		else if ($user_input->control_id == 'play') 	{
-			$url = $user_input->url;
-			if ($user_input->indirect){
-				$doc = HD::http_get_document( str_replace('http://mp4://', 'http://', $user_input->url));
-				$xml = HD::parse_xml_document($doc);
-				$url = $xml->Video->Media->Part->attributes()->key;
-				$user_input->url = $user_input->container == 'mp4' ? str_replace('http://','http://mp4://', $url) : $url;
-			}
-
-			$params['selected_media_url'] = $user_input->selected_media_url;
-			$series_array = array();
-			$series_array[] = array(
-				PluginVodSeriesInfo::name => $user_input->title,
-				PluginVodSeriesInfo::playback_url => $user_input->url,
-				PluginVodSeriesInfo::playback_url_is_stream_url => true,
-				);
-
-			$toBeReturned = array(
-				PluginVodInfo::id => 1,
-				PluginVodInfo::series => $series_array,
-				PluginVodInfo::name =>  $user_input->title,
-				PluginVodInfo::description => $user_input->summary,
-				PluginVodInfo::poster_url => $user_input->thumb,
-				PluginVodInfo::initial_series_ndx => 0,
-				PluginVodInfo::buffering_ms => 3000,
-				// PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
-				PluginVodInfo::advert_mode => false,
-				// PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
-				PluginVodInfo::actions => array(
-					GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
-					)
-				);
-			return ActionFactory::vod_play_with_vod_info($toBeReturned);
+			$plugin_cookies->channel_selected_index = $user_input->index;
+			return ActionFactory::vod_play();
 		} else if ($user_input->control_id == 'stop') {
 
 			$media_url =  MediaURL::decode($user_input->selected_media_url);
@@ -129,7 +100,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 				}
 			}
 			$url =  str_replace('?&', '?', $url);
-			hd_print("url = $url");
+			// hd_print("savePref url = $url");
 			HD::http_get_document($url);
 
 		} else if ( $user_input->control_id ==  'search') {
@@ -171,12 +142,12 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function get_all_folder_items(MediaURL $media_url, &$plugin_cookies)
 	{
-		hd_print(__METHOD__ . ':' . print_r( $media_url, true  ));
+		// hd_print(__METHOD__ . ':' . print_r( $media_url, true  ));
 		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);	
-		HD::print_backtrace();
+		// HD::print_backtrace();
 		// hd_print("\n\n\n\nbase_url=$base_url\n\n\n\n");	
 		$doc_url =  HD::is_url($media_url->key) ? $media_url->key : $base_url . (HD::starts_with($media_url->key , '/' ) ? $media_url->key : '/'. $media_url->key);
-		hd_print("key = " . $media_url->key . ", base_url = $base_url");
+		// hd_print("key = " . $media_url->key . ", base_url = $base_url");
 		//TODO arrumar essa gambiarra. o script precisa saber se começa com // ou não.
 		// $doc_url = str_replace('32400//', '32400/', $doc_url);
 		$doc      = HD::http_get_document( $doc_url );	
@@ -196,11 +167,11 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$summary  = "" ; //(string)$c->attributes()->summary;
 			$key      = (string)$c->attributes()->key;
 			$videoMediaArray =  array();
-			hd_print("key = $key , base_url = $base_url thumb = $thumb");
+			// hd_print("key = $key , base_url = $base_url thumb = $thumb");
 
 
 			foreach ($c->Media as $m) {
-				hd_print('entrou em media');
+				
 				$container = (string)$m->attributes()->container;
 				$height = (string)$m->attributes()->height;
 				$width = (string)$m->attributes()->width;
@@ -217,7 +188,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 					//dune não tem suporte para flv
 					//$base_url . $thumb;
 					$thumb = strpos($thumb, $base_url) === false ? $base_url . $thumb : $thumb;
-					hd_print("thumb = $thumb");
+					
 					$videoMediaArray[] = array
 					(
 						'container' => $container,
@@ -284,7 +255,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$params['title']   = $title;
 			$params['thumb']   = $thumb;
 			$params['key']     = $key;
-			// $params['summary'] = $cairo_ps_surface_dsc_comment(surface, comment)ary;
+			
 
 			$items[] = array
 			(
@@ -303,11 +274,8 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		
 		foreach ($xml->Directory as $c) {
 			$thumb           = (string)$c->attributes()->thumb;
-			// $thumb 			 = $base_url . '/photo/:/transcode?width=340&height=480&url=' . urlencode($base_url . (string)$c->attributes()->thumb);
-			//caso no xml corrente não tenha contenttype significa que é raiz e ai o key é somente o nome do channel EX: youtube.
-			//dessa forma é preciso concatenar o key corrente com o anterior.
 			hd_print('media_url->key =' . $media_url->key . ' c->attributes()->key = ' . (string)$c->attributes()->key );
-			// if (!strpos((string)$c->attributes()->key , $media_url->key)){
+			
 			if (!HD::starts_with((string)$c->attributes()->key, '/')){
 				hd_print((string)$c->attributes()->key . ' não começa com /');
 				$key         = $media_url->key   . '/' . (string)$c->attributes()->key;	
@@ -329,12 +297,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 
 
-			hd_print("base_url=$base_url, title=$title, summary=$summary, url=$url, cache_file_name=$cache_file_name, key=$key");
-
-			if ($thumb){
-				//cacheia o thum do channel
-				// EmplexerArchive::getInstance()->setFileToArchive($cache_file_name, $base_url . $thumb );	
-			}
+			// hd_print("base_url=$base_url, title=$title, summary=$summary, url=$url, cache_file_name=$cache_file_name, key=$key");
 
 			$items[] = array
 			(
@@ -343,8 +306,8 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 				PluginRegularFolderItem::view_item_params =>
 				array
 				(
-					ViewItemParams::icon_path               => $base_url . $thumb, // EmplexerArchive::getInstance()->getFileFromArchive($cache_file_name, $url),
-					ViewItemParams::item_detailed_icon_path =>$base_url . $thumb // EmplexerArchive::getInstance()->getFileFromArchive($cache_file_name, $url)
+					ViewItemParams::icon_path               => $base_url . $thumb,
+					ViewItemParams::item_detailed_icon_path =>$base_url . $thumb 
 					)
 				);
 		}
@@ -372,7 +335,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		$defs = array();
 
 
-		hd_print(__METHOD__ . ':' . print_r($xml, true));
+		// hd_print(__METHOD__ . ':' . print_r($xml, true));
 
 		foreach ($xml as $setting) {
 			$secture  = (bool)$setting->attributes()->secture;
@@ -442,7 +405,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 		$a =  ActionFactory::show_dialog('Prefs', $defs);
 
-		hd_print(__METHOD__ . ':' . print_r($a, true));
+		// hd_print(__METHOD__ . ':' . print_r($a, true));
 
 		return $a;
 	}
@@ -476,9 +439,55 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 		$a = ActionFactory::show_dialog('Search' ,$defs);
 
-		hd_print("search = " . print_r($a, true));
+		// hd_print("search = " . print_r($a, true));
 		return $a;
 	}
+
+	public static function get_vod_info($toPlay){
+
+		// hd_print(__METHOD__ . ':' . print_r($toPlay, true));
+		$url = $toPlay->url;
+		if ($toPlay->indirect){
+			$doc = HD::http_get_document( str_replace('http://mp4://', 'http://', $toPlay->url));
+			$xml = HD::parse_xml_document($doc);
+			$url = $xml->Video->Media->Part->attributes()->key;
+			$toPlay->url = $toPlay->container == 'mp4' ? str_replace('http://','http://mp4://', $url) : $url;
+		} else {
+			$url = $toPlay->container == 'mp4' ? str_replace('http://','http://mp4://', $url) : $url;
+		}
+
+
+
+
+		// $params['selected_media_url'] = $toPlay->selected_media_url;
+		$series_array = array();
+		$series_array[] = array(
+			PluginVodSeriesInfo::name => $toPlay->title,
+			PluginVodSeriesInfo::playback_url => $toPlay->url,
+			PluginVodSeriesInfo::playback_url_is_stream_url => true,
+			);
+
+		$toBeReturned = array(
+			PluginVodInfo::id => 1,
+			PluginVodInfo::series => $series_array,
+			PluginVodInfo::name =>  $toPlay->title,
+			PluginVodInfo::description => $toPlay->summary,
+			PluginVodInfo::poster_url => $toPlay->thumb,
+			PluginVodInfo::initial_series_ndx => 0,
+			PluginVodInfo::buffering_ms => 3000,
+				// PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
+			PluginVodInfo::advert_mode => false,
+				// PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
+			/*PluginVodInfo::actions => array(
+				GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
+				)*/
+			);	
+
+		hd_print(__METHOD__ . ':' . print_r($toBeReturned, true));
+		return $toBeReturned;
+	}
+
+
 }
 
 

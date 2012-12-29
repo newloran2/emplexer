@@ -68,9 +68,18 @@ class Emplexer extends DefaultDunePlugin
 
 	public function get_vod_info($media_url_str, &$plugin_cookies){
 		hd_print(__METHOD__ . ': ' . print_r($media_url_str, true) );
+		hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true) );
 		// hd_print(print_r(debug_backtrace(), true));
-		// HD::print_backtrace();
+		HD::print_backtrace();
+
+
 		$media_url = MediaURL::decode($media_url_str);
+
+
+		if ($media_url->screen_id == 'emplexer_base_channel'){
+			$toPlay = $media_url->video_media_array[$plugin_cookies->channel_selected_index];
+			return EmplexerBaseChannel::get_vod_info($toPlay);
+		}
 
 		$handler = $media_url->back_screen_id == EmplexerVideoList::ID ? EmplexerVideoList::ID : EmplexerMovieList::ID;
 
