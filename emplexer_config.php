@@ -5,6 +5,12 @@ define('NFS_CONNECTION_TYPE' , 'NFS');
 define('SMB_CONNECTION_TYPE' , 'SMB');
 define('DEFAULT_TIME_TO_MARK', 40);
 
+define('TYPE_DIRECTORY', 'directory');
+define('TYPE_VIDEO', 'video');
+define('TYPE_TRACK', 'track');
+define('TYPE_PHOTO', 'photo');
+
+
 
 
 class EmplexerConfig
@@ -15,6 +21,7 @@ class EmplexerConfig
     const USE_CACHE                      = true;
     const CREATE_LOG_FOLDER              = true;
     const CREATE_CACHE_FOLDER_ON_MAIN_HD = false;
+    
 
     //static $currentPlexBaseUR='';
 
@@ -42,6 +49,43 @@ public static function getPlexBaseUrl(&$plugin_cookies, $handler){
     // }
 }
 
+
+
+public static function getAllAvailableChannels(&$plugin_cookies, $handler)
+{    
+    $url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $handler) ;
+    $xml = HD::getAndParseXmlFromUrl($url);
+
+    hd_print(print_r($xml, true));
+
+    // $validChannels = array('video', 'music', 'photos');
+    $validChannels = EmplexerConfig::getValidChannelsNames();
+    $items = array();
+    foreach ($xml as $d) {
+        $key = (string)$d->attributes()->key;
+        if (in_array($key, $validChannels)){
+            $channelName = ucwords("$key Channels");
+            $items[] = array
+            (
+                PluginRegularFolderItem::media_url =>  EmplexerBaseChannel::get_media_url_str($key),
+                PluginRegularFolderItem::caption => $channelName,
+                PluginRegularFolderItem::view_item_params =>
+                array
+                (
+                    ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
+                )
+            );
+        }
+    }
+
+    hd_print(__METHOD__ . ':' . print_r($items, true));
+    return $items;
+}
+
+
+public static function getValidChannelsNames(){
+    return  array('video', 'music', 'photos');
+}
 
 public static function GET_SECTIONS_LIST_VIEW()
 {

@@ -10,10 +10,9 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	const ID = "emplexer_section_secreen"; 	
 	private $servers;
 
-	function __construct($servers)
+	function __construct()
 	{
 		parent::__construct(self::ID, $this->get_folder_views());
-		$this->servers = $servers;
 	}
 
 	public function get_handler_id()
@@ -30,7 +29,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 		$pop_up_action = UserInputHandlerRegistry::create_action($this, 'pop_up', null,'Filtos');
 
 
-		hd_print(__METHOD__ . ':' . print_r($pop_up_action, true));
+		// hd_print(__METHOD__ . ':' . print_r($pop_up_action, true));
 		$enter_action = ActionFactory::open_folder();
 
 	
@@ -45,7 +44,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	public function get_all_folder_items(MediaURL $media_url, &$plugin_cookies)
 	{
 		
-		hd_print('get_all_folder_items em ' .  self::ID);	
+		// hd_print('get_all_folder_items em ' .  self::ID);	
 
 		$items = array();
 		// foreach ($this->servers as $server ) {
@@ -78,17 +77,10 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 			}
 
-			$items[] = array
-			(
-				 // EmplexerRootList::get_media_url_str((string)$c->attributes()->key, null), 
-				PluginRegularFolderItem::media_url =>  EmplexerBaseChannel::get_media_url_str('video'),
-				PluginRegularFolderItem::caption => 'Video Channels',
-				PluginRegularFolderItem::view_item_params =>
-				array
-				(
-					ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
-				)
-			);
+			$channels = EmplexerConfig::getAllAvailableChannels($plugin_cookies, $this);
+			if (count($channels)>0){
+				$items =  array_merge($items, $channels);
+			}
 
 
 
@@ -101,35 +93,40 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
-		hd_print(__METHOD__ . ":" . print_r($user_input, true));
+		// hd_print(__METHOD__ . ":" . print_r($user_input, true));
 		
 
 		if ($user_input->control_id == 'pop_up') {
 			$media_url = MediaURL::decode($user_input->selected_media_url);
 
 			$key = (string) $media_url->category_id;
+			// hd_print("key = $key");
 
- 			$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key;
- 			/*$popUp = new EmplexerPopUp(4);
- 			$action = $popUp->showPopUpMenu($url);*/
+			if ($key){
+	 			$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key;
+	 			/*$popUp = new EmplexerPopUp(4);
+	 			$action = $popUp->showPopUpMenu($url);*/
 
-			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
-			$pop_up_items =  array();
-			$xml = simplexml_load_string($doc);
-			foreach ($xml->Directory as $c){
-				$key = (string)$c->attributes()->key;
-				$prompt = (string)$c->attributes()->prompt;
-				if ($key != 'all' &&  $key != 'folder' && !$prompt ){
-					$pop_up_items[] = array(
-						GuiMenuItemDef::caption=> (string)$c->attributes()->title,
-						GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url_for_pop_up($media_url, $key), $key)
-						);
+				$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
+				$pop_up_items =  array();
+				$xml = simplexml_load_string($doc);
+				foreach ($xml->Directory as $c){
+					$key = (string)$c->attributes()->key;
+					$prompt = (string)$c->attributes()->prompt;
+					if ($key != 'all' &&  $key != 'folder' && !$prompt ){
+						$pop_up_items[] = array(
+							GuiMenuItemDef::caption=> (string)$c->attributes()->title,
+							GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url_for_pop_up($media_url, $key), $key)
+							);
+					}
 				}
+				// hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true));		
+				$action = ActionFactory::show_popup_menu($pop_up_items);	
+				// hd_print(__METHOD__ . ': ' . print_r($action, true));
+				return $action;
+			} else {
+				return null;
 			}
-			hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );		
-			$action = ActionFactory::show_popup_menu($pop_up_items);	
-			// hd_print(__METHOD__ . ': ' . print_r($action, true));
-			return $action;
 			
 		}	
 	}

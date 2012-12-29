@@ -24,17 +24,19 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}
 
     public function handle_user_input(&$user_input, &$plugin_cookies){
-    	hd_print(__METHOD__ . '   teste :' .  print_r($user_input, true));
+    	// hd_print(__METHOD__ . '   teste :' .  print_r($user_input, true));
     	$media_url = MediaURL::decode($user_input->selected_media_url);
     	// hd_print(print_r($media_url, true));
     	HD::print_backtrace();
 
     	if ($user_input->control_id == 'enter'){
 
-    		hd_print('-----Entrou porra -------');
-	    	if (!$media_url->is_video){
+    		hd_print("-----Entrou porra ------- type =" . print_r($media_url, true));
+	    	if ($media_url->type == TYPE_DIRECTORY  || !$media_url->video_media_array){
+	    		hd_print("entrei no if media_url->type=" . $media_url->type);
 		    	return ActionFactory::open_folder($user_input->selected_media_url);	
-	    	} else {
+	    	} else  if ($media_url->type == TYPE_VIDEO){
+	    		hd_print("----------entrei em else---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 	    		$pop_up_items = array();
 	    		foreach ($media_url->video_media_array as $m) {
 	    			$name = $m->width . 'x' . $m->height;
@@ -44,10 +46,10 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	    			$params ['indirect'] = $m->indirect;
 	    			$params ['url'] = $m->container == 'mp4' ? str_replace('http://', 'http://mp4://', $m->url) : $m->url ;
 	    			$params ['title'] = $m->title;
-	    			$params ['summary'] = $m->summary;
+	    			$params ['summary'] =  $m->summary;
 	    			$params ['thumb'] = $m->thumb;
 	    			$params ['container'] = $m->container;
-	    			$params ['selected_media_url'] = $user_input->parent_media_url;
+	    			//$params ['selected_media_url'] = $user_input->parent_media_url;
 	    			
 	    			$pop_up_items[] = array(
 						GuiMenuItemDef::caption=> $name ,
@@ -56,12 +58,15 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	 
 	    		}
 
-	    		
-	    		if (count($pop_up_items) > 0){
-	    			hd_print('show popup =' . print_r($pop_up_items, true));
+	    		// hd_print('show popup =' . print_r($pop_up_items, true));
+	    		if (count($pop_up_items) > 0){	    			
 					return ActionFactory::show_popup_menu($pop_up_items);
 	    		}
+	    	} else if ($media_url->type =  TYPE_TRACK){
+	    		hd_print("----------entrei em else---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+	    		return ActionFactory::launch_media_url($media_url->video_media_array->key, $media_url->video_media_array->title);
 	    	}   
+
 	    } else if ($user_input->control_id == 'play') 	{
 	    	$url = $user_input->url;
 	    	if ($user_input->indirect){
@@ -110,7 +115,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
     }
 
 
-	public static function get_media_url_str($key, $is_video=false,$videoMediaArray=null)
+	public static function get_media_url_str($key, $type=TYPE_DIRECTORY,$videoMediaArray=null)
 	{
 
 		return MediaURL::encode(
@@ -118,7 +123,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			(
 				'screen_id'         => self::ID,
 				'key'               => $key,
-				'is_video'          => $is_video,
+				'type'          	=> $type,
 				'video_media_array' => $videoMediaArray
 			)
 		);
@@ -138,13 +143,14 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function get_all_folder_items(MediaURL $media_url, &$plugin_cookies)
 	{
-		// hd_print(__METHOD__ . ':' . print_r( $media_url, true  ));
+		hd_print(__METHOD__ . ':' . print_r( $media_url, true  ));
 		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);	
 		HD::print_backtrace();
 		// hd_print("\n\n\n\nbase_url=$base_url\n\n\n\n");	
-		$doc_url =  $base_url . '/' . $media_url->key;
+		$doc_url =  HD::is_url($media_url->key) ? $media_url->key : $base_url . (HD::starts_with($media_url->key , '/' ) ? $media_url->key : '/'. $media_url->key);
+		hd_print("key = " . $media_url->key . ", base_url = $base_url");
 		//TODO arrumar essa gambiarra. o script precisa saber se começa com // ou não.
-		$doc_url = str_replace('32400//', '32400/', $doc_url);
+		// $doc_url = str_replace('32400//', '32400/', $doc_url);
 		$doc      = HD::http_get_document( $doc_url );	
 		$xml      = HD::parse_xml_document($doc);
 		
@@ -159,11 +165,14 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			// $thumb = $base_url . '/photo/:/transcode?width=340&height=480&url=' . urlencode($base_url . (string)$c->attributes()->thumb);
 			// $key   = (string)$c->attributes()->key;	
 			$title    = (string)$c->attributes()->title;
-			$summary  = (string)$c->attributes()->summary;
+			$summary  = "" ; //(string)$c->attributes()->summary;
 			$key      = (string)$c->attributes()->key;
 			$videoMediaArray =  array();
+			hd_print("key = $key , base_url = $base_url thumb = $thumb");
 		
+
 			foreach ($c->Media as $m) {
+				hd_print('entrou em media');
 				$container = (string)$m->attributes()->container;
 				$height = (string)$m->attributes()->height;
 				$width = (string)$m->attributes()->width;
@@ -175,15 +184,12 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 				$indirect = (string)$m->attributes()->indirect;
 				$key_url = $base_url . (string)$m->Part->attributes()->key;
 				$key = $key_url;
-				
-/*				if ($container == "mp4" ){
-					//caso o container seja mp4 uso o sintaxe otimizada para streaming.
-					$key = str_replace('http://', 'http://mp4://', $key);
-				}
-*/
+
 				if ($container != "flv"){
 					//dune não tem suporte para flv
-					//
+					//$base_url . $thumb;
+					$thumb = strpos($thumb, $base_url) === false ? $base_url . $thumb : $thumb;
+					hd_print("thumb = $thumb");
 					$videoMediaArray[] = array
 					(
 						'container' => $container,
@@ -203,24 +209,67 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 				}
 			}
 
+			if (count($videoMediaArray) <=0){
+				$videoMediaArray[] = array
+					(
+						'container' => strpos($key, ".mp4") ?  true : false,
+						'height' => '?',
+						'width' => '?',
+						'audioCodec' => '?' ,
+						'videoCodec' => '?',
+						'videoResolution' => '?',
+						'bitrate'=>'?',
+						'indirect' =>  false,
+						'summary' => $summary,
+						'title' => $title,
+						'thumb' => $thumb,
+
+						'url' => $key
+					);		
+			}
 
 
 			$items[] = array
 			(
-				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, true, $videoMediaArray) ,
+				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_VIDEO, $videoMediaArray) ,
 				PluginRegularFolderItem::caption          => "$title",
 				PluginRegularFolderItem::view_item_params =>
 				array
 				(
-					ViewItemParams::icon_path               => $base_url . $thumb, // EmplexerArchive::getInstance()->getFileFromArchive($cache_file_name, $url),
-					ViewItemParams::item_detailed_icon_path =>$base_url . $thumb // EmplexerArchive::getInstance()->getFileFromArchive($cache_file_name, $url)
+					ViewItemParams::icon_path               => $thumb, // EmplexerArchive::getInstance()->getFileFromArchive($cache_file_name, $url),
+					ViewItemParams::item_detailed_icon_path => $thumb // EmplexerArchive::getInstance()->getFileFromArchive($cache_file_name, $url)
+				)
+			);	
+		}
+
+
+		foreach ($xml->Track as $t) {	
+
+			$title   = (string)$t->attributes()->title;
+			$title   = $title ? $title : 	(string)$t->attributes()->track;
+			$thumb   = (string)$t->attributes()->thumb;
+			$thumb   = HD ::is_url($thumb) ? $thumb : $base_url . $thumb; 
+			$key     =  $t->Media ? $base_url . (string)$t->Media->Part->attributes()->key : (string)$t->attributes()->key ;
+			$summary = (string)$t->attributes()->summary;
+			
+			$params = array();
+			$params['title']   = $title;
+			$params['thumb']   = $thumb;
+			$params['key']     = $key;
+			// $params['summary'] = $summary;
+ 
+ 			$items[] = array
+			(
+				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_TRACK, $params),
+				PluginRegularFolderItem::caption          => "$title",
+				PluginRegularFolderItem::view_item_params =>
+				array
+				(
+					ViewItemParams::icon_path               => $thumb, 
+					ViewItemParams::item_detailed_icon_path => $thumb 
 				)
 			);	
 
-			
-
-
-			
 		}
 
 		
@@ -229,9 +278,13 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			// $thumb 			 = $base_url . '/photo/:/transcode?width=340&height=480&url=' . urlencode($base_url . (string)$c->attributes()->thumb);
 			//caso no xml corrente não tenha contenttype significa que é raiz e ai o key é somente o nome do channel EX: youtube.
 			//dessa forma é preciso concatenar o key corrente com o anterior.
-			if (!(string)$xml->attributes()->contenttype){
+			hd_print('media_url->key =' . $media_url->key . ' c->attributes()->key = ' . (string)$c->attributes()->key );
+			// if (!strpos((string)$c->attributes()->key , $media_url->key)){
+			if (!HD::starts_with((string)$c->attributes()->key, '/')){
+				hd_print((string)$c->attributes()->key . ' não começa com /');
 				$key         = $media_url->key   . '/' . (string)$c->attributes()->key;	
 			} else {
+				hd_print((string)$c->attributes()->key . ' começa com /');
 				$key         = (string)$c->attributes()->key;	
 			}
 			
@@ -241,7 +294,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$cache_file_name = "channel_$title.jpg";
 
 
-			// hd_print("base_url=$base_url, title=$title, summary=$summary, url=$url, cache_file_name=$cache_file_name, key=$key");
+			hd_print("base_url=$base_url, title=$title, summary=$summary, url=$url, cache_file_name=$cache_file_name, key=$key");
 
 			if ($thumb){
 				//cacheia o thum do channel
@@ -250,7 +303,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 			$items[] = array
 			(
-				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, false),
+				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_DIRECTORY),
 				PluginRegularFolderItem::caption          => $title,
 				PluginRegularFolderItem::view_item_params =>
 				array
@@ -272,6 +325,76 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 		// hd_print(__METHOD__ . ':' . print_r($a, true) );
 		return $a;
+	}
+
+
+	public function showPrefScreen($key, &$plugin_cookies){
+		$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $key;
+		$xml = HD::getAndParseXmlFromUrl($url);
+		$defs = array();
+
+
+
+
+		foreach ($xml as $setting) {
+			$secture  = (bool)$setting->attributes()->secture;
+			$default  = (string)$setting->attributes()->default;
+			$value  = (string)$setting->attributes()->value;
+			$label  = (string)$setting->attributes()->label;
+			$values  = (string)$setting->attributes()->values;
+			$type  = (string)$setting->attributes()->type;
+			$option  = (string)$setting->attributes()->option;
+			$id  = (string)$setting->attributes()->id;
+
+
+			if ($type == "text"){
+				ControlFactory::add_text_field(
+		            $defs, 
+		            null, 
+		            null,
+		            $name            = $id, 
+		            $title           = $label,  
+		            $initial_value   = $default,
+		            $numeric         = false, 
+		            $password        = $secture, 
+		            $has_osk         = false, 
+		            $always_active   = 0, 
+		            $width           = 500
+		        );
+			}
+
+			if ($type == "bool"){
+				ControlFactory::add_combobox(
+					$defs,
+					null,
+					null,
+					$name 					=  $id,
+					$title 					=  $label,
+					$initial_value			=  $default,
+					$value_caption_pairs 	=  array('true', 'false'),
+					$width					=  500,
+					$need_confirm			=  false,
+					$need_apply				=  false
+				);
+			}
+
+			if ($type == 'enum'){
+				$values = split('|', $values);
+				ControlFactory::add_combobox(
+					$defs,
+					null,
+					null,
+					$name 					=  $id,
+					$title 					=  $label,
+					$initial_value			=  $default,
+					$value_caption_pairs 	=  $values,
+					$width					=  500,
+					$need_confirm			=  false,
+					$need_apply				=  false
+				);	
+			}
+		}
+
 	}
 }
 

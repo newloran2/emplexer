@@ -9,7 +9,15 @@ class HD
             array_diff_key($a, array_keys(array_keys($a)));
     }
 
-    
+    public static function is_url($url){
+        $urlregex = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+        if (eregi($urlregex, $url)) 
+            return true;
+        else
+            return false;
+
+    }
+
 
     public static function has_attribute($obj, $n)
     {
@@ -142,6 +150,11 @@ class HD
 
       public static function http_get_document($url, $opts = null)
     {
+
+        $url = str_replace('//', '/', $url);
+        $url = str_replace('http:/', 'http://', $url);
+        $url = str_replace('https:/', 'https://', $url);
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    20);
@@ -180,6 +193,7 @@ class HD
         {
             $err_msg = "HTTP request failed ($http_code)";
             hd_print($err_msg);
+            HD::print_backtrace();
             //throw new Exception($err_msg);
             throw new DuneException(
                 'Error: "'.$err_msg.'"',
@@ -237,7 +251,12 @@ class HD
         return $xml;
     }
 
-    
+    public static function getAndParseXmlFromUrl($url)
+    {
+        $doc = HD::http_get_document($url);
+        $xml = HD::parse_xml_document($doc);
+        return $xml;
+    }
 
     public static function make_json_rpc_request($op_name, $params)
     {
@@ -362,6 +381,10 @@ class HD
         socket_close($sock);
         return $servers;
     }
+
+
+
+    
 }
 
 
