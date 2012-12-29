@@ -339,8 +339,6 @@ class HD
 
 
      public static function getPlexServers($timeout=2){
-
-        phpinfo();
         
         $broadcast_string="M-SEARCH * HTTP/1.1\r\n\r\n";
         $port = 32414;
