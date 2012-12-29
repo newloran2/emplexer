@@ -1,9 +1,10 @@
 <?php 
 
 
-require_once 'lib/screen.php';
+// require_once 'lib/screen.php';
+require_once 'lib/vod/vod_movie_screen.php';
 
-class EmplexerMovieDescriptionScreen implements Screen  {
+class EmplexerMovieDescriptionScreen extends VodMovieScreen  {
 
     const ID='emplexer_movie_desction_screen';
 
@@ -77,6 +78,13 @@ class EmplexerMovieDescriptionScreen implements Screen  {
 
 
 	}
+
+    public function handle_user_input(&$user_input, &$plugin_cookies){
+        hd_print(__METHOD__);
+        hd_print(print_r($user_input, true));
+        hd_print(print_r($plugin_cookies, true));
+
+    }
 }
 
 

@@ -453,7 +453,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$url = $xml->Video->Media->Part->attributes()->key;
 			$toPlay->url = $toPlay->container == 'mp4' ? str_replace('http://','http://mp4://', $url) : $url;
 		} else {
-			$url = $toPlay->container == 'mp4' ? str_replace('http://','http://mp4://', $url) : $url;
+			$toPlay->url = $toPlay->container == 'mp4' ? str_replace('http://','http://mp4://', $url) : $url;
 		}
 
 
