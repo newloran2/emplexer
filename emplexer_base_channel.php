@@ -17,27 +17,19 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		
 	}
 
-
-
 	public function get_handler_id(){
 		return self::ID;
 	}
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
-		// hd_print(__METHOD__ . '   teste :' .  print_r($user_input, true));
 		$media_url = MediaURL::decode($user_input->selected_media_url);
-    	// hd_print(print_r($media_url, true));
-		// HD::print_backtrace();
 		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);	
 
 		if ($user_input->control_id == 'enter'){
 
-			// hd_print("-----Entrou porra ------- type =" . print_r($media_url, true));
 			if ($media_url->type == TYPE_DIRECTORY ){
-				// hd_print("entrei no if de dirctory media_url->type=" . $media_url->type);
 				return ActionFactory::open_folder($user_input->selected_media_url);	
 			} else  if ($media_url->type == TYPE_VIDEO){
-				// hd_print("----------entrei em else de video---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
 				$pop_up_items = array();
 				$index = 0;
 				foreach ($media_url->video_media_array as $m) {
@@ -45,14 +37,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 					if ($m->bitrate){
 						$name .= '-' . $m->bitrate;
 					}
-					/*$params ['indirect'] = $m->indirect;
-					$params ['url'] = $m->container == 'mp4' ? str_replace('http://', 'http://mp4://', $m->url) : $m->url ;
-					$params ['title'] = $m->title;
-					$params ['summary'] =  $m->summary;
-					$params ['thumb'] = $m->thumb;
-					$params ['container'] = $m->container;*/
 					$params ['index'] = $index++;
-	    			//$params ['selected_media_url'] = $user_input->parent_media_url;
 
 					$pop_up_items[] = array(
 						GuiMenuItemDef::caption=> $name ,
@@ -60,21 +45,20 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 						);
 
 				}
-	    		// hd_print('show popup =' . print_r($pop_up_items, true));
+	    		
 				if (count($pop_up_items) > 0){	    			
 					return ActionFactory::show_popup_menu($pop_up_items);
 				}
 			} else if ($media_url->type ==  TYPE_TRACK){
-				// hd_print("----------entrei em else de track---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
+				
 				return ActionFactory::launch_media_url($media_url->video_media_array->key, $media_url->video_media_array->title);
 			}  else if ($media_url->type == TYPE_CONF){
 
-				// hd_print("----------entrei em else de conf---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
-
 				return $this->showPrefScreen($media_url->key, $plugin_cookies);
+
 			} else if ($media_url->type == TYPE_SEARCH){
-				// hd_print("----------entrei em else de search---------- type =" .  $media_url->type  . ' video_media_array = ' . print_r($media_url->video_media_array, true));
-				return $this->showSearchScreen($media_url->key , 'teste', $plugin_cookies);
+
+				return $this->showSearchScreen($media_url->key , 'Search', $plugin_cookies);
 			} 
 
 		}
@@ -96,11 +80,11 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$notValidKeys =  array('identifier', 'handler_id', 'control_id', 'selected_control_id', 'parent_media_url', 'selected_media_url', 'sel_ndx');
 			foreach ($user_input as $key => $value) {
 				if (!in_array($key, $notValidKeys)){
-					$url .= "&". $key . '=' . $value;
+					$url .= "&". $key . '=' . urlencode($value);
 				}
 			}
 			$url =  str_replace('?&', '?', $url);
-			// hd_print("savePref url = $url");
+			hd_print("savePref url = $url");
 			HD::http_get_document($url);
 
 		} else if ( $user_input->control_id ==  'search') {
@@ -150,8 +134,10 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		// hd_print("key = " . $media_url->key . ", base_url = $base_url");
 		//TODO arrumar essa gambiarra. o script precisa saber se começa com // ou não.
 		// $doc_url = str_replace('32400//', '32400/', $doc_url);
-		$doc      = HD::http_get_document( $doc_url );	
-		$xml      = HD::parse_xml_document($doc);
+		// $doc      = HD::http_get_document( $doc_url );	
+		// $xml      = HD::parse_xml_document($doc);
+
+		$xml      = HD::getAndParseXmlFromUrl($doc_url);
 
 		$items    = array();
 
@@ -274,13 +260,13 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		
 		foreach ($xml->Directory as $c) {
 			$thumb           = (string)$c->attributes()->thumb;
-			hd_print('media_url->key =' . $media_url->key . ' c->attributes()->key = ' . (string)$c->attributes()->key );
+			// hd_print('media_url->key =' . $media_url->key . ' c->attributes()->key = ' . (string)$c->attributes()->key );
 			
 			if (!HD::starts_with((string)$c->attributes()->key, '/')){
-				hd_print((string)$c->attributes()->key . ' não começa com /');
+				// hd_print((string)$c->attributes()->key . ' não começa com /');
 				$key         = $media_url->key   . '/' . (string)$c->attributes()->key;	
 			} else {
-				hd_print((string)$c->attributes()->key . ' começa com /');
+				// hd_print((string)$c->attributes()->key . ' começa com /');
 				$key         = (string)$c->attributes()->key;	
 			}
 			
@@ -443,13 +429,21 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		return $a;
 	}
 
+
+
+
+
+
+
+
 	public static function get_vod_info($toPlay){
 
 		// hd_print(__METHOD__ . ':' . print_r($toPlay, true));
 		$url = $toPlay->url;
 		if ($toPlay->indirect){
-			$doc = HD::http_get_document( str_replace('http://mp4://', 'http://', $toPlay->url));
-			$xml = HD::parse_xml_document($doc);
+			$xml = HD::getAndParseXmlFromUrl(str_replace('http://mp4://', 'http://', $toPlay->url));
+			// $doc = HD::http_get_document( );
+			// $xml = HD::parse_xml_document($doc);
 			$url = $xml->Video->Media->Part->attributes()->key;
 			$toPlay->url = $toPlay->container == 'mp4' ? str_replace('http://','http://mp4://', $url) : $url;
 		} else {
@@ -474,7 +468,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			PluginVodInfo::description => $toPlay->summary,
 			PluginVodInfo::poster_url => $toPlay->thumb,
 			PluginVodInfo::initial_series_ndx => 0,
-			PluginVodInfo::buffering_ms => 3000,
+			PluginVodInfo::buffering_ms => 6000,
 				// PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
 			PluginVodInfo::advert_mode => false,
 				// PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
@@ -487,6 +481,23 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		return $toBeReturned;
 	}
 
+
+
+	public function doEnterDirectory(&$user_input){
+
+	}
+
+	public function doEnterVideo(&$user_input){
+
+	}	
+
+	public function doEnterMusic(&$user_input){
+
+	}	
+
+	public function doEnterPhoto(&$user_input){
+
+	}	
 
 }
 
