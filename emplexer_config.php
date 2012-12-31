@@ -58,6 +58,7 @@ public static function getPlexBaseUrl(&$plugin_cookies, $handler){
 public static function getAllAvailableChannels(&$plugin_cookies, $handler)
 {    
     $url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $handler) ;
+    hd_print("BASE_URL=$url" );
     $xml = HD::getAndParseXmlFromUrl($url);
 
     hd_print(print_r($xml, true));
