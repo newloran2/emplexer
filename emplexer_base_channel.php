@@ -3,7 +3,7 @@
 
 
 /**
-* classe generica para uso de channels do Plex.
+* classe generica para Fluxos de navegação e play do Plex.
 */
 class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements UserInputHandler
 {
@@ -487,7 +487,6 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		$items = array();
 
 		foreach ($xml->Directory as $c) {
-			$thumb           = (string)$c->attributes()->thumb;
 			// hd_print('media_url->key =' . $media_url->key . ' c->attributes()->key = ' . (string)$c->attributes()->key );
 			
 			if (!HD::starts_with((string)$c->attributes()->key, '/')){
@@ -511,8 +510,8 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 
 
-			// hd_print("this->base_url=$this->base_url, title=$title, summary=$summary, url=$url, cache_file_name=$cache_file_name, key=$key");
 
+			
 			$items[] = array
 			(
 				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, $type),
@@ -520,8 +519,8 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 				PluginRegularFolderItem::view_item_params =>
 				array
 				(
-					ViewItemParams::icon_path               => $this->base_url . $thumb,
-					ViewItemParams::item_detailed_icon_path =>$this->base_url . $thumb 
+					ViewItemParams::icon_path               => $this->getThumbURL($c),
+					ViewItemParams::item_detailed_icon_path => $this->getThumbURL($c)
 					)
 				);
 		}
@@ -532,6 +531,23 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	public function doParseOnPhotos(&$xml, &$plugin_cookies){
 
 	}
+
+
+	//decisões sobre url  (cache, nfs/smb/http)
+	
+	public function getThumbURL(SimpleXMLElement &$node)
+	{
+		$thumb = $node->attributes()->thumb;
+		return $this->base_url .  $thumb;
+	}
+
+	
+	public function getVideoUrl($videoUrl, $container=null)
+	{
+		return $videoUrl;
+	}
+
+
 
 }
 

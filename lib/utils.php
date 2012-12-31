@@ -6,7 +6,7 @@ class HD
     public static function is_map($a)
     {
         return is_array($a) &&
-            array_diff_key($a, array_keys(array_keys($a)));
+        array_diff_key($a, array_keys(array_keys($a)));
     }
 
     public static function is_url($url){
@@ -143,12 +143,12 @@ class HD
             PluginRegularFolderRange::from_ndx => intval($from_ndx),
             PluginRegularFolderRange::count => count($items),
             PluginRegularFolderRange::items => $items
-        );
+            );
     }
 
 
 
-      public static function http_get_document($url, $opts = null)
+    public static function http_get_document($url, $opts = null)
     {
 
         $url = str_replace('//', '/', $url);
@@ -173,7 +173,7 @@ class HD
             'X-Plex-Client-Platform' => 'Dune',
             'X-Plex-Language' => 'en',
             'X-Plex-Version' => 'abc'
-        );
+            );
 
 
         
@@ -188,27 +188,37 @@ class HD
         $content = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        $acceptedHeaders = array(200, 403);
+        $acceptedHeaders = array(200, 403,0);
         if ( !in_array($http_code, $acceptedHeaders) )
         {
             $err_msg = "HTTP request failed ($http_code)";
             hd_print($err_msg);
             HD::print_backtrace();
-            //throw new Exception($err_msg);
+            
+
+            switch ($http_code) {
+                case '0': //timeout
+                $msg = "The area you are trying to access is taking too long to respond, try again. ($http_code)";
+                break;
+                case '404':
+                $msg = "the area you are trying to access does not return any xml. ($http_code)";
+                break;
+                default:
+                $msg = "houve um problema ao acessar essa area, try again. ($http_code)";
+                break;
+            }
+
+
             throw new DuneException(
                 'Error: "'.$err_msg.'"',
                 0,
-                ActionFactory::show_error(false, 'Error when obtaining xml of plex (The emplexer is configured?)')
-            );
+                ActionFactory::show_error(false, $msg)
+                );
         }
 
         hd_print("HTTP OK ($http_code)");
 
         curl_close($ch);
-        
-        // in this specific example a 403 request indicates
-        // an expired session - handle it by returning 
-        // an informative response
         
         if ($http_code == 200) {
             return $content;
@@ -219,11 +229,32 @@ class HD
                 'result' => 'error',
                 'error' => 'Session expired',
                 'error_code' => '403'
-            );
+                );
             return json_encode($session_expired);
         }
         
     }
+
+    public static function http_head_document($url)
+    {
+        $init = microtime(true);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_FILETIME, true);
+        curl_setopt($curl, CURLOPT_NOBODY, true );
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION,    true);
+        curl_setopt($curl, CURLOPT_MAXREDIRS,         10);
+
+        curl_exec($curl);
+        $info = curl_getinfo($curl);
+        curl_close($curl);
+        $end =  microtime(true);
+        hd_print("executed head request to $url in " . ($end - $init));
+        return $info;
+    }
+
 
     public static function http_post_document($url, $post_data)
     {
@@ -232,7 +263,7 @@ class HD
             (
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => $post_data
-            ));
+                ));
     }
 
     
@@ -253,8 +284,25 @@ class HD
 
     public static function getAndParseXmlFromUrl($url)
     {
+
+
+        $time_start = microtime(true);
+        $get_start = microtime(true);
         $doc = HD::http_get_document($url);
+
+        $get_end = microtime(true);
+        $parse_start =  microtime(true);
         $xml = HD::parse_xml_document($doc);
+        $parse_end = microtime(true);
+        $time_end =  microtime(true);
+        
+
+        $time  = $time_end - $time_start;
+        $get_time = $get_end - $get_start;
+        $parse_time = $parse_end - $parse_start;
+
+
+        hd_print(__METHOD__ . ':' . " xml obtained in $get_time seconds and parsed in $parse_time seconds total =$time" );
         return $xml;
     }
 
@@ -268,7 +316,7 @@ class HD
             'id' => ++$request_id,
             'method' => $op_name,
             'params' => $params
-        );
+            );
 
         return $request;
     }
@@ -308,7 +356,7 @@ class HD
         'October',
         'November',
         'December',
-    );
+        );
 
     public static function format_date_time_date($tm)
     {
@@ -338,8 +386,8 @@ class HD
     
 
 
-     public static function getPlexServers($timeout=2){
-        
+    public static function getPlexServers($timeout=2){
+
         $broadcast_string="M-SEARCH * HTTP/1.1\r\n\r\n";
         $port = 32414;
         $ip='255.255.255.255';

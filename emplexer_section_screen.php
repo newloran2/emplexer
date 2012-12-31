@@ -82,7 +82,16 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				$items =  array_merge($items, $channels);
 			}
 
-
+			$items[] = array
+            (
+                PluginRegularFolderItem::media_url =>  EmplexerBaseChannel::get_media_url_str('/library/sections'),
+                PluginRegularFolderItem::caption => 'teste',
+                PluginRegularFolderItem::view_item_params =>
+                array
+                (
+                    ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
+                )
+            );
 
 		// }
 
@@ -162,6 +171,9 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	{
 		return EmplexerConfig::GET_SECTIONS_LIST_VIEW();
 	}
+
+
+
 }
 
 ?>
