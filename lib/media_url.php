@@ -69,6 +69,7 @@ class MediaURL
 
     public static function decode($s)
     {
+        // $s = str_replace(array("\r\n", "\r", "\n",  "\""), " ", utf8_encode($s));
 
         $s = str_replace(array("\n","\r"),"",$s); 
         $s = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":',$s); 
@@ -76,7 +77,10 @@ class MediaURL
         if (substr($s, 0, 1) !== '{')
             return new MediaURL($s, null);
 
-        return new MediaURL($s, json_decode($s));
+
+        $json =  json_decode($s);
+        hd_print("decodificando $s  resultado = " . print_r($json, true));
+        return new MediaURL($s,$json);
     }
 }
 

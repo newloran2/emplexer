@@ -11,10 +11,11 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	private $channel_type;
 	protected $base_url; 
-	function __construct(String $channel_type)
-	{
-		parent::__construct(self::ID, $this->get_folder_views());
-		$channel_type = $this->channel_type;
+	function __construct($id=null)
+	{	
+		$name = !$id ? self::ID : $id;
+		parent::__construct($name, $this->get_folder_views());
+		
 	}
 
 	public function get_handler_id(){
@@ -335,14 +336,14 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function doStop(&$user_input , $plugin_cookies=null){
 		
-		$media_url =  MediaURL::decode($user_input->selected_media_url);
-		EmplexerFifoController::getInstance()->killPlexNotify();
-		$action =  ActionFactory::invalidate_folders(
-			array(
-				$media_url,
-				)
-			);
-		return $action;
+		// $media_url =  MediaURL::decode($user_input->selected_media_url);
+		// EmplexerFifoController::getInstance()->killPlexNotify();
+		// $action =  ActionFactory::invalidate_folders(
+		// 	array(
+		// 		$media_url,
+		// 		)
+		// 	);
+		// return $action;
 
 	}
 

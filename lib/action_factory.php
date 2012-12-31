@@ -61,7 +61,7 @@ class ActionFactory
         );
     }
 
-	 public static function launch_media_url($url)
+	 public static function launch_media_url($url,$post_action=null)
     {
         return array
         (
@@ -70,6 +70,7 @@ class ActionFactory
              array
              (
                 LaunchMediaUrlActionData::url => $url,
+                LaunchMediaUrlActionData::post_action => $post_action
              ),
         );
     }

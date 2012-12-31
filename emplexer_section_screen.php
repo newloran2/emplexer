@@ -82,16 +82,16 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				$items =  array_merge($items, $channels);
 			}
 
-			$items[] = array
-            (
-                PluginRegularFolderItem::media_url =>  EmplexerBaseChannel::get_media_url_str('/library/sections'),
-                PluginRegularFolderItem::caption => 'teste',
-                PluginRegularFolderItem::view_item_params =>
-                array
-                (
-                    ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
-                )
-            );
+			// $items[] = array
+   //          (
+   //              PluginRegularFolderItem::media_url =>  EmplexerListVideo::get_media_url_str('/library'),
+   //              PluginRegularFolderItem::caption => 'teste',
+   //              PluginRegularFolderItem::view_item_params =>
+   //              array
+   //              (
+   //                  ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
+   //              )
+   //          );
 
 		// }
 
@@ -102,7 +102,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
-		// hd_print(__METHOD__ . ":" . print_r($user_input, true));
+		hd_print(__METHOD__ . ":" . print_r($user_input, true));
 		
 
 		if ($user_input->control_id == 'pop_up') {
@@ -123,13 +123,15 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 					$key = (string)$c->attributes()->key;
 					$prompt = (string)$c->attributes()->prompt;
 					if ($key != 'all' &&  $key != 'folder' && !$prompt ){
+					// if ($key != 'all' ){
 						$pop_up_items[] = array(
 							GuiMenuItemDef::caption=> (string)$c->attributes()->title,
 							GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url_for_pop_up($media_url, $key), $key)
-							);
+							// GuiMenuItemDef::action =>  ActionFactory::open_folder(EmplexerListVideo::get_media_url_str("library/sections/" .$media_url->category_id . "/" . $key))
+						);
 					}
 				}
-				// hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true));		
+				hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true));		
 				$action = ActionFactory::show_popup_menu($pop_up_items);	
 				// hd_print(__METHOD__ . ': ' . print_r($action, true));
 				return $action;

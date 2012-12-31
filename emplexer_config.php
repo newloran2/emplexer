@@ -3,6 +3,8 @@
 define('HTTP_CONNECTION_TYPE', 'HTTP');
 define('NFS_CONNECTION_TYPE' , 'NFS');
 define('SMB_CONNECTION_TYPE' , 'SMB');
+define('NOT_SEEN_CAPTION_COLOR', '000000');
+define('HAS_SEEN_CAPTION_COLOR', '000000');
 define('DEFAULT_TIME_TO_MARK', 40);
 
 define('TYPE_DIRECTORY', 'directory');

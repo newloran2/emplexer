@@ -25,12 +25,26 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
     public function handle_user_input(&$user_input, &$plugin_cookies){
     	hd_print(print_r($user_input, true));
+    	$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
     	$media_url = MediaURL::decode($user_input->selected_media_url);
 		if ($user_input->control_id == 'play'){			
+			hd_print(__METHOD__ . ':' .  print_r($user_input, true));
 			if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
 				$url = dirname($media_url->video_url);
 				return ActionFactory::dvd_play($url);
-			}else {
+			} else if (strpos(strtolower($media_url->video_url), ".iso")){
+				return ActionFactory::dvd_play($media_url->video_url);
+			} else {
+				
+				$url = $media_url->video_url;
+				$startPosition = $media_url->viewOffset / 1000; 
+				$plexFileId = $media_url->key;
+				$timeToMark=DEFAULT_TIME_TO_MARK;
+				$basePlexURL = $base_url;
+				$pooling=5;
+				$time_action = UserInputHandlerRegistry::create_action($this, 'time', null);
+				// EmplexerFifoController::getInstance()->startDefaultPlayBack($url,$startPosition,$plexFileId,$timeToMark,$basePlexURL,$pooling);
+				// return ActionFactory::launch_media_url($media_url->video_url , $time_action);
 				return ActionFactory::vod_play();
 			}
 		} 
@@ -141,6 +155,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		hd_print(__METHOD__ . ': ' . print_r($media_url, true));
 		// hd_print(__METHOD__ . ': ' . $media_url->get_raw_string());
 
+		$base_url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
 		if (is_null ($media_url->filter_name)){
 			$doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
 		} else {
@@ -150,16 +165,24 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		$xml = simplexml_load_string($doc);
 
 		$items = array();
-		$bgImage = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .  $xml->attributes()->art;
+		$bgImage = $base_url .  $xml->attributes()->art;
 
 		foreach ($xml->Video as $c)
 		{
-			$thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb);
-			$detailPhoto = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			$thumb        = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb);
+			$detailPhoto  = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
-			$nfsVideoUrl = 'nfs://192.168.2.9:' . (string)$c->Media->Part->attributes()->file; 
+			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file; 
+			$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$c->Media->Part->attributes()->file;
+			hd_print("httpurl = $httpVidelUrl nfsVideoUrl = $nfsVideoUrl smbVideoUrl = $smbVideoUrl" );
 
-			$v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
+
+			$videoUrl['http'] = $httpVidelUrl;
+			$videoUrl['smb']  = $smbVideoUrl;
+			$videoUrl['nfs']  = $nfsVideoUrl;
+
+			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
+			$v = $videoUrl[$plugin_cookies->connectionMethod];
 
 			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';				
 			
@@ -170,7 +193,9 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					'video_url' => $v,
 					'viewOffset' => (string)$c->attributes()->viewOffset,
 					'duration' => (string)$c->Media->attributes()->duration,
-					'summary' => str_replace('"', '' , (string)$c->attributes()->summary),
+					// 'summary' => str_replace('"', '' , (string)$c->attributes()->summary),
+					'summary' => str_replace(array("\r\n", "\r", "\n",  "\""), " ", utf8_encode((string)$c->attributes()->summary))	,
+					// 'summary' => (string)$c->attributes()->summary	,
 					'name' => (string)$c->attributes()->title,
 					'thumb' => EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb,
 					'title' => (string)$xml->attributes()->title1,
@@ -192,6 +217,9 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 
 			             
+              // hd_print(print_r($media, true));
+
+
 
 			$items[] = array
 			(
@@ -203,8 +231,9 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					ViewItemParams::icon_path                 => EmplexerArchive::getInstance()->getFileFromArchive($cacheKey, $thumb),
 					ViewItemParams::item_detailed_icon_path   => EmplexerArchive::getInstance()->getFileFromArchive($cacheKey, $thumb),
 					ViewItemParams::item_detailed_info        => $info,
-					ViewItemParams::item_caption_color        => $c->attributes()->viewCount ? 1 :  12,
+					ViewItemParams::item_caption_color        => $c->attributes()->viewCount ? $plugin_cookies->hasSeenCaptionColor :  $plugin_cookies->notSeenCaptionColor,
 					// ViewItemParams::icon_dx                   =>  100,
+					
 					// ViewItemParams::icon_dy                   =>  100,
 					// ViewItemParams::icon_sel_dx               =>  100,
 					// ViewItemParams::icon_sel_dy               =>  100,					

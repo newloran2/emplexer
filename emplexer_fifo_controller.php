@@ -84,7 +84,16 @@ class EmplexerFifoController
 		// exec("echo 'kill' > /tmp/emplexer.fifo");	
 		fwrite($this->fileDescriptor, "kill\n");
 //		hd_print(__METHOD__ . " Escrevi com kill" );
+	}
 
+	public function startDefaultPlayBack($url,  $startPosition, $plexFileId,  $timeToMark=DEFAULT_TIME_TO_MARK, $basePlexURL, $pooling=5)
+	{
+		$command = "p|". urlencode($url) . "|$startPosition|$plexFileId|$pooling|$basePlexURL|$timeToMark\n";
+		$this->open();
+		hd_print("iniciando startDefaultPlayBack com paramentros $command");
+		//exec("/usr/bin/wget \"http://192.168.2.7/cgi-bin/do?cmd=start_file_playback&media_url=nfs%3A%2F%2F192.168.2.9%3A%2Fvolume1%2FAnimes%2FFairy+Tail%2Fs01%2FPUNCH_Fairy_Tail_-_10_HD.mkv\"");
+		// HD::http_get_document("http://192.168.2.7/cgi-bin/do?cmd=start_file_playback&media_url=nfs%3A%2F%2F192.168.2.9%3A%2Fvolume1%2FAnimes%2FFairy+Tail%2Fs01%2FPUNCH_Fairy_Tail_-_10_HD.mkv");
+		fwrite($this->fileDescriptor, $command);
 	}
 
 

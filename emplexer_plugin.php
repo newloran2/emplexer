@@ -26,6 +26,7 @@ require_once 'emplexer_fifo_controller.php';
 require_once 'emplexer_popup.php';
 require_once 'emplexer_movie_description_screen.php';
 require_once 'emplexer_base_channel.php';
+require_once 'emplexer_list_video.php';
 
 //implements UserInputHandler
 class Emplexer extends DefaultDunePlugin 
@@ -56,8 +57,9 @@ class Emplexer extends DefaultDunePlugin
 		$this->add_screen(new EmplexerSeasonList());
 		$this->add_screen(new EmplexerVideoList());
 		$this->add_screen(new EmplexerMovieList());
-		$this->add_screen(new EmplexerMovieDescriptionScreen());
-		$this->add_screen(new EmplexerBaseChannel('video'));
+		// $this->add_screen(new EmplexerMovieDescriptionScreen());	
+		$this->add_screen(new EmplexerBaseChannel());
+		$this->add_screen(new EmplexerListVideo());
 
 		EmplexerFifoController::getInstance(); // inicia o fifo
 	}
