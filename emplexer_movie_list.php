@@ -34,6 +34,18 @@ class EmplexerMovieList extends  EmplexerVideoList
 	{
 		return EmplexerConfig::GET_VIDEOS_LIST_VIEW();
 	}
+
+	public function getDetailedInfo(SimpleXMLElement &$node){
+		$info = (string)$node->attributes()->title;
+		// 'Serie:' . (string)$c->attributes()->grandparentTitle . ' || ' .
+		// 'Episode Name :' . (string)$c->attributes()->title. ' || ' .
+		// 'EP:'  . 'S'.(string)$c->attributes()->parentIndex . 'E'. (string)$c->attributes()->index . '||' .
+		// 'summary:'. str_replace('"', '' , (string)$c->attributes()->summary);
+
+		return $info;
+
+	}
 }
+
 
 ?>

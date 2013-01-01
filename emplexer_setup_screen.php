@@ -22,8 +22,8 @@ require_once 'lib/abstract_controls_screen.php';
 			$plexPort   = isset($plugin_cookies->plexPort) ? $plugin_cookies->plexPort : EmplexerConfig::DEFAULT_PLEX_PORT;
 			$timeToMark   = isset($plugin_cookies->timeToMark) ? $plugin_cookies->timeToMark : DEFAULT_TIME_TO_MARK;
 			$connectionMethod   = isset($plugin_cookies->connectionMethod) ? $plugin_cookies->connectionMethod : HTTP_CONNECTION_TYPE;
-			$notSeenCaptionColor   = isset($plugin_cookies->notSeenCaptionColor) ? $plugin_cookies->notSeenCaptionColor : NOT_SEEN_CAPTION_COLOR;
-			$hasSeenCaptionColor   = isset($plugin_cookies->hasSeenCaptionColor) ? $plugin_cookies->hasSeenCaptionColor : HAS_SEEN_CAPTION_COLOR;
+			$notSeenCaptionColor   = isset($plugin_cookies->notSeenCaptionColor) ? $plugin_cookies->notSeenCaptionColor : DEFAULT_NOT_SEEN_CAPTION_COLOR;
+			$hasSeenCaptionColor   = isset($plugin_cookies->hasSeenCaptionColor) ? $plugin_cookies->hasSeenCaptionColor : DEFAULT_HAS_SEEN_CAPTION_COLOR;
 			$userName   = isset($plugin_cookies->userName) ? $plugin_cookies->userName : "";
 			$passWord   = isset($plugin_cookies->password) ? $plugin_cookies->password : "";
 			
@@ -101,6 +101,7 @@ require_once 'lib/abstract_controls_screen.php';
 
 
 			$colorSeenNames = array();
+			$colorSeenNames[] = 'white';
 			$colorSeenNames[] = 'black';
 			$colorSeenNames[] = 'blue';
 			$colorSeenNames[] = 'light green';
@@ -125,7 +126,7 @@ require_once 'lib/abstract_controls_screen.php';
 			$colorSeenNames[] = 'other red :)';
 			$colorSeenNames[] = 'other grey :)';
 
-// $colorSeenNames['000000'] = 'black';
+// 			$colorSeenNames['000000'] = 'black';
 // 			$colorSeenNames['0000A0'] = 'blue';
 // 			$colorSeenNames['C0E0C0'] = 'light green';
 // 			$colorSeenNames['A0C0FF'] = 'light blue';
@@ -199,14 +200,20 @@ require_once 'lib/abstract_controls_screen.php';
 
 		public function handle_user_input(&$user_input, &$plugin_cookies )	
 		{
+			EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
+			return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));
+		}
+
+
+		public static function savePreferences(&$user_input, &$plugin_cookies){
 			hd_print("user_input = "  . print_r($user_input, true));
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
 
 			$plugin_cookies->plexIp           = $user_input->plexIp;
 			$plugin_cookies->plexPort         = $user_input->plexPort;
-			$plugin_cookies->connectionMethod = $user_input->connectionMethod ;
-			$plugin_cookies->hasSeenCaptionColor = $user_input->hasSeenCaptionColor ;
-			$plugin_cookies->notSeenCaptionColor = $user_input->notSeenCaptionColor ;
+			$plugin_cookies->connectionMethod = $user_input->connectionMethod ? $user_input->connectionMethod : HTTP_CONNECTION_TYPE ;
+			$plugin_cookies->hasSeenCaptionColor = $user_input->hasSeenCaptionColor ? $user_input->hasSeenCaptionColor : DEFAULT_HAS_SEEN_CAPTION_COLOR ;
+			$plugin_cookies->notSeenCaptionColor = $user_input->notSeenCaptionColor ? $user_input->notSeenCaptionColor : DEFAULT_NOT_SEEN_CAPTION_COLOR;
 
 			if ($user_input->connectionMethod == 'smb'){
 				$plugin_cookies->userName = $user_input->userName ? $user_input->userName : $plugin_cookies->userName;
@@ -218,9 +225,6 @@ require_once 'lib/abstract_controls_screen.php';
 			// $plugin_cookies->connectionMethod = $user_input->connectionMethod ;
 
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
-			return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));
-
-			// return ActionFactory::show_title_dialog('Configuration successfully saved.');
 		}
 	}
 	?>

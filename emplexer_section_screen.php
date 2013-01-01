@@ -139,7 +139,14 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				return null;
 			}
 			
-		}	
+		} if ($user_input->control_id == 'savePref') {
+            hd_print(__METHOD__ . ':' . print_r($user_input, true));
+            hd_print(__METHOD__ . ':' . print_r($plugin_cookies, true));
+            EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
+            
+        }
+
+
 	}
 
 

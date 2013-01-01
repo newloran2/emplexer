@@ -23,10 +23,10 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		return self::ID;
 	}
 
-    public function handle_user_input(&$user_input, &$plugin_cookies){
-    	hd_print(print_r($user_input, true));
-    	$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
-    	$media_url = MediaURL::decode($user_input->selected_media_url);
+	public function handle_user_input(&$user_input, &$plugin_cookies){
+		hd_print(print_r($user_input, true));
+		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+		$media_url = MediaURL::decode($user_input->selected_media_url);
 		if ($user_input->control_id == 'play'){			
 			hd_print(__METHOD__ . ':' .  print_r($user_input, true));
 			if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
@@ -54,10 +54,10 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$media_url =  $this->get_media_url_str($user_input->back_key, $user_input->back_filter_name);
 			EmplexerFifoController::getInstance()->killPlexNotify();
 			$action =  ActionFactory::invalidate_folders(
-	                        array(
-	                            $media_url,
-	                        )
-                    	);
+				array(
+					$media_url,
+					)
+				);
 			return $action;
 		} 
 
@@ -69,7 +69,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		if ($user_input->control_id == 'info') {
 
-	        return ActionFactory::open_folder(EmplexerMovieDescriptionScreen::get_media_url_str());
+			return ActionFactory::open_folder(EmplexerMovieDescriptionScreen::get_media_url_str());
 		}
 
 		if ($user_input->control_id == 'pop_up'){
@@ -91,7 +91,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				GuiMenuItemDef::caption=> $was_seen ? 'mark as unread' : 'mark as read' ,
 				// GuiMenuItemDef::caption=> 'mark as unread'  ,
 				GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'mark', $params)
-			);
+				);
 
 			hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );		
 			return ActionFactory::show_popup_menu($pop_up_items);
@@ -106,10 +106,10 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			HD::http_get_document($user_input->url);
 
 			$action =  ActionFactory::invalidate_folders(
-	                        array(
-	                            $media_url,
-	                        )
-                    	);
+				array(
+					$media_url,
+					)
+				);
 			return $action;
 
 		}
@@ -127,10 +127,11 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		(
 			GUI_EVENT_KEY_ENTER => $play_action,
 			GUI_EVENT_KEY_PLAY => $play_action,
-			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action,
-			GUI_EVENT_KEY_INFO => $info_action
+			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action
 
-		);
+			// GUI_EVENT_KEY_INFO => $info_action
+
+			);
 
 		// hd_print(print_r($a, true));
 		return $a;
@@ -147,8 +148,8 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				'key'  			 => $key,
 				'filter_name'  	 => $filter_name,
 				'type'			 => $type
-			)
-		);
+				)
+			);
 	}
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
@@ -173,12 +174,15 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$detailPhoto  = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file; 
-			$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$c->Media->Part->attributes()->file;
-			hd_print("httpurl = $httpVidelUrl nfsVideoUrl = $nfsVideoUrl smbVideoUrl = $smbVideoUrl" );
+			if ($plugin_cookies->connectionMethod == 'smb'){
+				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$c->Media->Part->attributes()->file;	
+				$videoUrl['smb']  = $smbVideoUrl;
+			}
+			
+
 
 
 			$videoUrl['http'] = $httpVidelUrl;
-			$videoUrl['smb']  = $smbVideoUrl;
 			$videoUrl['nfs']  = $nfsVideoUrl;
 
 			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
@@ -204,22 +208,27 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					'back_key' => $media_url->key,
 					'back_filter_name' => $media_url->filter_name,
 					'was_seen' => $c->attributes()->viewCount ? true : false
-				)
-			);
+					)
+				);
 
-			$info =
-				'Serie:' . (string)$c->attributes()->grandparentTitle . ' || ' .
-				'Episode Name :' . (string)$c->attributes()->title. ' || ' .
-				'EP:'  . 'S'.(string)$c->attributes()->parentIndex . 'E'. (string)$c->attributes()->index . '||' .
-                'summary:'. str_replace('"', '' , (string)$c->attributes()->summary);
-                
-                
+			$info = $this->getDetailedInfo($c);
+			// 'Serie:' . (string)$c->attributes()->grandparentTitle . ' || ' .
+			// 'Episode Name :' . (string)$c->attributes()->title. ' || ' .
+			// 'EP:'  . 'S'.(string)$c->attributes()->parentIndex . 'E'. (string)$c->attributes()->index . '||' .
+			// 'summary:'. str_replace('"', '' , (string)$c->attributes()->summary);
 
 
-			             
+
+
+
               // hd_print(print_r($media, true));
 
 
+			$hasSeenCaptionColor = (!$plugin_cookies->hasSeenCaptionColor || $plugin_cookies->hasSeenCaptionColor == DEFAULT_HAS_SEEN_CAPTION_COLOR ) ? null : $plugin_cookies->hasSeenCaptionColor;
+			$notSeenCaptionColor = (!$plugin_cookies->notSeenCaptionColor || $plugin_cookies->notSeenCaptionColor == DEFAULT_HAS_SEEN_CAPTION_COLOR ) ? null : $plugin_cookies->notSeenCaptionColor;
+			$item_caption_color = $c->attributes()->viewCount ? $hasSeenCaptionColor :  $notSeenCaptionColor;
+
+			$item_caption_color = (!$item_caption_color) ? $item_caption_color : $item_caption_color-1 ;
 
 			$items[] = array
 			(
@@ -231,7 +240,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					ViewItemParams::icon_path                 => EmplexerArchive::getInstance()->getFileFromArchive($cacheKey, $thumb),
 					ViewItemParams::item_detailed_icon_path   => EmplexerArchive::getInstance()->getFileFromArchive($cacheKey, $thumb),
 					ViewItemParams::item_detailed_info        => $info,
-					ViewItemParams::item_caption_color        => $c->attributes()->viewCount ? $plugin_cookies->hasSeenCaptionColor :  $plugin_cookies->notSeenCaptionColor,
+					ViewItemParams::item_caption_color        => $item_caption_color,
 					// ViewItemParams::icon_dx                   =>  100,
 					
 					// ViewItemParams::icon_dy                   =>  100,
@@ -255,6 +264,17 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 	public  function get_folder_views()
 	{
 		return EmplexerConfig::GET_EPISODES_LIST_VIEW();
+	}
+
+	public function getDetailedInfo(SimpleXMLElement &$node){
+		$info =
+		'Serie:' . (string)$node->attributes()->grandparentTitle . ' || ' .
+		'Episode Name :' . (string)$node->attributes()->title. ' || ' .
+		'EP:'  . 'S'.(string)$node->attributes()->parentIndex . 'E'. (string)$node->attributes()->index . '||' .
+		'summary:'. str_replace('"', '' , (string)$node->attributes()->summary);
+
+		return $info;
+
 	}
 
 
