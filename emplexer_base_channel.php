@@ -306,7 +306,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	public function doEnterMusic(&$user_input){
 		hd_print(__METHOD__);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
-		return ActionFactory::launch_media_url($media_url->video_media_array->key, $media_url->video_media_array->title);
+		return ActionFactory::launch_media_url($media_url->video_media_array->key);
 	}	
 
 	public function doEnterPhoto(&$user_input){
