@@ -72,7 +72,7 @@ class MediaURL
         // $s = str_replace(array("\r\n", "\r", "\n",  "\""), " ", utf8_encode($s));
 
         $s = str_replace(array("\n","\r"),"",$s); 
-        $s = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":',$s); 
+
 
         if (substr($s, 0, 1) !== '{')
             return new MediaURL($s, null);
