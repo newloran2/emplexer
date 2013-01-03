@@ -11,6 +11,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	function __construct($id=null,$folder_views=null)
 	{
+		hd_print(__METHOD__);
 		if (!is_null($id) && !is_null($folder_views) ){
 			// hd_print('parent' . print_r($folder_views, true));
 			parent::__construct($id, $folder_views);
@@ -20,10 +21,12 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 	}
 
 	public function get_handler_id(){
+		hd_print(__METHOD__);
 		return self::ID;
 	}
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
+		hd_print(__METHOD__);
 		hd_print(print_r($user_input, true));
 		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
@@ -88,7 +91,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$params['url'] = $url;
 
 			$pop_up_items[] = array(
-				GuiMenuItemDef::caption=> $was_seen ? 'mark as unread' : 'mark as read' ,
+				GuiMenuItemDef::caption=> $was_seen ? 'mark as unwatched' : 'mark as watched' ,
 				// GuiMenuItemDef::caption=> 'mark as unread'  ,
 				GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'mark', $params)
 				);
@@ -118,6 +121,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
+		hd_print(__METHOD__);
 		UserInputHandlerRegistry::get_instance()->register_handler($this);
 		$play_action = UserInputHandlerRegistry::create_action($this, 'play');
 		$info_action = UserInputHandlerRegistry::create_action($this, 'info');
@@ -139,6 +143,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public static function get_media_url_str($key, $filter_name =null, $type='show')
 	{
+		hd_print(__METHOD__);
 		self::$type = $type;
 
 		return MediaURL::encode(
@@ -153,7 +158,9 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 	}
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
+		hd_print(__METHOD__);
 		hd_print(__METHOD__ . ': ' . print_r($media_url, true));
+		hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true));
 		// hd_print(__METHOD__ . ': ' . $media_url->get_raw_string());
 
 		$base_url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
@@ -176,17 +183,19 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file; 
 			if ($plugin_cookies->connectionMethod == 'smb'){
 				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$c->Media->Part->attributes()->file;	
-				$videoUrl['smb']  = $smbVideoUrl;
+				$videoUrl[SMB_CONNECTION_TYPE]  = $smbVideoUrl;
 			}
 			
 
 
 
-			$videoUrl['http'] = $httpVidelUrl;
-			$videoUrl['nfs']  = $nfsVideoUrl;
+			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
+			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
 			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
 			$v = $videoUrl[$plugin_cookies->connectionMethod];
+
+			hd_print("-----------$videoUrl = $v-----------");
 
 			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';				
 			
@@ -263,10 +272,12 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public  function get_folder_views()
 	{
+		hd_print(__METHOD__);
 		return EmplexerConfig::GET_EPISODES_LIST_VIEW();
 	}
 
 	public function getDetailedInfo(SimpleXMLElement &$node){
+		hd_print(__METHOD__);
 		$info =
 		'Serie:' . (string)$node->attributes()->grandparentTitle . ' || ' .
 		'Episode Name :' . (string)$node->attributes()->title. ' || ' .

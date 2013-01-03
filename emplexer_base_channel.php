@@ -13,16 +13,19 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	protected $base_url; 
 	function __construct($id=null)
 	{	
+		hd_print(__METHOD__);
 		$name = !$id ? self::ID : $id;
 		parent::__construct($name, $this->get_folder_views());
 		
 	}
 
 	public function get_handler_id(){
+		hd_print(__METHOD__);
 		return self::ID;
 	}
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
+		hd_print(__METHOD__);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		if (!$this->base_url){
 			$this->base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
@@ -56,7 +59,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	
 	public static function get_media_url_str($key, $type=TYPE_DIRECTORY,$videoMediaArray=null)
 	{
-
+		hd_print(__METHOD__);
 		return MediaURL::encode(
 			array
 			(
@@ -70,6 +73,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
+		hd_print(__METHOD__);
 		UserInputHandlerRegistry::get_instance()->register_handler($this);
 		$enter_action = UserInputHandlerRegistry::create_action($this, 'enter');
 		return array
@@ -82,6 +86,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function get_all_folder_items(MediaURL $media_url, &$plugin_cookies)
 	{
+		hd_print(__METHOD__);
 		if (!$this->base_url){
 			$this->base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
 		}
@@ -99,11 +104,13 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function get_folder_views()
 	{
+		hd_print(__METHOD__);
 		return EmplexerConfig::GET_EPISODES_LIST_VIEW();
 	}
 
 
 	public function showPrefScreen($key, &$plugin_cookies){
+		hd_print(__METHOD__);
 		$url = $this->base_url . $key;
 		$xml = HD::getAndParseXmlFromUrl($url);
 		$identifier = (string)$xml->attributes()->identifier;
@@ -185,6 +192,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 
 	public function showSearchScreen($key, $title, &$plugin_cookies){
+		hd_print(__METHOD__);
 		// $base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
 		$url = $this->base_url . $key;
 		
@@ -219,7 +227,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 
 	public static function get_vod_info($toPlay){
-
+		hd_print(__METHOD__);
 		// hd_print(__METHOD__ . ':' . print_r($toPlay, true));
 		$url = $toPlay->url;
 		if ($toPlay->indirect){
@@ -267,10 +275,12 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	//enter Actions 
 
 	public function doEnterDirectory(&$user_input){
+		hd_print(__METHOD__);
 		return ActionFactory::open_folder($user_input->selected_media_url);	
 	}
 
 	public function doEnterVideo(&$user_input){
+		hd_print(__METHOD__);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		$pop_up_items = array();
 		$index = 0;
@@ -294,6 +304,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}	
 
 	public function doEnterMusic(&$user_input){
+		hd_print(__METHOD__);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		return ActionFactory::launch_media_url($media_url->video_media_array->key, $media_url->video_media_array->title);
 	}	
@@ -303,11 +314,13 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}	
 
 	public function doEnterConf(&$user_input){
+		hd_print(__METHOD__);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		return $this->showPrefScreen($media_url->key, $plugin_cookies);
 	}	
 
 	public function doEnterSearch(&$user_input){
+		hd_print(__METHOD__);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		return $this->showSearchScreen($media_url->key , 'Search', $plugin_cookies);
 	}	
@@ -315,6 +328,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	//other actions
 	public function doSavePrefs(&$user_input, &$plugin_cookies){
+		hd_print(__METHOD__);
 		$url =  $this->base_url ."/:/plugins/".$user_input->identifier . "/prefs/set?";
 		$notValidKeys =  array('identifier', 'handler_id', 'control_id', 'selected_control_id', 'parent_media_url', 'selected_media_url', 'sel_ndx');
 		foreach ($user_input as $key => $value) {
@@ -328,6 +342,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}
 
 	public function doPlay(&$user_input, &$plugin_cookies=null){
+		hd_print(__METHOD__);
 		if ($plugin_cookies)
 			$plugin_cookies->channel_selected_index = $user_input->index;
 
@@ -352,6 +367,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}
 
 	public function doSearch(&$user_input, &$plugin_cookies=null){
+		hd_print(__METHOD__);
 		$url = $user_input->key . '&query=' . urlencode($user_input->query);
 		hd_print("search url =$url");
 		return ActionFactory::open_folder( $this->get_media_url_str($url, TYPE_DIRECTORY));
@@ -363,6 +379,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function doParseOnVideos(&$xml, &$media_url,  &$plugin_cookies)
 	{
+		hd_print(__METHOD__);
 		$items = array();
 
 		foreach ($xml->Video as $c) {	
@@ -449,7 +466,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function doParseOnMusics(&$xml, &$media_url,  &$plugin_cookies)
 	{
-
+		hd_print(__METHOD__);
 		$items = array();
 		foreach ($xml->Track as $t) {	
 
@@ -484,7 +501,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}
 
 	public function doParseOnDirectories(&$xml, &$media_url,  &$plugin_cookies){
-
+		hd_print(__METHOD__);
 		$items = array();
 
 		foreach ($xml->Directory as $c) {
@@ -538,6 +555,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	
 	public function getThumbURL(SimpleXMLElement &$node)
 	{
+		hd_print(__METHOD__);
 		$thumb = $node->attributes()->thumb;
 		return $this->base_url .  $thumb;
 	}
@@ -545,6 +563,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	
 	public function getVideoUrl($videoUrl, $container=null)
 	{
+		hd_print(__METHOD__);
 		return $videoUrl;
 	}
 

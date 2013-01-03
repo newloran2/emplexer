@@ -7,6 +7,7 @@ class EmplexerMovieList extends  EmplexerVideoList
 
 	function __construct()
 	{
+		hd_print(__METHOD__);
 		parent::__construct(self::ID, $this->get_folder_views());
 	}
 
@@ -14,6 +15,7 @@ class EmplexerMovieList extends  EmplexerVideoList
 
 	public static function get_media_url_str($key, $filter_name =null, $type='movie')
 	{
+		hd_print(__METHOD__);
 		hd_print("key: $key" );
 		
 		self::$type = $type;
@@ -32,10 +34,12 @@ class EmplexerMovieList extends  EmplexerVideoList
 
 	public  function get_folder_views()
 	{
+		hd_print(__METHOD__);
 		return EmplexerConfig::GET_VIDEOS_LIST_VIEW();
 	}
 
 	public function getDetailedInfo(SimpleXMLElement &$node){
+		hd_print(__METHOD__);
 		$info = (string)$node->attributes()->title;
 		// 'Serie:' . (string)$c->attributes()->grandparentTitle . ' || ' .
 		// 'Episode Name :' . (string)$c->attributes()->title. ' || ' .

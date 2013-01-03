@@ -16,6 +16,7 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 
 	public static function get_media_url_str($category_id, $filter_name=null)
 	{
+		hd_print(__METHOD__);
 		hd_print('  category_id: ' . $category_id . ' filter_name: ' .  $filter_name);
 		$filter_name = !isset($filter_name)?'all':$filter_name;
 
@@ -31,6 +32,7 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
+		hd_print(__METHOD__);
 		$enter_action = ActionFactory::open_folder();
 
 		return array
@@ -42,7 +44,7 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
-		
+		hd_print(__METHOD__);
 		//hd_print(__METHOD__ . ':' . print_r($media_url, true));
 		$doc = HD::http_get_document( 
 			EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . 
@@ -88,6 +90,7 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 
 	private function get_right_media_url(MediaURL $media_url, $node)
 	{
+		hd_print(__METHOD__);
 		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');
 		$season = array('all','recentlyViewedShows');
 		
@@ -101,6 +104,7 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 
 	public function get_folder_views()
 	{
+		hd_print(__METHOD__);
 		// return EmplexerConfig::GET_SECTIONS_LIST_VIEW();
 		return EmplexerConfig::GET_VIDEOS_LIST_VIEW();
 	}

@@ -12,17 +12,19 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 	function __construct()
 	{
+		hd_print(__METHOD__);
 		parent::__construct(self::ID, $this->get_folder_views());
 	}
 
 	public function get_handler_id()
 	{
+		hd_print(__METHOD__);
 		return self::ID;
 	}
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
-
+		hd_print(__METHOD__);
 		// hd_print(__METHOD__ . ': ' .  print_r($media_url, true));
 
 		UserInputHandlerRegistry::get_instance()->register_handler($this);
@@ -43,7 +45,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 	public function get_all_folder_items(MediaURL $media_url, &$plugin_cookies)
 	{
-		
+		hd_print(__METHOD__);
 		// hd_print('get_all_folder_items em ' .  self::ID);	
 
 		$items = array();
@@ -102,6 +104,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
+		hd_print(__METHOD__);
 		hd_print(__METHOD__ . ":" . print_r($user_input, true));
 		
 
@@ -152,6 +155,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 	private function get_right_media_url_for_pop_up(MediaURL $media_url,$filter_name)
 	{
+		hd_print(__METHOD__);
 		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');
 		$season = array('all','recentlyViewedShows','unwatched');
 		
@@ -165,7 +169,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 	private function get_right_media_url($type, $key)
 	{
-		
+		hd_print(__METHOD__);	
 		if ($type == "movie"){			
 			// hd_print ("key =$key type=$type  movie");
 			return EmplexerMovieList::get_media_url_str($key, 'all', 'movie');

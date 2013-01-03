@@ -16,6 +16,7 @@ class EmplexerPopUp
 	}
 
 	public function showPopUpMenu($url){
+		hd_print(__METHOD__);
 		$doc = HD::http_get_document($url);
 		// hd_print(print_r($doc,true));
 		$pop_up_items =  array();
@@ -64,6 +65,7 @@ class EmplexerPopUp
 
 	private function addNextToChunk($chunckArray, $currentChunk, $index)
 	{
+		hd_print(__METHOD__);
 		// hd_print('chunckArray =' . print_r($chunckArray, true));
 		// hd_print('currentChunk =' . print_r($currentChunk, true));
 		// hd_print('index =' . print_r($index, true));

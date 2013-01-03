@@ -1,8 +1,8 @@
 <?php 
 
-define('HTTP_CONNECTION_TYPE', 'HTTP');
-define('NFS_CONNECTION_TYPE' , 'NFS');
-define('SMB_CONNECTION_TYPE' , 'SMB');
+define('HTTP_CONNECTION_TYPE', 'http');
+define('NFS_CONNECTION_TYPE' , 'nfs');
+define('SMB_CONNECTION_TYPE' , 'smb');
 define('DEFAULT_NOT_SEEN_CAPTION_COLOR', 'FFFFFF');
 define('DEFAULT_HAS_SEEN_CAPTION_COLOR', 'FFFFFF');
 define('DEFAULT_TIME_TO_MARK', 40);
@@ -40,7 +40,7 @@ class EmplexerConfig
     // if ($currentPlexBaseUR) {
     //     return $currentPlexBaseUR;
     // }else {
-
+        hd_print(__METHOD__);
         $plexIp   = $plugin_cookies->plexIp;
         $plexPort = $plugin_cookies->plexPort;
         if (!$plexIp || !$plexPort){
@@ -63,6 +63,7 @@ class EmplexerConfig
 
     public static function getAllAvailableChannels(&$plugin_cookies, $handler)
     {    
+        hd_print(__METHOD__);
         $url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $handler) ;
         hd_print("BASE_URL=$url" );
         $xml = HD::getAndParseXmlFromUrl($url);
@@ -95,11 +96,13 @@ class EmplexerConfig
 
 
     public static function getValidChannelsNames(){
+        hd_print(__METHOD__);
         return  array('video', 'music', 'photos');
     }
 
     public static function GET_SECTIONS_LIST_VIEW()
     {
+        hd_print(__METHOD__);
         return array(
             array
             (
@@ -128,6 +131,7 @@ class EmplexerConfig
     }
 
     public static function GET_VIDEOS_LIST_VIEW(){
+        hd_print(__METHOD__);
         return array(
 
             // large icons view

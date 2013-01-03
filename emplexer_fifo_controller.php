@@ -7,6 +7,7 @@ class EmplexerFifoController
 	private static $instance;
 
 	public static function getInstance(){
+		hd_print(__METHOD__);
 		if (!isset(self::$instance)){
 			hd_print(self::$instance);
 			self::$instance = new EmplexerFifoController();
@@ -16,6 +17,7 @@ class EmplexerFifoController
 
 	private function __construct()
 	{
+		hd_print(__METHOD__);
 		$plugin_dir = dirname(__FILE__);
 		if (!$this->isRuning()){
 			exec("$plugin_dir/bin/emplexer_fifo_controller.sh '$plugin_dir/bin/' >> /D/dune_plugin_logs/fifo.txt 2>/dev/null &");	
@@ -26,6 +28,7 @@ class EmplexerFifoController
 
 	public function __destruct()
 	{
+		hd_print(__METHOD__);
 		$this->open();
 		fwrite($this->fileDescriptor, "quit\n");
 		fclose($this->fileDescriptor);
@@ -33,6 +36,7 @@ class EmplexerFifoController
 	}
 
 	public function isRuning(){
+		hd_print(__METHOD__);
 		// $pid = shell_exec("pidof emplexer_fifo_controller.sh");
 		// $ret = isset($pid);
 		// hd_print(__METHOD__ . ": resultado pid= $pid ret=$ret");
@@ -40,6 +44,7 @@ class EmplexerFifoController
 	}
 
 	private function open(){
+		hd_print(__METHOD__);
 		if (is_null($this->fileDescriptor)){
 			$this->fileDescriptor = fopen('/tmp/emplexer.fifo', 'r+');
 			stream_set_blocking($this->fileDescriptor, true);	
@@ -49,7 +54,7 @@ class EmplexerFifoController
 	}
 
 	public function downloadToCache($fileName, $fileUrl){
-		
+		hd_print(__METHOD__);
 		// fwrite($this->fileDescriptor, "c|$fileName|$fileUrl");
 		$file_path = "/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName";
 		// $file_path = "/D/emplexer/emplexer_default_archive/$fileName";
@@ -73,6 +78,7 @@ class EmplexerFifoController
 	}
 
 	public function startPlexNotify($id, $pooling, $url, $timeToMark=DEFAULT_TIME_TO_MARK){
+		hd_print(__METHOD__);
 		// s|id do arquivo no plex|tempo do pooling|url base do plex (http://192.168.2.9:32400/)"
 		$this->open();
 		fwrite($this->fileDescriptor, "s|$id|$pooling|$url|$timeToMark\n");
@@ -80,6 +86,7 @@ class EmplexerFifoController
 //		hd_print(__METHOD__ . " Escrevi com s|$id|$pooling|$url" );
 	}
 	public function killPlexNotify(){
+		hd_print(__METHOD__);
 		$this->open();
 		// exec("echo 'kill' > /tmp/emplexer.fifo");	
 		fwrite($this->fileDescriptor, "kill\n");
@@ -88,6 +95,7 @@ class EmplexerFifoController
 
 	public function startDefaultPlayBack($url,  $startPosition, $plexFileId,  $timeToMark=DEFAULT_TIME_TO_MARK, $basePlexURL, $pooling=5)
 	{
+		hd_print(__METHOD__);
 		$command = "p|". urlencode($url) . "|$startPosition|$plexFileId|$pooling|$basePlexURL|$timeToMark\n";
 		$this->open();
 		hd_print("iniciando startDefaultPlayBack com paramentros $command");

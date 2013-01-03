@@ -10,11 +10,13 @@ class EmplexerMovieDescriptionScreen extends VodMovieScreen  {
 
     
     public function get_id(){
+        hd_print(__METHOD__);
         return self::ID;
     }
 
  	public static function get_media_url_str()
     {
+        hd_print(__METHOD__);
         return MediaURL::encode(
             array
             (
@@ -25,15 +27,18 @@ class EmplexerMovieDescriptionScreen extends VodMovieScreen  {
     }
 
     public function get_action_map(MediaURL $media_url, &$plugin_cookies){
+        hd_print(__METHOD__);
         return null;
     }
 
     public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
+        hd_print(__METHOD__);
         return $this->get_folder_view($media_url, $plugin_cookies);
     }
 
 	public function get_folder_view(MediaURL $media_url, &$plugin_cookies)
 	{
+        hd_print(__METHOD__);
 		$movie =  array(
             PluginMovie::name => 'Air Gear',
             // PluginMovie::name_original => ,

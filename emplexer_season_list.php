@@ -11,7 +11,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 
 	function __construct()
 	{
-		// hd_print(__METHOD__);
+		hd_print(__METHOD__);
 		parent::__construct(self::ID, $this->get_folder_views());	
 		UserInputHandlerRegistry::get_instance()->register_handler($this);
 
@@ -19,6 +19,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 
 	public static function get_media_url_str($key, $filter_name=null)
 	{
+		hd_print(__METHOD__);
 		return MediaURL::encode(
 			array
 			(
@@ -31,12 +32,13 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 
 
 	public function get_handler_id(){
+		hd_print(__METHOD__);
 		return self::ID;
 	}
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
-
+		hd_print(__METHOD__);
 		$enter_action = ActionFactory::open_folder();
 		$pop_up_action = UserInputHandlerRegistry::create_action($this, 'pop_up', null,'Filtos');
 
@@ -51,6 +53,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
+		hd_print(__METHOD__);
 		hd_print(print_r($user_input, true));		
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		
@@ -60,7 +63,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 	}
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
-
+		hd_print(__METHOD__);
 		// hd_print (__METHOD__ . ':' . print_r($media_url, true));
 		if (!isset($media_url->filter_name)){
 			$doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $media_url->key );			
@@ -92,7 +95,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 
 		foreach ($xml->Directory as $c)
 		{
-
+			hd_print(__METHOD__);
 			// hd_print(__METHOD__ . ':' .  print_r($xml, true));
 			$thumb = (string)$c->attributes()->thumb ? (string)$c->attributes()->thumb : (string)$xml->attributes()->thumb;
 			$url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .'/photo/:/transcode?width=340&height=480&url=' . urlencode( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $thumb);
@@ -132,6 +135,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 	}
 
 	public function get_archive(MediaURL $media_url){
+		hd_print(__METHOD__);
 		// return $this->archive;
 		return null;
 	}
@@ -142,6 +146,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 
 	public function get_folder_views()
 	{
+		hd_print(__METHOD__);
 		// return EmplexerConfig::GET_SECTIONS_LIST_VIEW();
 		return EmplexerConfig::GET_VIDEOS_LIST_VIEW();
 	}

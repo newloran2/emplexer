@@ -11,11 +11,13 @@ require_once 'lib/abstract_controls_screen.php';
 
 		function __construct()
 		{
+			hd_print(__METHOD__);
 			parent::__construct(self::ID);
 			hd_print('teste setup screen');
 		}
 
 		public function do_get_control_defs(&$plugin_cookies){
+			hd_print(__METHOD__);
 			hd_print(__METHOD__  . print_r($plugin_cookies, true));
 			$defs = array();
 			$plexIp     = isset($plugin_cookies->plexIp)   ? $plugin_cookies->plexIp   : '';
@@ -55,9 +57,9 @@ require_once 'lib/abstract_controls_screen.php';
 
 
 			$comboOpts = array();
-			$comboOpts['http'] = 'HTTP';
-			$comboOpts['nfs']  = 'NFS';
-			$comboOpts['smb']  = 'SMB';
+			$comboOpts['http'] = 'http';
+			$comboOpts['nfs']  = 'nfs';
+			$comboOpts['smb']  = 'smb';
 
 
 			$this->add_combobox(
@@ -200,12 +202,14 @@ require_once 'lib/abstract_controls_screen.php';
 
 		public function handle_user_input(&$user_input, &$plugin_cookies )	
 		{
+			hd_print(__METHOD__);
 			EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
 			return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));
 		}
 
 
 		public static function savePreferences(&$user_input, &$plugin_cookies){
+			hd_print(__METHOD__);
 			hd_print("user_input = "  . print_r($user_input, true));
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
 
