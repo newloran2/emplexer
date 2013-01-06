@@ -72,7 +72,8 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		if ($user_input->control_id == 'info') {
 
-			return ActionFactory::open_folder(EmplexerMovieDescriptionScreen::get_media_url_str());
+			
+			return ActionFactory::open_folder(VodMovieScreen::get_media_url_str($media_url->detail_info_key));
 		}
 
 		if ($user_input->control_id == 'pop_up'){
@@ -131,9 +132,8 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		(
 			GUI_EVENT_KEY_ENTER => $play_action,
 			GUI_EVENT_KEY_PLAY => $play_action,
-			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action
-
-			// GUI_EVENT_KEY_INFO => $info_action
+			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action,
+			GUI_EVENT_KEY_INFO => $info_action
 
 			);
 
@@ -165,12 +165,14 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		$base_url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
 		if (is_null ($media_url->filter_name)){
-			$doc = HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
+			// $doc =    HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
+			$xml =    HD::getAndParseXmlFromUrl(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
 		} else {
-			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
+			// $doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
+			$xml = HD::getAndParseXmlFromUrl( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
 		}
 
-		$xml = simplexml_load_string($doc);
+		// $xml = simplexml_load_string($doc);
 
 		$items = array();
 		$bgImage = $base_url .  $xml->attributes()->art;
@@ -216,7 +218,8 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					'back_screen_id' => $media_url->screen_id,
 					'back_key' => $media_url->key,
 					'back_filter_name' => $media_url->filter_name,
-					'was_seen' => $c->attributes()->viewCount ? true : false
+					'was_seen' => $c->attributes()->viewCount ? true : false,
+					'detail_info_key' =>(string)$c->attributes()->key
 					)
 				);
 

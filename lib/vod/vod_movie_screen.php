@@ -77,13 +77,19 @@ class VodMovieScreen implements Screen, UserInputHandler
                 VodSeriesListScreen::get_media_url_str($movie->id),
         );
 
-        return array
+        $a = 
+        array
         (
             PluginFolderView::multiple_views_supported  => false,
             PluginFolderView::archive                   => null,
             PluginFolderView::view_kind                 => PLUGIN_FOLDER_VIEW_MOVIE,
             PluginFolderView::data                      => $movie_folder_view,
         );
+        HD::print_backtrace();
+        hd_print(__METHOD__ . ':' . print_r($a, true));
+
+        return $a;
+
     }
 
     

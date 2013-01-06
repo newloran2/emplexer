@@ -28,6 +28,8 @@ require_once 'emplexer_movie_description_screen.php';
 require_once 'emplexer_base_channel.php';
 require_once 'emplexer_list_video.php';
 
+require_once 'lib/vod/vod_movie_screen.php';
+
 //implements UserInputHandler
 class Emplexer extends DefaultDunePlugin 
 {
@@ -58,7 +60,8 @@ class Emplexer extends DefaultDunePlugin
 		$this->add_screen(new EmplexerSeasonList());
 		$this->add_screen(new EmplexerVideoList());
 		$this->add_screen(new EmplexerMovieList());
-		// $this->add_screen(new EmplexerMovieDescriptionScreen());	
+		// $this->add_screen(new EmplexerMovieDescriptionScreen());
+		$this->add_screen(new VodMovieScreen($this->vod))	;
 		$this->add_screen(new EmplexerBaseChannel());
 		$this->add_screen(new EmplexerListVideo());
 
@@ -84,6 +87,10 @@ class Emplexer extends DefaultDunePlugin
 		if ($media_url->screen_id == 'emplexer_base_channel'){
 			$toPlay = $media_url->video_media_array[$plugin_cookies->channel_selected_index];
 			return EmplexerBaseChannel::get_vod_info($toPlay);
+		}
+
+		if ($media_url->screen_id == 'vod_movie'){
+			return EmplexerVod::get_vod_info($media_url, $plugin_cookies);
 		}
 
 		$handler = $media_url->back_screen_id == EmplexerVideoList::ID ? EmplexerVideoList::ID : EmplexerMovieList::ID;

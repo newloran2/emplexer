@@ -14,7 +14,7 @@ class EmplexerMovieDescriptionScreen extends VodMovieScreen  {
         return self::ID;
     }
 
- 	public static function get_media_url_str()
+ 	public static function get_media_url_str($movie_id)
     {
         hd_print(__METHOD__);
         return MediaURL::encode(

@@ -29,6 +29,7 @@ class EmplexerFifoController
 	public function __destruct()
 	{
 		hd_print(__METHOD__);
+		HD::print_backtrace();
 		$this->open();
 		fwrite($this->fileDescriptor, "quit\n");
 		fclose($this->fileDescriptor);

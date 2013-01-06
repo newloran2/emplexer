@@ -155,6 +155,7 @@ class HD
         $url = str_replace('http:/', 'http://', $url);
         $url = str_replace('https:/', 'https://', $url);
 
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    20);
@@ -285,10 +286,18 @@ class HD
     public static function getAndParseXmlFromUrl($url)
     {
 
+        $cache_dir = '/persistfs/plugins_archive/emplexer/xml/';
+        $fileName = md5($url);
 
         $time_start = microtime(true);
         $get_start = microtime(true);
-        $doc = HD::http_get_document($url);
+        if (!file_exists($cache_dir . $fileName)){
+            $doc = HD::http_get_document($url); 
+            file_put_contents($cache_dir . $fileName, $doc);
+        } else {
+            $doc = file_get_contents($cache_dir . $fileName);
+        }
+        
 
         $get_end = microtime(true);
         $parse_start =  microtime(true);
