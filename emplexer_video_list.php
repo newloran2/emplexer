@@ -207,7 +207,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 			$media = MediaURL::encode(
 				array(
-					'movie_id'=>(string)$c->attributes()->index, 
+					'movie_id'=>$v, 
 					'video_url' => $v,
 					'viewOffset' => (string)$c->attributes()->viewOffset,
 					'duration' => (string)$c->Media->attributes()->duration,

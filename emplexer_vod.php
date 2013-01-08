@@ -4,6 +4,7 @@
 	*/
 	class EmplexerVod extends AbstractVod
 	{
+
 		private $base_url;
 		function __construct()
 		{
@@ -46,10 +47,11 @@
 				$budget = null
 
 				);
-			$movie->add_series_data(1,'Once Upon a Time s02e01','nfs://192.168.2.9:/volume1/Animes/Another/PUNCH_Another_-_03_HD.mkv',true);
+			$movie->add_series_data(1,$movie->name,'nfs://192.168.2.9:'. (string) $xml->Video->Media->Part->attributes()->file ,true);
 
 			hd_print(__METHOD__ . ':' . print_r($movie, true));
 			$this->set_cached_movie($movie);
+			hd_print(print_r($this,true));
 		}
 
 		public function getWriterStr(&$xml)
@@ -90,22 +92,24 @@
 			}
 			return $countries;
 		}
+
 		public function get_vod_info(MediaURL $media_url, &$plugin_cookies){
 			$movie = $this->get_cached_movie($media_url->movie_id);
-
+			hd_print(__METHOD__ . ':'  . print_r($movie, true));
+			
 
 		// $params['selected_media_url'] = $toPlay->selected_media_url;
 			$series_array = array();
 			$series_array[] = array(
-				PluginVodSeriesInfo::name => $movie->name_original,
-				PluginVodSeriesInfo::playback_url => $toPlay->url,
+				PluginVodSeriesInfo::name => $movie->name_original . "\n" .  $movie->name,
+				PluginVodSeriesInfo::playback_url => $movie->series_list[0]->playback_url,
 				PluginVodSeriesInfo::playback_url_is_stream_url => true,
 				);
 
 			$toBeReturned = array(
 				PluginVodInfo::id => 1,
-				PluginVodInfo::series => $series_array,
-				PluginVodInfo::name =>  $movie->series_list[0]->playback_url,
+				PluginVodInfo::series => $movie->series_list,
+				PluginVodInfo::name =>  $movie->name_original,
 				PluginVodInfo::description => $movie->description,
 				PluginVodInfo::poster_url => $movie->poster_url,
 				PluginVodInfo::initial_series_ndx => 0,
@@ -117,7 +121,14 @@
 				GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
 				)*/
 			);	
+
+		hd_print(__METHOD__ . ':'  . print_r($toBeReturned, true));
+
+			return $toBeReturned;
 		}
+
+
+
 
 
 	}

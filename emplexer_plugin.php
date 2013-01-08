@@ -90,7 +90,9 @@ class Emplexer extends DefaultDunePlugin
 		}
 
 		if ($media_url->screen_id == 'vod_movie'){
-			return EmplexerVod::get_vod_info($media_url, $plugin_cookies);
+			
+			return $this->vod->get_vod_info($media_url, $plugin_cookies);
+			// EmplexerVod::get_vod_info($media_url, $plugin_cookies);
 		}
 
 		$handler = $media_url->back_screen_id == EmplexerVideoList::ID ? EmplexerVideoList::ID : EmplexerMovieList::ID;
