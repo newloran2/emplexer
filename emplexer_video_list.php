@@ -201,7 +201,10 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';				
 			
-			EmplexerArchive::getInstance()->setFileToArchive($cacheKey, $thumb );
+			if ($c->attributes()->thumb){
+				EmplexerArchive::getInstance()->setFileToArchive($cacheKey, $thumb );				
+			}
+
 			$media = MediaURL::encode(
 				array(
 					'movie_id'=>(string)$c->attributes()->index, 

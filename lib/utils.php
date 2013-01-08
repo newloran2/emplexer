@@ -286,18 +286,11 @@ class HD
     public static function getAndParseXmlFromUrl($url)
     {
 
-        $cache_dir = '/persistfs/plugins_archive/emplexer/xml/';
-        $fileName = md5($url);
-
+        
         $time_start = microtime(true);
         $get_start = microtime(true);
-        if (!file_exists($cache_dir . $fileName)){
-            $doc = HD::http_get_document($url); 
-            file_put_contents($cache_dir . $fileName, $doc);
-        } else {
-            $doc = file_get_contents($cache_dir . $fileName);
-        }
-        
+        $doc = HD::http_get_document($url); 
+            
 
         $get_end = microtime(true);
         $parse_start =  microtime(true);
