@@ -13,7 +13,7 @@
 		}
 		
 		public function try_load_movie($movie_id, &$plugin_cookies){
-			hd_print(__METHOD__ ) ;
+			hd_print(__METHOD__  . ': ' . print_r($plugin_cookiesm, true)) ;
 
 			if (!$this->base_url){
 				$this->base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
@@ -47,7 +47,27 @@
 				$budget = null
 
 				);
-			$movie->add_series_data(1,$movie->name,'nfs://192.168.2.9:'. (string) $xml->Video->Media->Part->attributes()->file ,true);
+
+			$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$xml->Video->Media->Part->attributes()->key;
+			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$xml->Video->Media->Part->attributes()->file; 
+			if ($plugin_cookies->connectionMethod == 'smb'){
+				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$xml->Video->Media->Part->attributes()->file;	
+				$videoUrl[SMB_CONNECTION_TYPE]  = $smbVideoUrl;
+			}
+			
+
+
+
+			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
+			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
+
+			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
+			// 
+			
+			$v = $videoUrl[$plugin_cookies->connectionMethod];
+			hd_print("-----------videoUrl = $v-----------");
+
+			$movie->add_series_data(1,$movie->name,$v ,true);
 
 			hd_print(__METHOD__ . ':' . print_r($movie, true));
 			$this->set_cached_movie($movie);
