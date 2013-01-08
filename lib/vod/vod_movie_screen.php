@@ -71,10 +71,12 @@ class VodMovieScreen implements Screen, UserInputHandler
             PluginMovieFolderView::has_right_button => $has_right_button,
             PluginMovieFolderView::right_button_caption => $right_button_caption,
             PluginMovieFolderView::right_button_action => $right_button_action,
-            PluginMovieFolderView::has_multiple_series =>
-                (count($movie->series_list) > 1),
-            PluginMovieFolderView::series_media_url =>
-                VodSeriesListScreen::get_media_url_str($movie->id),
+            PluginMovieFolderView::has_multiple_series => (count($movie->series_list) > 1),
+            PluginMovieFolderView::series_media_url => VodSeriesListScreen::get_media_url_str($movie->id),
+            // PluginMovieFolderView::params => array(
+            //         PluginFolderViewParams::background_url => 'http://192.168.2.9:32400/library/metadata/351/art/1343089927'
+            //     )
+
         );
 
         $a = 
