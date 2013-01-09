@@ -27,11 +27,12 @@
 			// $movie->set_data("American",'The American','Alone among assassins, Jack is a master craftsman. When a job in Sweden ends more harshly than expected for this American abroad, he vows to his contact Larry that his next assignment will be his last. Jack reports to the Italian countryside, where he holes up in a small town and relishes being away from death for a spell. The assignment, as specified by a Belgian woman, Mathilde, is in the offing as a weapon is constructed. Surprising himself, Jack seeks out the friendship of local priest Father Benedetto and pursues romance with local woman Clara. But by stepping out of the shadows, Jack may be tempting fate.','http://192.168.2.9:32400/library/metadata/4376/thumb/1342928192',1050,'2010','Anton Corbijn','Hiporã',
 				// "George Clooney \n Jack,Thekla Reuten|Mathilde,Bruce Altman|Larry,Violante Placido|Clara|,Paolo Bonacelli|Father Benedetto",'Crime,Drama,Suspense,Thriller',6.4000000953674299,10,'R','USA','1 real');
 			
-
+			$grandparentTitle = (string)$xml->Video->attributes()->grandparentTitle;
+			$title = $grandparentTitle ? "Episode " . (string)$xml->Video->attributes()->index . ' : ' . (string)$xml->Video->attributes()->title : (string)$xml->Video->attributes()->title;
 // (string)$xml->Video->attributes()->summary
 			$movie->set_data(
-				$name = (string)$xml->Video->attributes()->grandparentTitle ,
-				$name_original = (string)$xml->Video->attributes()->title ,
+				$name = $grandparentTitle ,
+				$name_original =  $title ,
 				$description =  (string)$xml->Video->attributes()->summary ,
 				$poster_url = $this->base_url . (string)$xml->Video->attributes()->thumb  ,
 				$length_min = ((float)$xml->Video->attributes()->duration) /1000/60 ,
@@ -107,8 +108,8 @@
 		{
 			$countries = null;
 
-			foreach ($xml->Country as $country) {
-				$countries .= (string)$country->attributes()->tag .  "\n";
+			foreach ($xml->Video->Country as $country) {
+				$countries .= (string)$country->attributes()->tag ;
 			}
 			return $countries;
 		}
