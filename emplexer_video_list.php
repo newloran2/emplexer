@@ -188,16 +188,18 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				$videoUrl[SMB_CONNECTION_TYPE]  = $smbVideoUrl;
 			}
 			
-
-
-
 			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
 			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
 			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
 			$v = $videoUrl[$plugin_cookies->connectionMethod];
 
-			hd_print("-----------$videoUrl = $v-----------");
+			if (!$v){
+				hd_print('connectionMethod not setted use http as default');
+				$v = $httpVidelUrl;
+			}
+
+			hd_print("-----------videoUrl = $v-----------");
 
 			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';				
 			
