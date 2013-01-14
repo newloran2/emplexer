@@ -189,7 +189,8 @@ class HD
         $content = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        $acceptedHeaders = array(200, 403,0);
+        $acceptedHeaders = array(200, 403);
+        hd_print('http_code = ' . $http_code);
         if ( !in_array($http_code, $acceptedHeaders) )
         {
             $err_msg = "HTTP request failed ($http_code)";
