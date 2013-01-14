@@ -304,7 +304,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}	
 
 	public function doEnterMusic(&$user_input){
-		hd_print(__METHOD__);
+		hd_print(__METHOD__ );
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		return ActionFactory::launch_media_url($media_url->video_media_array->key);
 	}	
@@ -370,7 +370,13 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		hd_print(__METHOD__);
 		$url = $user_input->key . '&query=' . urlencode($user_input->query);
 		hd_print("search url =$url");
-		return ActionFactory::open_folder( $this->get_media_url_str($url, TYPE_DIRECTORY));
+		$parameters =  array(
+					'key'    => $url,
+					'type'   => TYPE_DIRECTORY,
+					'params' => null
+				);
+		return ActionFactory::open_folder( $this->getNextScreen($parameters));
+		// return ActionFactory::open_folder( $this->get_media_url_str($url, TYPE_DIRECTORY));
 	}
 
 
@@ -447,10 +453,15 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 					);		
 			}
 
-
+			$parameters =  array(
+					'key'    => $key,
+					'type'   => TYPE_VIDEO,
+					'params' => $videoMediaArray
+				);
 			$items[] = array
 			(
-				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_VIDEO, $videoMediaArray) ,
+				// PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_VIDEO, $videoMediaArray) ,
+				PluginRegularFolderItem::media_url        => $this->getNextScreen($parameters) ,
 				PluginRegularFolderItem::caption          => "$title",
 				PluginRegularFolderItem::view_item_params =>
 				array
@@ -463,6 +474,8 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 		return $items;	
 	}
+
+
 
 	public function doParseOnMusics(&$xml, &$media_url,  &$plugin_cookies)
 	{
@@ -482,10 +495,16 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$params['thumb']   = $thumb;
 			$params['key']     = $key;
 			
+			$parameters =  array(
+					'key'    => $key,
+					'type'   => TYPE_TRACK,
+					'params' => $params
+				);
 
 			$items[] = array
 			(
-				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_TRACK, $params),
+				// PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, TYPE_TRACK, $params),
+				PluginRegularFolderItem::media_url        => $this->getNextScreen($parameters),
 				PluginRegularFolderItem::caption          => "$title",
 				PluginRegularFolderItem::view_item_params =>
 				array
@@ -527,12 +546,17 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$type = !$search ? $type : TYPE_SEARCH;
 
 
-
+			$parameters =  array(
+					'key'    => $key,
+					'type'   => $type,
+					'params' => null
+				);
 
 			
 			$items[] = array
 			(
-				PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, $type),
+				// PluginRegularFolderItem::media_url        => $this->get_media_url_str($key, $type),
+				PluginRegularFolderItem::media_url        => $this->getNextScreen($parameters),
 				PluginRegularFolderItem::caption          => $title,
 				PluginRegularFolderItem::view_item_params =>
 				array
@@ -565,6 +589,13 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	{
 		hd_print(__METHOD__);
 		return $videoUrl;
+	}
+
+	public function getNextScreen($parameters){
+		$key = $parameters['key'];
+		$type = $parameters['type'];
+		$params = $parameters['params'];
+		return $this->get_media_url_str($key, $type, $params);
 	}
 
 
