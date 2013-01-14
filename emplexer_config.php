@@ -43,6 +43,15 @@ class EmplexerConfig
         hd_print(__METHOD__);
         $plexIp   = $plugin_cookies->plexIp;
         $plexPort = $plugin_cookies->plexPort;
+
+        //quick fix.
+        //caso o usuário tenha instalado por cima de uma versão antiga que ainda não tenha esses items esses não são setados.
+        //caso esses não sejam setados o plugin não consegue achar o conection type e com isso não sabe qual url usar.
+        $connectionMethod       = $plugin_cookies->connectionMethod ? $plugin_cookies->connectionMethod : HTTP_CONNECTION_TYPE ;
+        $hasSeenCaptionColor    = $plugin_cookies->hasSeenCaptionColor ? $plugin_cookies->hasSeenCaptionColor : DEFAULT_HAS_SEEN_CAPTION_COLOR ;
+        $notSeenCaptionColor    = $plugin_cookies->notSeenCaptionColor ? $plugin_cookies->notSeenCaptionColor : DEFAULT_NOT_SEEN_CAPTION_COLOR;
+
+
         if (!$plexIp || !$plexPort){
 
             $btnSaveAction = UserInputHandlerRegistry::create_action($handler, 'savePref');
@@ -55,6 +64,8 @@ class EmplexerConfig
                 // ActionFactory::show_error(false, "emplexer not configured, please go to setup and set ip and port")
                 );
         }
+
+
         return "http://$plexIp:$plexPort";
     // }
     }
