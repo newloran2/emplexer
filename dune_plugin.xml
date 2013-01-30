@@ -6,7 +6,7 @@
       <parent_media_url>root://applications</parent_media_url>
       <media_url>emplexer_section_secreen</media_url>
       <caption>emplexer</caption>
-      <icon_url>plugin_file://icons/games.png</icon_url>
+      <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
           <type>plugin_open_folder</type>
@@ -19,7 +19,7 @@
       <parent_media_url>root://sources</parent_media_url>
       <media_url>emplexer_section_secreen</media_url>
       <caption>emplexer</caption>
-      <icon_url>plugin_file://icons/games.png</icon_url>
+      <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
           <type>plugin_open_folder</type>
@@ -33,7 +33,7 @@
       <parent_media_url>setup://applications</parent_media_url>
       <media_url>emplexer_setup_screen</media_url>
       <caption>emplexer</caption>
-      <icon_url>plugin_file://icons/games.png</icon_url>
+      <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
           <type>plugin_open_folder</type>

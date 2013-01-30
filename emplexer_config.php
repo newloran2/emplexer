@@ -24,7 +24,7 @@ class EmplexerConfig
     const DEFAULT_PLEX_PORT              = 32400; 
     const USE_NFS                        = true; 
     const USE_SMB                        = false; 
-    const USE_CACHE                      = false;
+    static $USE_CACHE                       = false;
     const CREATE_LOG_FOLDER              = true;
     const CREATE_CACHE_FOLDER_ON_MAIN_HD = false;
     
@@ -65,9 +65,25 @@ class EmplexerConfig
                 );
         }
 
+        //checa se precisa criar o cache_dir;
+        EmplexerConfig::createCacheDirIfNeeded($plugin_cookies);
 
         return "http://$plexIp:$plexPort";
     // }
+    }
+
+
+    public static function createCacheDirIfNeeded(&$plugin_cookies){
+    //se não existir o diretorio de cache devo criar
+        EmplexerConfig::$USE_CACHE  = $plugin_cookies->useCache;
+        hd_print(__METHOD__ . ': ' . EmplexerConfig::$USE_CACHE);
+        $cache_dir='/persistfs/plugins_archive/emplexer/emplexer_default_archive';
+        if (EmplexerConfig::$USE_CACHE && !file_exists($cache_dir)){
+            if (!file_exists($cache_dir)){
+                 $result = mkdir($cache_dir);
+                 hd_print("criação de diretório de cache em $cache_dir [" . $result ? 'OK' : 'FAIL' . "]" );
+            }
+        }
     }
 
 

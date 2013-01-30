@@ -28,6 +28,7 @@ require_once 'lib/abstract_controls_screen.php';
 			$userName   = isset($plugin_cookies->userName) ? $plugin_cookies->userName : "";
 			$passWord   = isset($plugin_cookies->password) ? $plugin_cookies->password : "";
 			$showOnMainScreen = isset($plugin_cookies->showOnMainScreen) ? $plugin_cookies->showOnMainScreen : 'No';
+			$useCache = isset($plugin_cookies->useCache) ? $plugin_cookies->useCache : 'true';
 			
 			hd_print("password = $passWord userName = $userName" );
 			
@@ -165,6 +166,19 @@ require_once 'lib/abstract_controls_screen.php';
         		$need_apply = true
         	);
 
+        	$useCacheOptions = array('true' => 'Yes', 'false' => 'No');
+
+        	$this->add_combobox(
+				$defs,
+        		$name		   			= 'useCache',
+        		$title		   			= 'Use Cache',
+        		$initial_value 			= $useCache,
+        		$value_caption_pairs 	= $useCacheOptions,
+        		$width					= 300,
+        		$need_confirm 			= false, 
+        		$need_apply = true
+        	);
+
 
 
 			$this->add_button(
@@ -218,6 +232,7 @@ require_once 'lib/abstract_controls_screen.php';
 				$plugin_cookies->password = $plugin_cookies->password ;				
 			}
 			$plugin_cookies->showOnMainScreen = $user_input->showOnMainScreen;
+			$plugin_cookies->useCache = $user_input->useCache;
 			// $plugin_cookies->connectionMethod = $user_input->connectionMethod ;
 
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));

@@ -89,10 +89,13 @@ class EmplexerArchive implements Archive
 	{
 		hd_print(__METHOD__);
 		//no cache
-		if(EmplexerConfig::USE_CACHE){
+		if(EmplexerConfig::$USE_CACHE === 'true'){
+			hd_print( __METHOD__ .  ': Entrou.... ' );
 			//hd_print(__METHOD__ . " fileName=$fileName, fileUrl=$fileUrl");
 			$this->urls[$fileName] = $fileUrl ;
 			EmplexerFifoController::getInstance()->downloadToCache($fileName, $fileUrl);
+		} else {
+			hd_print( __METHOD__ .  ': Não Entrou.... ' );
 		}
 	}
 

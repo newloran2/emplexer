@@ -180,7 +180,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		foreach ($xml->Video as $c)
 		{
 			$thumb        = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb);
-			if (!EmplexerConfig::USE_CACHE){
+			if (EmplexerConfig::$USE_CACHE  === 'false'){
 				$thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			}
 			$detailPhoto  = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;

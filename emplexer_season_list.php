@@ -99,7 +99,7 @@ class EmplexerSeasonList extends AbstractPreloadedRegularScreen implements UserI
 			// hd_print(__METHOD__ . ':' .  print_r($xml, true));
 			$thumb = (string)$c->attributes()->thumb ? (string)$c->attributes()->thumb : (string)$xml->attributes()->thumb;
 			$url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .'/photo/:/transcode?width=340&height=480&url=' . urlencode( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $thumb);
-			if (!EmplexerConfig::USE_CACHE){
+			if (EmplexerConfig::$USE_CACHE === 'false'){
 				$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . $thumb;
 			}
 			// $url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .'/photo/:/transcode?width=150&height=222&url=' . EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;

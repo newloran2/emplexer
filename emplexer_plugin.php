@@ -39,19 +39,14 @@ class Emplexer extends DefaultDunePlugin
 		hd_print(__METHOD__);
 		if (EmplexerConfig::CREATE_LOG_FOLDER){
 			if (file_exists('/D') && is_dir('/D')){
-				mkdir('/D/dune_plugin_logs/');
-				hd_print('log_dir created');
+				if (!file_exists('/D/dune_plugin_logs/')){
+					mkdir('/D/dune_plugin_logs/');
+					hd_print('log_dir created');	
+				}
 			}
 		}
 
-		//se não existir o diretorio de cache devo criar
-		if (EmplexerConfig::USE_CACHE){
-			$cache_dir='/persistfs/plugins_archive/emplexer/emplexer_default_archive';
-			if (!file_exists($cache_dir)){
-				 $result = mkdir($cache_dir);
-				 hd_print("criação de diretório de cache em $cache_dir [" . $result ? 'OK' : 'FAIL' . "]" );
-			}
-		}
+		
 
 		$this->vod = new EmplexerVod();
 		$this->add_screen(new EmplexerSetupScreen());
