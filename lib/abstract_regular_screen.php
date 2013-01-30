@@ -31,7 +31,7 @@ abstract class AbstractRegularScreen implements RegularScreen
 
     public function __set($name, $value){
         $this->{$name} = $value;
-        hd_print("$name=$name value=$value");
+        hd_print("$name=$name value=". is_array($value)? print_r($value, true) : $value);
         
         if ($name == "folder_views" ){
             hd_print("folder_view");

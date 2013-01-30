@@ -227,8 +227,8 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 
 	public static function get_vod_info($toPlay){
-		hd_print(__METHOD__);
-		// hd_print(__METHOD__ . ':' . print_r($toPlay, true));
+		// hd_print(__METHOD__);
+		hd_print(__METHOD__ . ':' . print_r($toPlay, true));
 		$url = $toPlay->url;
 		if ($toPlay->indirect){
 			$xml = HD::getAndParseXmlFromUrl(str_replace('http://mp4://', 'http://', $toPlay->url));
@@ -259,12 +259,12 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			PluginVodInfo::poster_url => $toPlay->thumb,
 			PluginVodInfo::initial_series_ndx => 0,
 			PluginVodInfo::buffering_ms => 6000,
-				// PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
+			PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
 			PluginVodInfo::advert_mode => false,
-				// PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
-			/*PluginVodInfo::actions => array(
+			PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
+			PluginVodInfo::actions => array(
 				GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
-				)*/
+				)
 		);	
 
 		hd_print(__METHOD__ . ':' . print_r($toBeReturned, true));
@@ -407,8 +407,12 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 				$videoResolution = (string)$m->attributes()->videoResolution;
 				$bitrate = (string)$m->attributes()->bitrate;
 				$indirect = (string)$m->attributes()->indirect;
-				$key_url = $this->base_url . (string)$m->Part->attributes()->key;
+				$key_url =  $this->getVideoUrl($m, $plugin_cookies); 
 				$key = $key_url;
+				$was_seen = (string)$m->attributes()->viewCount;
+				$viewOffset = $m->attributes()->viewOffset? (string)$m->attributes()->viewOffset : 0;
+
+				hd_print("was_seen = $was_seen , viewOffset = $viewOffset");
 
 				if ($container != "flv"){
 					//dune não tem suporte para flv
@@ -428,12 +432,14 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 						'summary' => $summary,
 						'title' => $title,
 						'thumb' => $thumb,
-
-						'url' => $key
+						'url' => $key,
+						'was_seen' => $was_seen,
+						'viewOffset'=> $viewOffset
 						);	
 				}
 			}
 
+			//não achou nenhuma informação  então usa ? para tudo.
 			if (count($videoMediaArray) <=0){
 				$videoMediaArray[] = array
 				(
@@ -448,8 +454,9 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 					'summary' => $summary,
 					'title' => $title,
 					'thumb' => $thumb,
-
-					'url' => $key
+					'url' => $key,
+					'was_seen' => false,
+					'viewOffset'=> 0
 					);		
 			}
 
@@ -541,6 +548,10 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$settings        = (string)$c->attributes()->settings;
 			$search          = (string)$c->attributes()->search;
 			$prompt          = (string)$c->attributes()->prompt;
+			$art 			 = $c->attributes()->art ? (string)$c->attributes()->art :(string)$xml->attributes()->art;
+
+			hd_print('art= ' . $art);
+
 
 			$type = !$settings ? TYPE_DIRECTORY : TYPE_CONF;
 			$type = !$search ? $type : TYPE_SEARCH;
@@ -549,7 +560,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			$parameters =  array(
 					'key'    => $key,
 					'type'   => $type,
-					'params' => null
+					'params' => $art ? array( 'art' => $this->base_url . $art )  : null
 				);
 
 			
@@ -585,10 +596,12 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}
 
 	
-	public function getVideoUrl($videoUrl, $container=null)
+	public function getVideoUrl(SimpleXMLElement &$node, &$plugin_cookies)
 	{
 		hd_print(__METHOD__);
-		return $videoUrl;
+
+		return $this->base_url .  (string)$node->Part->attributes()->key;
+		
 	}
 
 	public function getNextScreen($parameters){

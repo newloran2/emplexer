@@ -84,18 +84,18 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				$items =  array_merge($items, $channels);
 			}
 
-			// $items[] = array
-   //          (
-   //              PluginRegularFolderItem::media_url =>  EmplexerListVideo::get_media_url_str('/library'),
-   //              PluginRegularFolderItem::caption => 'teste',
-   //              PluginRegularFolderItem::view_item_params =>
-   //              array
-   //              (
-   //                  ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
-   //              )
-   //          );
+			$items[] = array
+            (
+                PluginRegularFolderItem::media_url =>  EmplexerListVideo::get_media_url_str('/library/sections'),
+                PluginRegularFolderItem::caption => 'teste',
+                PluginRegularFolderItem::view_item_params =>
+                array
+                (
+                    ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
+                )
+            );
 
-		// }
+		
 
 
 		// hd_print(print_r($items, true));

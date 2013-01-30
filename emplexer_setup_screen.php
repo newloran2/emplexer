@@ -17,8 +17,7 @@ require_once 'lib/abstract_controls_screen.php';
 		}
 
 		public function do_get_control_defs(&$plugin_cookies){
-			hd_print(__METHOD__);
-			hd_print(__METHOD__  . print_r($plugin_cookies, true));
+			hd_print(__METHOD__  . ': ' . print_r($plugin_cookies, true));
 			$defs = array();
 			$plexIp     = isset($plugin_cookies->plexIp)   ? $plugin_cookies->plexIp   : '';
 			$plexPort   = isset($plugin_cookies->plexPort) ? $plugin_cookies->plexPort : EmplexerConfig::DEFAULT_PLEX_PORT;
@@ -28,6 +27,7 @@ require_once 'lib/abstract_controls_screen.php';
 			$hasSeenCaptionColor   = isset($plugin_cookies->hasSeenCaptionColor) ? $plugin_cookies->hasSeenCaptionColor : DEFAULT_HAS_SEEN_CAPTION_COLOR;
 			$userName   = isset($plugin_cookies->userName) ? $plugin_cookies->userName : "";
 			$passWord   = isset($plugin_cookies->password) ? $plugin_cookies->password : "";
+			$showOnMainScreen = isset($plugin_cookies->showOnMainScreen) ? $plugin_cookies->showOnMainScreen : 'No';
 			
 			hd_print("password = $passWord userName = $userName" );
 			
@@ -152,12 +152,26 @@ require_once 'lib/abstract_controls_screen.php';
         	);
 
 
+        	$showOnMainScreenOptions = array('yes' => 'Yes', 'no' => 'No');
+
+        	$this->add_combobox(
+				$defs,
+        		$name		   			= 'showOnMainScreen',
+        		$title		   			= 'Add to main screen',
+        		$initial_value 			= $showOnMainScreen,
+        		$value_caption_pairs 	= $showOnMainScreenOptions,
+        		$width					= 300,
+        		$need_confirm 			= false, 
+        		$need_apply = true
+        	);
+
+
 
 			$this->add_button(
 				$defs,
 				$name          = "btnSalvar",
-				$title         = "salvar",
-				$caption	   = "salvar",
+				$title         = "save",
+				$caption	   = "save",
 				$width         =  200     
 			);
 
@@ -203,6 +217,7 @@ require_once 'lib/abstract_controls_screen.php';
 				$plugin_cookies->userName = $plugin_cookies->userName ;
 				$plugin_cookies->password = $plugin_cookies->password ;				
 			}
+			$plugin_cookies->showOnMainScreen = $user_input->showOnMainScreen;
 			// $plugin_cookies->connectionMethod = $user_input->connectionMethod ;
 
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));

@@ -85,7 +85,7 @@ class Emplexer extends DefaultDunePlugin
 
 
 		if ($media_url->screen_id == 'emplexer_base_channel'){
-			$toPlay = $media_url->video_media_array[$plugin_cookies->channel_selected_index];
+				$toPlay = $media_url->video_media_array[$plugin_cookies->channel_selected_index];
 			return EmplexerBaseChannel::get_vod_info($toPlay);
 		}
 

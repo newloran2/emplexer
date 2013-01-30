@@ -62,6 +62,9 @@ class EmplexerRootList extends AbstractPreloadedRegularScreen
 			$thumb =(string)$c->attributes()->thumb;
 			$url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $thumb);
 			// $urlb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			if (!EmplexerConfig::USE_CACHE){
+				$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $thumb;
+			}
 			$bgImage = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) .  $c->attributes()->art;
 			
 			$caption = (string) $c->attributes()->ratingKey . '.jpg';

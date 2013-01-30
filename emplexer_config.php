@@ -24,7 +24,7 @@ class EmplexerConfig
     const DEFAULT_PLEX_PORT              = 32400; 
     const USE_NFS                        = true; 
     const USE_SMB                        = false; 
-    const USE_CACHE                      = true;
+    const USE_CACHE                      = false;
     const CREATE_LOG_FOLDER              = true;
     const CREATE_CACHE_FOLDER_ON_MAIN_HD = false;
     
@@ -111,7 +111,7 @@ class EmplexerConfig
         return  array('video', 'music', 'photos');
     }
 
-    public static function GET_SECTIONS_LIST_VIEW()
+    public static function GET_SECTIONS_LIST_VIEW($art=null)
     {
         hd_print(__METHOD__);
         return array(
@@ -123,6 +123,9 @@ class EmplexerConfig
                 (
                     ViewParams::num_cols => 1,
                     ViewParams::num_rows => 12,
+                    ViewParams::background_path => $art,
+                    ViewParams::optimize_full_screen_background => false,
+                    ViewParams::background_order => 'before_all'
                     ),
 
                 PluginRegularFolderView::base_view_item_params => array
@@ -141,7 +144,7 @@ class EmplexerConfig
             );
     }
 
-    public static function GET_VIDEOS_LIST_VIEW(){
+    public static function GET_VIDEOS_LIST_VIEW($art=null){
         hd_print(__METHOD__);
         return array(
 
@@ -167,7 +170,10 @@ class EmplexerConfig
                     ViewParams::paint_details => true,
                     ViewParams::zoom_detailed_icon => true,
                     ViewParams::paint_item_info_in_details => true,
-                    ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL
+                    ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+                    ViewParams::background_path => $art,
+                    ViewParams::optimize_full_screen_background => false,
+                    ViewParams::background_order => 'before_all'
                     ),
 PluginRegularFolderView::base_view_item_params => array
 (
@@ -213,7 +219,10 @@ array
         ViewParams::paint_details => false,
         ViewParams::zoom_detailed_icon => false,
         ViewParams::paint_item_info_in_details => true,
-        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL
+        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+        ViewParams::background_path => $art,
+        ViewParams::optimize_full_screen_background => false,
+        ViewParams::background_order => 'before_all'
         ),
     PluginRegularFolderView::base_view_item_params => array
     (
@@ -253,7 +262,10 @@ array
         ViewParams::icon_selection_box_height => 222,
         ViewParams::paint_details => true,
         ViewParams::zoom_detailed_icon => true,
-        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL
+        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+        ViewParams::background_path => $art,
+        ViewParams::optimize_full_screen_background => false,
+        ViewParams::background_order => 'before_all'
         ),
     PluginRegularFolderView::base_view_item_params => array
     (
@@ -285,7 +297,10 @@ array
         ViewParams::num_rows => 12,
         ViewParams::paint_details => true,
         ViewParams::zoom_detailed_icon => true,
-        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL
+        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+        ViewParams::background_path => $art,
+        ViewParams::optimize_full_screen_background => false,
+        ViewParams::background_order => 'before_all'
         ),
 
     PluginRegularFolderView::base_view_item_params => array
@@ -304,7 +319,7 @@ array
 );
 }
 
-public static function GET_EPISODES_LIST_VIEW(){
+public static function GET_EPISODES_LIST_VIEW($art=null){
     return array(
         // normal icons view
         array
@@ -326,7 +341,10 @@ public static function GET_EPISODES_LIST_VIEW(){
                 ViewParams::paint_details => true,
                 ViewParams::zoom_detailed_icon => true,
                 ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
-                ViewParams::item_detailed_info_title_color => 6 #FFE040 ,
+                ViewParams::item_detailed_info_title_color => 6, #FFE040 ,
+                ViewParams::background_path => $art,
+                ViewParams::optimize_full_screen_background => false,
+                ViewParams::background_order => 'before_all'
                 ),
 
             PluginRegularFolderView::base_view_item_params => array
@@ -371,7 +389,10 @@ array
         ViewParams::paint_details => false,
         ViewParams::zoom_detailed_icon => false ,
         ViewParams::item_detailed_info_title_color => 6, #FFE040 ,
-        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL
+        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+        ViewParams::background_path => $art,
+        ViewParams::optimize_full_screen_background => false,
+        ViewParams::background_order => 'before_all'
                 // ViewParams::paint_path_box => false,
                 // ViewParams::paint_help_line => true,
                 // ViewParams::paint_scrollbar => false,
@@ -418,6 +439,9 @@ array
         ViewParams::paint_details => true,
         ViewParams::zoom_detailed_icon => true,
         ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+        ViewParams::background_path => $art,
+        ViewParams::optimize_full_screen_background => false,
+        ViewParams::background_order => 'before_all'
         ),
 
     PluginRegularFolderView::base_view_item_params => array
