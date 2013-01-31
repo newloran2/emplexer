@@ -75,29 +75,46 @@ require_once 'lib/abstract_controls_screen.php';
         	);
 
 			if ($connectionMethod == 'smb'){
-
-	        	$this->add_text_field(
+				$this->add_button(
 					$defs,
-					$name          = "userName",
-					$title         = "User Name",
-					$initial_value = $userName,
-					$numeric       = false,
-					$password      = false,
-					$has_osk       = false,
-					$always_active = 0,
-					$width         = 500     
+					$name          = "configureSMB",
+					$title         = "Advance SMB Configuration",
+					$caption	   = "SMB Configuration",
+					$width         =  200
 				);
 
-				$this->add_text_field(
+	   //      	$this->add_text_field(
+				// 	$defs,
+				// 	$name          = "userName",
+				// 	$title         = "User Name",
+				// 	$initial_value = $userName,
+				// 	$numeric       = false,
+				// 	$password      = false,
+				// 	$has_osk       = false,
+				// 	$always_active = 0,
+				// 	$width         = 500     
+				// );
+
+				// $this->add_text_field(
+				// 	$defs,
+				// 	$name          = "password",
+				// 	$title         = "Password",
+				// 	$initial_value = $passWord,
+				// 	$numeric       = false,
+				// 	$password      = true,
+				// 	$has_osk       = false,
+				// 	$always_active = 0,
+				// 	$width         = 500     
+				// );
+			}
+
+			if ($connectionMethod == 'nfs'){
+				$this->add_button(
 					$defs,
-					$name          = "password",
-					$title         = "Password",
-					$initial_value = $passWord,
-					$numeric       = false,
-					$password      = true,
-					$has_osk       = false,
-					$always_active = 0,
-					$width         = 500     
+					$name          = "configureNfs",
+					$title         = "Advance Nfs Configuration",
+					$caption	   = "Nfs Configuration",
+					$width         =  200
 				);
 			}
 
@@ -179,7 +196,8 @@ require_once 'lib/abstract_controls_screen.php';
         		$need_apply = true
         	);
 
-
+        	// $this->getStorageLocations($plugin_cookies, $defs);
+        	
 
 			$this->add_button(
 				$defs,
@@ -188,8 +206,6 @@ require_once 'lib/abstract_controls_screen.php';
 				$caption	   = "save",
 				$width         =  200     
 			);
-
-
 			return $defs;
 		}
 
@@ -207,9 +223,19 @@ require_once 'lib/abstract_controls_screen.php';
 
 		public function handle_user_input(&$user_input, &$plugin_cookies )	
 		{
-			hd_print(__METHOD__);
-			EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
-			return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));
+			hd_print(__METHOD__ . ':' . print_r($user_input, true));
+			if ($user_input->selected_control_id == 'configureNfs'){
+				return ActionFactory::show_nfs_advanced_configuration_modal('Nfs advanced configuration',&$plugin_cookies);
+			} else if ($user_input->selected_control_id == 'configureSMB'){
+				return ActionFactory::show_smb_advanced_configuration_modal('SMB advanced configuration',&$plugin_cookies);
+			} else if ($user_input->selected_control_id == 'btnSalvar'){
+				EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
+				return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));	
+			} else if ($user_input->selected_control_id == 'connectionMethod') {
+				EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
+				return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));	
+			}
+			
 		}
 
 
@@ -238,4 +264,5 @@ require_once 'lib/abstract_controls_screen.php';
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
 		}
 	}
+
 	?>
