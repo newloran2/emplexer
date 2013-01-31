@@ -278,6 +278,67 @@ class ActionFactory
             return ActionFactory::show_dialog($title, $defs);
     }
 
+     public static function show_nfs_advanced_configuration_modal($modalTitle, &$plugin_cookies,$post_action= null){
+      
+        $defs = array();
+        $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
+        $xml = HD::getAndParseXmlFromUrl($plexLocation);
+        // hd_print(__METHOD__ . ';' . print_r($xml, true));
+        foreach ($xml->Directory as $directory) {
+            foreach ($directory->Location as $location) {
+                ControlFactory::add_text_field(
+                    $defs, 
+                    null, 
+                    null,
+                    $name            = str_replace(array('/', ' '), '_', (string)$location->attributes()->path), 
+                    $title           = (string)$location->attributes()->path,  
+                    $initial_value   = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path,  
+                    $numeric         = false, 
+                    $password        = false, 
+                    $has_osk         = false, 
+                    $always_active   = 0, 
+                    $width           = 500
+                );
+            }
+        }
+        ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
+        'btnSalvar', 'save', 200, $post_action);
+
+
+        return ActionFactory::show_dialog($modalTitle, $defs);
+    }
+
+    public static function show_smb_advanced_configuration_modal($modalTitle, &$plugin_cookies,$post_action= null){
+      
+        $defs = array();
+        $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
+        $xml = HD::getAndParseXmlFromUrl($plexLocation);
+        // hd_print(__METHOD__ . ';' . print_r($xml, true));
+        foreach ($xml->Directory as $directory) {
+            foreach ($directory->Location as $location) {
+                ControlFactory::add_text_field(
+                    $defs, 
+                    null, 
+                    null,
+                    $name            = str_replace(array('/', ' '), '_', (string)$location->attributes()->path), 
+                    $title           = (string)$location->attributes()->path,  
+                    $initial_value   = 'smb://user:password@'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path,  
+                    $numeric         = false, 
+                    $password        = false, 
+                    $has_osk         = false, 
+                    $always_active   = 0, 
+                    $width           = 500
+                );
+            }
+        }
+        ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
+        'btnSalvar', 'save', 200, $post_action);
+
+
+        return ActionFactory::show_dialog($modalTitle, $defs);
+    }
+
+
 
 }
 
