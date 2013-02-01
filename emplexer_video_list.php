@@ -1,5 +1,6 @@
 <?php 
 
+
 /**
 * 
 */
@@ -54,6 +55,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		if ($user_input->control_id == 'stop')
 		{
+			hd_print('ENTREI NO EVENTO STOP');
 			$media_url =  $this->get_media_url_str($user_input->back_key, $user_input->back_filter_name);
 			EmplexerFifoController::getInstance()->killPlexNotify();
 			$action =  ActionFactory::invalidate_folders(
@@ -195,7 +197,12 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
 			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
-			$v = $videoUrl[$plugin_cookies->connectionMethod];
+			// $v = $videoUrl[$plugin_cookies->connectionMethod];
+			
+			if ($plugin_cookies->connectionMethod == HTTP_CONNECTION_TYPE) 
+				$v = $httpVidelUrl;
+			else
+				$v = $this->getPlayBackUrl($plugin_cookies, (string)$c->Media->Part->attributes()->file, $plugin_cookies->connectionMethod);
 
 			if (!$v){
 				hd_print('connectionMethod not setted use http as default');
@@ -296,7 +303,19 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		'summary:'. str_replace('"', '' , (string)$node->attributes()->summary);
 
 		return $info;
+	}
 
+
+	public function getPlayBackUrl(&$plugin_cookies, $filePath, $type=HTTP_CONNECTION_TYPE){
+
+		if ($type == HTTP_CONNECTION_TYPE) return $filePath;
+
+		foreach ($plugin_cookies as $key => $value) {
+			if (strpos($filePath, $key) !== false){
+				return str_replace($key, $value, $filePath);
+			}
+		}
+		// $nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . $filePath; 
 	}
 
 

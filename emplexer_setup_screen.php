@@ -74,14 +74,14 @@ require_once 'lib/abstract_controls_screen.php';
         		$need_apply = true
         	);
 
-			if ($connectionMethod == 'smb'){
-				$this->add_button(
-					$defs,
-					$name          = "configureSMB",
-					$title         = "Advance SMB Configuration",
-					$caption	   = "SMB Configuration",
-					$width         =  200
-				);
+			// if ($connectionMethod == 'smb'){
+			// 	$this->add_button(
+			// 		$defs,
+			// 		$name          = "configureSMB",
+			// 		$title         = "Advance SMB Configuration",
+			// 		$caption	   = "SMB Configuration",
+			// 		$width         =  200
+			// 	);
 
 	   //      	$this->add_text_field(
 				// 	$defs,
@@ -106,17 +106,17 @@ require_once 'lib/abstract_controls_screen.php';
 				// 	$always_active = 0,
 				// 	$width         = 500     
 				// );
-			}
+			// }
 
-			if ($connectionMethod == 'nfs'){
-				$this->add_button(
-					$defs,
-					$name          = "configureNfs",
-					$title         = "Advance Nfs Configuration",
-					$caption	   = "Nfs Configuration",
-					$width         =  200
-				);
-			}
+			// if ($connectionMethod == 'nfs'){
+			// 	$this->add_button(
+			// 		$defs,
+			// 		$name          = "configureNfs",
+			// 		$title         = "Advance Nfs Configuration",
+			// 		$caption	   = "Nfs Configuration",
+			// 		$width         =  200
+			// 	);
+			// }
 
 
 
@@ -225,15 +225,44 @@ require_once 'lib/abstract_controls_screen.php';
 		{
 			hd_print(__METHOD__ . ':' . print_r($user_input, true));
 			if ($user_input->selected_control_id == 'configureNfs'){
-				return ActionFactory::show_nfs_advanced_configuration_modal('Nfs advanced configuration',&$plugin_cookies);
+
+				$saveAdvanceNfsConfig = UserInputHandlerRegistry::create_action($this, 'saveAdvanceNfsConfig');
+				return ActionFactory::show_nfs_advanced_configuration_modal('Nfs advanced configuration',&$plugin_cookies, $saveAdvanceNfsConfig);
+
 			} else if ($user_input->selected_control_id == 'configureSMB'){
-				return ActionFactory::show_smb_advanced_configuration_modal('SMB advanced configuration',&$plugin_cookies);
+
+				$saveAdvanceSmbConfig = UserInputHandlerRegistry::create_action($this, 'saveAdvanceSmbConfig');
+				return ActionFactory::show_smb_advanced_configuration_modal('SMB advanced configuration',&$plugin_cookies, $saveAdvanceSmbConfig);
+
 			} else if ($user_input->selected_control_id == 'btnSalvar'){
+
 				EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
 				return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));	
+
 			} else if ($user_input->selected_control_id == 'connectionMethod') {
+
+				if ($user_input->connectionMethod == NFS_CONNECTION_TYPE){
+					$saveAdvanceNfsConfig = UserInputHandlerRegistry::create_action($this, 'saveAdvanceNfsConfig');
+					return ActionFactory::show_nfs_advanced_configuration_modal('Nfs advanced configuration',&$plugin_cookies, $saveAdvanceNfsConfig);					
+				} else if ($user_input->connectionMethod == SMB_CONNECTION_TYPE){
+					$saveAdvanceSmbConfig = UserInputHandlerRegistry::create_action($this, 'saveAdvanceSmbConfig');
+					return ActionFactory::show_smb_advanced_configuration_modal('SMB advanced configuration',&$plugin_cookies, $saveAdvanceSmbConfig);
+				} else {
+					EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
+					return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));		
+				}
+				
+
+			} else if ($user_input->selected_control_id == 'saveAdvanceNfs'){
+
 				EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
 				return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));	
+
+			} else if ($user_input->selected_control_id == 'saveAdvanceSmb'){
+
+				EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
+				return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));	
+
 			}
 			
 		}
@@ -260,6 +289,14 @@ require_once 'lib/abstract_controls_screen.php';
 			$plugin_cookies->showOnMainScreen = $user_input->showOnMainScreen;
 			$plugin_cookies->useCache = $user_input->useCache;
 			// $plugin_cookies->connectionMethod = $user_input->connectionMethod ;
+
+
+			
+			foreach ($user_input as $key => $value) {
+				$plugin_cookies->{$key} = $value;	
+			}
+			
+
 
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
 		}

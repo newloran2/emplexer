@@ -290,7 +290,7 @@ class ActionFactory
                     $defs, 
                     null, 
                     null,
-                    $name            = str_replace(array('/', ' '), '_', (string)$location->attributes()->path), 
+                    $name            = (string)$location->attributes()->path, 
                     $title           = (string)$location->attributes()->path,  
                     $initial_value   = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path,  
                     $numeric         = false, 
@@ -302,7 +302,7 @@ class ActionFactory
             }
         }
         ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
-        'btnSalvar', 'save', 200, $post_action);
+        'saveAdvanceNfs', 'save', 200, $post_action);
 
 
         return ActionFactory::show_dialog($modalTitle, $defs);
@@ -320,7 +320,7 @@ class ActionFactory
                     $defs, 
                     null, 
                     null,
-                    $name            = str_replace(array('/', ' '), '_', (string)$location->attributes()->path), 
+                    $name            = (string)$location->attributes()->path, 
                     $title           = (string)$location->attributes()->path,  
                     $initial_value   = 'smb://user:password@'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path,  
                     $numeric         = false, 
@@ -332,7 +332,7 @@ class ActionFactory
             }
         }
         ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
-        'btnSalvar', 'save', 200, $post_action);
+        'saveAdvanceSmb', 'save', 200, $post_action);
 
 
         return ActionFactory::show_dialog($modalTitle, $defs);
