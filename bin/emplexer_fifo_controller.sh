@@ -53,9 +53,11 @@ do
             sleepTime=${splitedLine[2]}
             url=${splitedLine[3]}
             markTime=${splitedLine[4]}
+            time_to_position=${splitedLine[5]}
 
-        	echo "iniciando plex_notify com comando plex_notify.sh $key $sleepTime '$url' $markTime & "
-        	sh $current_dir/plex_notify.sh $key $sleepTime "$url" $markTime &
+
+        	echo "iniciando plex_notify com comando plex_notify.sh $key $sleepTime '$url' $markTime  & "
+        	sh $current_dir/plex_notify.sh $key $sleepTime "$url" $markTime $time_to_position &
         	echo `pidof plex_notify.sh`
         fi
 

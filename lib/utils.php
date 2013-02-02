@@ -150,7 +150,6 @@ class HD
 
     public static function http_get_document($url, $opts = null)
     {
-
         $url = str_replace('//', '/', $url);
         $url = str_replace('http:/', 'http://', $url);
         $url = str_replace('https:/', 'https://', $url);

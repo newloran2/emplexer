@@ -35,20 +35,40 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			hd_print(__METHOD__ . ':' .  print_r($user_input, true));
 			if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
 				$url = dirname($media_url->video_url);
-				return ActionFactory::dvd_play($url);
+				return   ActionFactory::dvd_play($url);
 			} else if (strpos(strtolower($media_url->video_url), ".iso")){
-				return ActionFactory::dvd_play($media_url->video_url);
+				return ActionFactory::launch_media_url($media_url->video_url);   //ActionFactory::dvd_play($media_url->video_url);
+
+				// $pop_up_items =  array();
+				// $pop_up_items[] = array(
+				// 	GuiMenuItemDef::caption=> 'Play as DVD',
+				// 	GuiMenuItemDef::action =>  ActionFactory::dvd_play($media_url->video_url)
+				// );
+				// $pop_up_items[] = array(
+				// 	GuiMenuItemDef::caption=> 'Play as Bluy',
+				// 	GuiMenuItemDef::action =>  ActionFactory::dvd_play($media_url->video_url)
+				// );
+				
+				// hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true));		
+				// $action = ActionFactory::show_popup_menu($pop_up_items);	
+				// // hd_print(__METHOD__ . ': ' . print_r($action, true));
+				// return $action;
+
+
+
 			} else {
 				
 				$url = $media_url->video_url;
+				$key = $media_url->key;
 				$startPosition = $media_url->viewOffset / 1000; 
 				$plexFileId = $media_url->key;
 				$timeToMark=DEFAULT_TIME_TO_MARK;
 				$basePlexURL = $base_url;
 				$pooling=5;
 				$time_action = UserInputHandlerRegistry::create_action($this, 'time', null);
+				// EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this).'/');
 				// EmplexerFifoController::getInstance()->startDefaultPlayBack($url,$startPosition,$plexFileId,$timeToMark,$basePlexURL,$pooling);
-				// return ActionFactory::launch_media_url($media_url->video_url , $time_action);
+				// return ActionFactory::launch_media_url($media_url->video_url);
 				return ActionFactory::vod_play();
 			}
 		} 

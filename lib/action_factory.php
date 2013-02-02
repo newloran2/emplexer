@@ -61,6 +61,19 @@ class ActionFactory
         );
     }
 
+    public static function bluray_play($url)
+    {
+        return array
+        (
+            GuiAction::handler_string_id => BLURAY_PLAY_ACTION_ID,            
+            GuiAction::data =>
+             array
+             (
+                BlurayPlayActionData::url => $url,
+             ),
+        );
+    }
+
 	 public static function launch_media_url($url,$post_action=null)
     {
         return array
@@ -286,13 +299,20 @@ class ActionFactory
         // hd_print(__METHOD__ . ';' . print_r($xml, true));
         foreach ($xml->Directory as $directory) {
             foreach ($directory->Location as $location) {
+                //se já existir a chave e o valor for nfs usa a chave que já existe se não pega o valor do plex
+                if ($plugin_cookies->{$location->attributes()->path} && strpos($plugin_cookies->{$location->attributes()->path}, 'nfs://') !== false){
+                    $value = $plugin_cookies->{$location->attributes()->path};      
+                } else {
+                    $value = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path;
+                }   
+                
                 ControlFactory::add_text_field(
                     $defs, 
                     null, 
                     null,
                     $name            = (string)$location->attributes()->path, 
                     $title           = (string)$location->attributes()->path,  
-                    $initial_value   = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path,  
+                    $initial_value   = $value,  
                     $numeric         = false, 
                     $password        = false, 
                     $has_osk         = false, 
@@ -316,13 +336,20 @@ class ActionFactory
         // hd_print(__METHOD__ . ';' . print_r($xml, true));
         foreach ($xml->Directory as $directory) {
             foreach ($directory->Location as $location) {
+                //se já existir a chave e o valor for smb usa a chave que já existe se não pega o valor do plex
+                if ($plugin_cookies->{$location->attributes()->path} && strpos($plugin_cookies->{$location->attributes()->path}, 'smb://') !== false){
+                    $value = $plugin_cookies->{$location->attributes()->path};      
+                } else {
+                    $value = 'smb://user:password@'. $plugin_cookies->plexIp .  (string)$location->attributes()->path;
+                }   
+                 
                 ControlFactory::add_text_field(
                     $defs, 
                     null, 
                     null,
                     $name            = (string)$location->attributes()->path, 
                     $title           = (string)$location->attributes()->path,  
-                    $initial_value   = 'smb://user:password@'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path,  
+                    $initial_value   = $value,
                     $numeric         = false, 
                     $password        = false, 
                     $has_osk         = false, 
