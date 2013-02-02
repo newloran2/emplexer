@@ -37,25 +37,13 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				$url = dirname($media_url->video_url);
 				return   ActionFactory::dvd_play($url);
 			} else if (strpos(strtolower($media_url->video_url), ".iso")){
+
 				return ActionFactory::launch_media_url($media_url->video_url);   //ActionFactory::dvd_play($media_url->video_url);
 
-				// $pop_up_items =  array();
-				// $pop_up_items[] = array(
-				// 	GuiMenuItemDef::caption=> 'Play as DVD',
-				// 	GuiMenuItemDef::action =>  ActionFactory::dvd_play($media_url->video_url)
-				// );
-				// $pop_up_items[] = array(
-				// 	GuiMenuItemDef::caption=> 'Play as Bluy',
-				// 	GuiMenuItemDef::action =>  ActionFactory::dvd_play($media_url->video_url)
-				// );
+			} else if (strpos(strtolower($media_url->video_url), ".m2ts")){
+
+				return ActionFactory::launch_media_url($media_url->video_url);
 				
-				// hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true));		
-				// $action = ActionFactory::show_popup_menu($pop_up_items);	
-				// // hd_print(__METHOD__ . ': ' . print_r($action, true));
-				// return $action;
-
-
-
 			} else {
 				
 				$url = $media_url->video_url;
