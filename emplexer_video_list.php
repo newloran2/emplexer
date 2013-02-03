@@ -171,19 +171,13 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		hd_print(__METHOD__);
 		hd_print(__METHOD__ . ': ' . print_r($media_url, true));
 		hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true));
-		// hd_print(__METHOD__ . ': ' . $media_url->get_raw_string());
 
 		$base_url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
 		if (is_null ($media_url->filter_name)){
-			// $doc =    HD::http_get_document(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
 			$xml =    HD::getAndParseXmlFromUrl(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
 		} else {
-			// $doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
 			$xml = HD::getAndParseXmlFromUrl( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
 		}
-
-		// $xml = simplexml_load_string($doc);
-
 		$items = array();
 		$bgImage = $base_url .  $xml->attributes()->art;
 

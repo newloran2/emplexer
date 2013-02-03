@@ -109,7 +109,7 @@ class Emplexer extends DefaultDunePlugin
 		$toBeReturned = array(
 			PluginVodInfo::id => $media_url->movie_id,
 			PluginVodInfo::series => $series_array,
-			PluginVodInfo::name =>  $media_url->title,
+			PluginVodInfo::name =>  $media_url->name,
 			PluginVodInfo::description => $media_url->summary,
 			PluginVodInfo::poster_url => $media_url->thumb,
 			PluginVodInfo::initial_series_ndx => 0,

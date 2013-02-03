@@ -259,12 +259,12 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			PluginVodInfo::poster_url => $toPlay->thumb,
 			PluginVodInfo::initial_series_ndx => 0,
 			PluginVodInfo::buffering_ms => 6000,
-			PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
+			// PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
 			PluginVodInfo::advert_mode => false,
-			PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
-			PluginVodInfo::actions => array(
-				GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
-				)
+			// PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
+			// PluginVodInfo::actions => array(
+			// 	GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
+			// 	)
 		);	
 
 		hd_print(__METHOD__ . ':' . print_r($toBeReturned, true));
