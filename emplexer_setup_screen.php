@@ -295,7 +295,7 @@ require_once 'lib/abstract_controls_screen.php';
 				$plugin_cookies->{$key} = $value;	
 			}
 			
-			if (!file_exists('/persistfs1') && $user_input->useCache != 'false'){
+			if (!file_exists('/persistfs') && $user_input->useCache != 'false'){
 				hd_print('não existe');
 				$plugin_cookies->useCache = 'false';	
 				
