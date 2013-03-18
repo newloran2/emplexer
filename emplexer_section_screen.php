@@ -1,9 +1,6 @@
 <?php 
 
-/**
-* Section Screen
-*Show all section has created on Plex
-*/
+
 class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements UserInputHandler
 {
 
@@ -125,11 +122,12 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				foreach ($xml->Directory as $c){
 					$key = (string)$c->attributes()->key;
 					$prompt = (string)$c->attributes()->prompt;
+					$is_secondary = (string)$c->attributes()->secondary;
 					if ($key != 'all' &&  $key != 'folder' && !$prompt ){
 					// if ($key != 'all' ){
 						$pop_up_items[] = array(
 							GuiMenuItemDef::caption=> (string)$c->attributes()->title,
-							GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url_for_pop_up($media_url, $key), $key)
+							GuiMenuItemDef::action =>  ActionFactory::open_folder($this->get_right_media_url_for_pop_up($media_url, $key, $is_secondary != null), $key)
 							// GuiMenuItemDef::action =>  ActionFactory::open_folder(EmplexerListVideo::get_media_url_str("library/sections/" .$media_url->category_id . "/" . $key))
 						);
 					}
@@ -153,29 +151,42 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	}
 
 
-	private function get_right_media_url_for_pop_up(MediaURL $media_url,$filter_name)
+	private function get_right_media_url_for_pop_up(MediaURL $media_url,$filter_name, $is_secondary=false)
 	{
-		hd_print(__METHOD__);
+
+		hd_print(__METHOD__ . ':'. print_r($media_url, true)) ;
+		
 		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');
 		$season = array('all','recentlyViewedShows','unwatched');
 		
+		if ($is_secondary){
+			hd_print('entrou ' .  $filter_name);
+			return EmplexerSecondarySection::get_media_url_str($media_url->category_id,$filter_name,$media_url->type);
+		}
+
+		if ($media_url->type == "movie"){
+			return EmplexerMovieList::get_media_url_str($media_url->category_id, $filter_name, $media_url->type);
+		}
+
 		if (in_array($filter_name , $episodes)){			
-			return EmplexerVideoList::get_media_url_str($media_url->category_id, $filter_name);
+			return EmplexerVideoList::get_media_url_str($media_url->category_id, $filter_name, $media_url->type);
 		} else {
 			return EmplexerRootList::get_media_url_str($media_url->category_id, $filter_name);
 		}
+
 	}
 
 
 	private function get_right_media_url($type, $key)
 	{
-		hd_print(__METHOD__);	
+		hd_print(__METHOD__);
+
 		if ($type == "movie"){			
 			// hd_print ("key =$key type=$type  movie");
 			return EmplexerMovieList::get_media_url_str($key, 'all', 'movie');
 		} else {
 			// hd_print ("key =$key type=$ddtype  show");
-			return EmplexerRootList::get_media_url_str($key); //all
+			return EmplexerRootList::get_media_url_str($key,'all', 'show'); //all
 		}
 	}
 

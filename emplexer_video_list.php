@@ -40,7 +40,13 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 				return ActionFactory::launch_media_url($media_url->video_url);   //ActionFactory::dvd_play($media_url->video_url);
 
-			} else if (strpos(strtolower($media_url->video_url), ".m2ts")){
+			} else if (strpos(strtolower($media_url->video_url), "bdmv")){
+				$pos=strpos(strtolower($media_url->video_url),'bdmv');
+				$url =substr($media_url->video_url,0,$pos-1);
+				hd_print('tentando tocar bluray com a url ' . $url );
+				return  ActionFactory::bluray_play($url);
+			}
+			else if (strpos(strtolower($media_url->video_url), ".m2ts")){
 
 				return ActionFactory::launch_media_url($media_url->video_url);
 				
@@ -183,10 +189,10 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		foreach ($xml->Video as $c)
 		{
-			$thumb        = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=340&height=480&url=' . urlencode(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb);
-			if (EmplexerConfig::$USE_CACHE  === 'false'){
-				$thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
-			}
+			$thumb        = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=320&height=480&url=' . EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			// if (EmplexerConfig::$USE_CACHE  === 'false'){
+			// 	$thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			// }
 			$detailPhoto  = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file; 

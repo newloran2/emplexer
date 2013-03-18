@@ -236,8 +236,7 @@ require_once 'lib/abstract_controls_screen.php';
 
 			} else if ($user_input->selected_control_id == 'btnSalvar'){
 
-				EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
-				return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));	
+				return EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies,ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies)));				
 
 			} else if ($user_input->selected_control_id == 'connectionMethod') {
 
@@ -268,7 +267,7 @@ require_once 'lib/abstract_controls_screen.php';
 		}
 
 
-		public static function savePreferences(&$user_input, &$plugin_cookies){
+		public static function savePreferences(&$user_input, &$plugin_cookies, $action=null){
 			hd_print(__METHOD__);
 			hd_print("user_input = "  . print_r($user_input, true));
 			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
@@ -287,7 +286,7 @@ require_once 'lib/abstract_controls_screen.php';
 				$plugin_cookies->password = $plugin_cookies->password ;				
 			}
 			$plugin_cookies->showOnMainScreen = $user_input->showOnMainScreen;
-			$plugin_cookies->useCache = $user_input->useCache;
+
 			// $plugin_cookies->connectionMethod = $user_input->connectionMethod ;
 
 
@@ -296,9 +295,23 @@ require_once 'lib/abstract_controls_screen.php';
 				$plugin_cookies->{$key} = $value;	
 			}
 			
+			if (!file_exists('/persistfs1') && $user_input->useCache != 'false'){
+				hd_print('não existe');
+				$plugin_cookies->useCache = 'false';	
+				
+				hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
+
+				return ActionFactory::show_title_dialog('Your system storage is not present, cache will be disabled.', $action);
+				
+			} else {
+				hd_print('existe');
+				$plugin_cookies->useCache = $user_input->useCache;
+				hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
+			}
+
+			
 
 
-			hd_print("plugin_cookies = "  . print_r($plugin_cookies, true));
 		}
 	}
 

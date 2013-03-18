@@ -27,6 +27,7 @@ require_once 'emplexer_popup.php';
 require_once 'emplexer_movie_description_screen.php';
 require_once 'emplexer_base_channel.php';
 require_once 'emplexer_list_video.php';
+require_once 'emplexer_secondary_section.php';
 
 require_once 'lib/vod/vod_movie_screen.php';
 
@@ -59,6 +60,7 @@ class Emplexer extends DefaultDunePlugin
 		$this->add_screen(new VodMovieScreen($this->vod))	;
 		$this->add_screen(new EmplexerBaseChannel());
 		$this->add_screen(new EmplexerListVideo());
+		$this->add_screen(new EmplexerSecondarySection());
 
 		EmplexerFifoController::getInstance(); // inicia o fifo
 	}

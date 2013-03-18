@@ -37,7 +37,7 @@
 				$poster_url = $this->base_url . (string)$xml->Video->attributes()->thumb  ,
 				$length_min = ((float)$xml->Video->attributes()->duration) /1000/60 ,
 				$year = (string)$xml->Video->attributes()->year,
-				$directors_str =  $this->getWriterStr($xml),
+				$directors_str =  $this->geDirectorStr($xml),
 				$scenarios_str = null,
 				$actors_str = $this->getRolesStr($xml),
 				$genres_str = $this->getGenreStr($xml) ,
@@ -83,6 +83,16 @@
 				$writes .= (string)$writer->attributes()->tag . "\n";
 			}
 			return $writes;
+		}
+
+		public function geDirectorStr(&$xml)
+		{
+			$director = null;
+			// hd_print(__METHOD__ . ':' . print_r($xml, true));
+			foreach ($xml->Video->Director as $director) {
+				$director .= (string)$director->attributes()->tag . "\n";
+			}
+			return $director;
 		}
 
 		public function getRolesStr(&$xml)

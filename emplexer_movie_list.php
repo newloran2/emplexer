@@ -16,8 +16,6 @@ class EmplexerMovieList extends  EmplexerVideoList
 	public static function get_media_url_str($key, $filter_name =null, $type='movie')
 	{
 		hd_print(__METHOD__);
-		hd_print("key: $key" );
-		
 		self::$type = $type;
 
 		return MediaURL::encode(
