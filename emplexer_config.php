@@ -398,7 +398,7 @@ array
     (
         ViewParams::num_cols => 7,
         ViewParams::num_rows => 4,
-        ViewParams::paint_sandwich => false,
+        ViewParams::paint_sandwich => true,
         ViewParams::sandwich_base => 'gui_skin://special_icons/sandwich_base.aai',
         ViewParams::sandwich_mask => 'cut_icon://{name=sandwich_mask}',
         ViewParams::sandwich_cover => 'cut_icon://{name=sandwich_cover}',
