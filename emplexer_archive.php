@@ -95,11 +95,11 @@ class EmplexerArchive implements Archive
 			$this->urls[$fileName] = $fileUrl ;
 			EmplexerFifoController::getInstance()->downloadToCache($fileName, $fileUrl);
 		} else {
-			hd_print( __METHOD__ .  ': Não Entrou.... ' );
+			hd_print( __METHOD__ .  ': Não Entrou.... ' . $fileUrl);
 		}
 	}
 
-	public function getFileFromArchive($fileName, $default_url ='missing://'){
+	public function getFileFromArchive($fileName, $default_url ='plugin_file://icons/poster.png'){
 		hd_print(__METHOD__);
 		if (!isset($this->urls[$fileName])) {
 			return $default_url;

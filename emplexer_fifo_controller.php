@@ -55,26 +55,28 @@ class EmplexerFifoController
 	}
 
 	public function downloadToCache($fileName, $fileUrl){
-		hd_print(__METHOD__);
-		// fwrite($this->fileDescriptor, "c|$fileName|$fileUrl");
-		$file_path = "/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName";
-		// $file_path = "/D/emplexer/emplexer_default_archive/$fileName";
-		if (!file_exists($file_path)){
-			//$this->open();
-			// exec("echo 'c|$fileName|$fileUrl' > /tmp/emplexer.fifo");
-			//fwrite($this->fileDescriptor, "c|$fileName|$fileUrl\n");
-			//hd_print(__METHOD__ . " Escrevi com c|$fileName|$fileUrl" );
-			$opts = array(
-				CURLOPT_BINARYTRANSFER => true,
-				CURLOPT_HEADER =>false,
-			);
-			$doc = HD::http_get_document($fileUrl, $opts);
-			$file = fopen($file_path, 'x');
-			fwrite($file, $doc);
-			fclose($file);
-			unset($doc);
-			$doc= null;
+		if (EmplexerConfig::$HAS_PERSISTFS){
+			hd_print(__METHOD__);
+			// fwrite($this->fileDescriptor, "c|$fileName|$fileUrl");
+			$file_path = "/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName";
+			// $file_path = "/D/emplexer/emplexer_default_archive/$fileName";
+			if (!file_exists($file_path)){
+				//$this->open();
+				// exec("echo 'c|$fileName|$fileUrl' > /tmp/emplexer.fifo");
+				//fwrite($this->fileDescriptor, "c|$fileName|$fileUrl\n");
+				//hd_print(__METHOD__ . " Escrevi com c|$fileName|$fileUrl" );
+				$opts = array(
+					CURLOPT_BINARYTRANSFER => true,
+					CURLOPT_HEADER =>false,
+				);
+				$doc = HD::http_get_document($fileUrl, $opts);
+				$file = fopen($file_path, 'x');
+				fwrite($file, $doc);
+				fclose($file);
+				unset($doc);
+				$doc= null;
 
+			}	
 		}
 	}
 
@@ -104,6 +106,15 @@ class EmplexerFifoController
 		// HD::http_get_document("http://192.168.2.7/cgi-bin/do?cmd=start_file_playback&media_url=nfs%3A%2F%2F192.168.2.9%3A%2Fvolume1%2FAnimes%2FFairy+Tail%2Fs01%2FPUNCH_Fairy_Tail_-_10_HD.mkv");
 		fwrite($this->fileDescriptor, $command);
 	}
+
+	public function startSetPlayBackPosition($position, $delay=2){
+		$plugin_dir = dirname(__FILE__);
+		$command ="$plugin_dir/bin/setPlayBackPosition.sh $delay $position >> 1 2>/dev/null &";
+		hd_print("executando comando = $command");
+		exec($command);	
+		
+	}
+
 
 
 }

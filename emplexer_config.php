@@ -1,4 +1,4 @@
-<?php 
+®<?php 
 
 define('HTTP_CONNECTION_TYPE', 'http');
 define('NFS_CONNECTION_TYPE' , 'nfs');
@@ -29,6 +29,7 @@ class EmplexerConfig
     const USE_NFS                        = true; 
     const USE_SMB                        = false; 
     static $USE_CACHE                       = false;
+    static $HAS_PERSISTFS                = false;
     const CREATE_LOG_FOLDER              = true;
     const CREATE_CACHE_FOLDER_ON_MAIN_HD = false;
     
@@ -83,7 +84,7 @@ class EmplexerConfig
         hd_print(__METHOD__ . ': ' . EmplexerConfig::$USE_CACHE);
         $cache_dir='/persistfs/plugins_archive/emplexer/emplexer_default_archive';
         if (EmplexerConfig::$USE_CACHE && !file_exists($cache_dir)){
-            if (!file_exists($cache_dir)){
+            if (!file_exists($cache_dir )){
                  $result = mkdir($cache_dir);
                  hd_print("criação de diretório de cache em $cache_dir [" . $result ? 'OK' : 'FAIL' . "]" );
             }
@@ -153,7 +154,7 @@ class EmplexerConfig
                     ViewItemParams::item_paint_icon => FALSE,
                     ViewItemParams::icon_scale_factor => 0.75,
                     ViewItemParams::icon_sel_scale_factor => 1,
-                    ViewItemParams::icon_path => 'missing://',
+                    ViewItemParams::icon_path => 'plugin_file://icons/poster.png',
                     ViewItemParams::item_layout => HALIGN_LEFT,
                     ViewItemParams::icon_valign => VALIGN_CENTER,
                     ViewItemParams::item_caption_font_size => FONT_SIZE_NORMAL
@@ -209,8 +210,8 @@ PluginRegularFolderView::base_view_item_params => array
 
 PluginRegularFolderView::not_loaded_view_item_params => array
 (
-    ViewItemParams::icon_path => 'missing://',
-    ViewItemParams::item_detailed_icon_path => 'missing://',
+    ViewItemParams::icon_path => 'plugin_file://icons/poster.png',
+    ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
     ViewItemParams::item_paint_caption_within_icon => true,
     ViewItemParams::item_caption_within_icon_color => 'white',
     ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL
@@ -259,7 +260,7 @@ array
     PluginRegularFolderView::not_loaded_view_item_params => array
     (
         ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
-        ViewItemParams::item_detailed_icon_path => 'missing://',
+        ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
         ),
     ),
 
@@ -302,7 +303,7 @@ array
     PluginRegularFolderView::not_loaded_view_item_params => array
     (
         ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
-        ViewItemParams::item_detailed_icon_path => 'missing://',
+        ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
         ),
     ),
 
@@ -328,7 +329,7 @@ array
         ViewItemParams::item_paint_icon => FALSE,
         ViewItemParams::icon_scale_factor => 0.75,
         ViewItemParams::icon_sel_scale_factor => 1,
-        ViewItemParams::icon_path => 'missing://',
+        ViewItemParams::icon_path => 'plugin_file://icons/poster.png',
         ViewItemParams::item_layout => HALIGN_LEFT,
         ViewItemParams::icon_valign => VALIGN_CENTER,
         ViewItemParams::item_caption_font_size => FONT_SIZE_NORMAL
@@ -363,8 +364,9 @@ public static function GET_EPISODES_LIST_VIEW($art=null){
                 ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
                 ViewParams::item_detailed_info_title_color => 6, #FFE040 ,
                 ViewParams::background_path => $art,
-                ViewParams::optimize_full_screen_background => false,
-                ViewParams::background_order => 'before_all'
+                ViewParams::optimize_full_screen_background => true,
+                ViewParams::background_order => 'before_all',
+                ViewParams::cycle_mode_enabled => true
                 ),
 
             PluginRegularFolderView::base_view_item_params => array
@@ -381,8 +383,8 @@ public static function GET_EPISODES_LIST_VIEW($art=null){
 
             PluginRegularFolderView::not_loaded_view_item_params => array
             (
-                ViewItemParams::icon_path => 'missing://',
-                ViewItemParams::item_detailed_icon_path => 'missing://',
+                ViewItemParams::icon_path => 'plugin_file://icons/poster.png',
+                ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
                 ViewItemParams::item_paint_caption_within_icon => false,
                 ViewItemParams::item_caption_within_icon_color => 'white',
                 ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL
@@ -437,8 +439,8 @@ PluginRegularFolderView::base_view_item_params => array
 
 PluginRegularFolderView::not_loaded_view_item_params => array
 (
-    ViewItemParams::icon_path => 'missing://',
-            ViewItemParams::item_detailed_icon_path => 'missing://',
+    ViewItemParams::icon_path => 'plugin_file://icons/poster.png',
+            ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
             ViewItemParams::item_paint_caption_within_icon => false,
             ViewItemParams::item_caption_within_icon_color => 'white',
             ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL
@@ -469,15 +471,15 @@ array
         ViewItemParams::item_paint_icon => FALSE,
         ViewItemParams::icon_scale_factor => 0.75,
         ViewItemParams::icon_sel_scale_factor => 1,
-        ViewItemParams::icon_path => 'missing://',
+        ViewItemParams::icon_path => 'plugin_file://icons/poster.png',
         ViewItemParams::item_layout => HALIGN_LEFT,
         ViewItemParams::icon_valign => VALIGN_CENTER,
         ViewItemParams::item_caption_font_size => FONT_SIZE_NORMAL
         ),
 
     PluginRegularFolderView::not_loaded_view_item_params => array(
-        ViewItemParams::icon_path => 'missing://',
-        ViewItemParams::item_detailed_icon_path => 'missing://',
+        ViewItemParams::icon_path => 'plugin_file://icons/poster.png',
+        ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
         ViewItemParams::item_paint_caption_within_icon => true,
         ViewItemParams::item_caption_within_icon_color => 'white',
         ViewItemParams::item_caption_font_size => FONT_SIZE_SMALL

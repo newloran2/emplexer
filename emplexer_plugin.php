@@ -47,6 +47,10 @@ class Emplexer extends DefaultDunePlugin
 			}
 		}
 
+		EmplexerConfig::$HAS_PERSISTFS =  file_exists('/persistfs/plugins_archive/emplexer/');
+
+		
+
 		
 
 		$this->vod = new EmplexerVod();
@@ -72,8 +76,7 @@ class Emplexer extends DefaultDunePlugin
 
 	public function get_vod_info($media_url_str, &$plugin_cookies){
 		hd_print(__METHOD__);
-		hd_print(__METHOD__ . ': ' . print_r($media_url_str, true) );
-		hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true) );
+
 		// hd_print(print_r(debug_backtrace(), true));
 		HD::print_backtrace();
 

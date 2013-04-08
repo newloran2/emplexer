@@ -68,6 +68,13 @@ class EmplexerMovieDescriptionScreen extends VodMovieScreen  {
                 //(count($movie->series_list) > 1),
             // PluginMovieFolderView::series_media_url =>
                 // VideomoreVodSeriesListScreen::get_media_url_str($movie->id),
+           'teste' => 'isso teste',
+            PluginMovieFolderView::params => array
+            (
+                PluginFolderViewParams::paint_path_box =>false,
+                PluginFolderViewParams::paint_content_box_background => true,
+                PluginFolderViewParams::background_url => 'http://thetvdb.com/banners/fanart/original/267440-2.jpg'
+            )
         );
 
         $folder_view = array

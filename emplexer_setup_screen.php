@@ -196,6 +196,14 @@ require_once 'lib/abstract_controls_screen.php';
         		$need_apply = true
         	);
 
+			$this->add_button(
+				$defs,
+				$name          = "btnSubtitle",
+				$title         = "Subtitles",
+				$caption	   = "Subtitle Config",
+				$width         =  200     
+			);        	
+
         	// $this->getStorageLocations($plugin_cookies, $defs);
         	
 

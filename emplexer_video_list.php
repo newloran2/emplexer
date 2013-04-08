@@ -47,7 +47,6 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				return  ActionFactory::bluray_play($url);
 			}
 			else if (strpos(strtolower($media_url->video_url), ".m2ts")){
-
 				return ActionFactory::launch_media_url($media_url->video_url);
 				
 			} else {
@@ -62,6 +61,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				$time_action = UserInputHandlerRegistry::create_action($this, 'time', null);
 				// EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this).'/');
 				// EmplexerFifoController::getInstance()->startDefaultPlayBack($url,$startPosition,$plexFileId,$timeToMark,$basePlexURL,$pooling);
+				// EmplexerFifoController::getInstance()->startSetPlayBackPosition(200);
 				// return ActionFactory::launch_media_url($media_url->video_url);
 				return ActionFactory::vod_play();
 			}
@@ -88,8 +88,8 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		if ($user_input->control_id == 'info') {
 
-			
-			return ActionFactory::open_folder(VodMovieScreen::get_media_url_str($media_url->detail_info_key));
+			$extra = array('bgImage' => $media_url->art );
+			return ActionFactory::open_folder(VodMovieScreen::get_media_url_str($media_url->detail_info_key, $extra));
 		}
 
 		if ($user_input->control_id == 'pop_up'){
@@ -185,15 +185,16 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$xml = HD::getAndParseXmlFromUrl( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
 		}
 		$items = array();
-		$bgImage = $base_url .  $xml->attributes()->art;
+
 
 		foreach ($xml->Video as $c)
 		{
-			$thumb        = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=320&height=480&url=' . EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			$thumb        = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=320&height=480&url=' . EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;		
+			$bgImage = $base_url .  (string)$c->attributes()->art;
 			// if (EmplexerConfig::$USE_CACHE  === 'false'){
 			// 	$thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			// }
-			$detailPhoto  = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			$detailPhoto  = $thumb;
 			$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file; 
 			if ($plugin_cookies->connectionMethod == 'smb'){
@@ -231,11 +232,12 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					'video_url' => $v,
 					'viewOffset' => (string)$c->attributes()->viewOffset,
 					'duration' => (string)$c->Media->attributes()->duration,
-					// 'summary' => str_replace('"', '' , (string)$c->attributes()->summary),
-					'summary' => str_replace(array("\r\n", "\r", "\n",  "\""), " ", utf8_encode((string)$c->attributes()->summary))	,
+					// 'summary' => utf8_decode((string)$c->attributes()->summary),
+					'summary' => str_replace(array("\r\n", "\r", "\n",  "\""), " ", (string)$c->attributes()->summary)	,
 					// 'summary' => (string)$c->attributes()->summary	,
 					'name' => (string)$c->attributes()->title,
-					'thumb' => EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb,
+					'thumb' => $thumb,
+					'art'   => $bgImage,
 					'title' => (string)$xml->attributes()->title1,
 					'key' =>  (string) $c->attributes()->ratingKey,
 					'back_screen_id' => $media_url->screen_id,
@@ -291,7 +293,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				)
 			);
 		}
-		// hd_print(print_r($items, true));
+		hd_print(print_r($items, true));
 		return $items;
 	}
 

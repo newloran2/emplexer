@@ -36,7 +36,8 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 		(
 			GUI_EVENT_KEY_ENTER => $enter_action,
 			GUI_EVENT_KEY_PLAY => $enter_action,
-			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action
+			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action,
+			GUI_EVENT_KEY_0 =>  $pop_up_action
 		);
 	}
 

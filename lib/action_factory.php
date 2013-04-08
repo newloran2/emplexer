@@ -328,6 +328,8 @@ class ActionFactory
         return ActionFactory::show_dialog($modalTitle, $defs);
     }
 
+
+
     public static function show_smb_advanced_configuration_modal($modalTitle, &$plugin_cookies,$post_action= null){
       
         $defs = array();
@@ -360,6 +362,245 @@ class ActionFactory
         }
         ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
         'saveAdvanceSmb', 'save', 200, $post_action);
+
+
+        return ActionFactory::show_dialog($modalTitle, $defs);
+    }
+
+     public static function show_subtitle_config_modal($modalTitle, &$plugin_cookies,$post_action= null){
+      
+        $defs = array();
+
+        $languageCodes = array(
+             "aa" => "Afar",
+             "ab" => "Abkhazian",
+             "ae" => "Avestan",
+             "af" => "Afrikaans",
+             "ak" => "Akan",
+             "am" => "Amharic",
+             "an" => "Aragonese",
+             "ar" => "Arabic",
+             "as" => "Assamese",
+             "av" => "Avaric",
+             "ay" => "Aymara",
+             "az" => "Azerbaijani",
+             "ba" => "Bashkir",
+             "be" => "Belarusian",
+             "bg" => "Bulgarian",
+             "bh" => "Bihari",
+             "bi" => "Bislama",
+             "bm" => "Bambara",
+             "bn" => "Bengali",
+             "bo" => "Tibetan",
+             "br" => "Breton",
+             "bs" => "Bosnian",
+             "ca" => "Catalan",
+             "ce" => "Chechen",
+             "ch" => "Chamorro",
+             "co" => "Corsican",
+             "cr" => "Cree",
+             "cs" => "Czech",
+             "cu" => "Church Slavic",
+             "cv" => "Chuvash",
+             "cy" => "Welsh",
+             "da" => "Danish",
+             "de" => "German",
+             "dv" => "Divehi",
+             "dz" => "Dzongkha",
+             "ee" => "Ewe",
+             "el" => "Greek",
+             "en" => "English",
+             "eo" => "Esperanto",
+             "es" => "Spanish",
+             "et" => "Estonian",
+             "eu" => "Basque",
+             "fa" => "Persian",
+             "ff" => "Fulah",
+             "fi" => "Finnish",
+             "fj" => "Fijian",
+             "fo" => "Faroese",
+             "fr" => "French",
+             "fy" => "Western Frisian",
+             "ga" => "Irish",
+             "gd" => "Scottish Gaelic",
+             "gl" => "Galician",
+             "gn" => "Guarani",
+             "gu" => "Gujarati",
+             "gv" => "Manx",
+             "ha" => "Hausa",
+             "he" => "Hebrew",
+             "hi" => "Hindi",
+             "ho" => "Hiri Motu",
+             "hr" => "Croatian",
+             "ht" => "Haitian",
+             "hu" => "Hungarian",
+             "hy" => "Armenian",
+             "hz" => "Herero",
+             "ia" => "Interlingua (International Auxiliary Language Association)",
+             "id" => "Indonesian",
+             "ie" => "Interlingue",
+             "ig" => "Igbo",
+             "ii" => "Sichuan Yi",
+             "ik" => "Inupiaq",
+             "io" => "Ido",
+             "is" => "Icelandic",
+             "it" => "Italian",
+             "iu" => "Inuktitut",
+             "ja" => "Japanese",
+             "jv" => "Javanese",
+             "ka" => "Georgian",
+             "kg" => "Kongo",
+             "ki" => "Kikuyu",
+             "kj" => "Kwanyama",
+             "kk" => "Kazakh",
+             "kl" => "Kalaallisut",
+             "km" => "Khmer",
+             "kn" => "Kannada",
+             "ko" => "Korean",
+             "kr" => "Kanuri",
+             "ks" => "Kashmiri",
+             "ku" => "Kurdish",
+             "kv" => "Komi",
+             "kw" => "Cornish",
+             "ky" => "Kirghiz",
+             "la" => "Latin",
+             "lb" => "Luxembourgish",
+             "lg" => "Ganda",
+             "li" => "Limburgish",
+             "ln" => "Lingala",
+             "lo" => "Lao",
+             "lt" => "Lithuanian",
+             "lu" => "Luba-Katanga",
+             "lv" => "Latvian",
+             "mg" => "Malagasy",
+             "mh" => "Marshallese",
+             "mi" => "Maori",
+             "mk" => "Macedonian",
+             "ml" => "Malayalam",
+             "mn" => "Mongolian",
+             "mr" => "Marathi",
+             "ms" => "Malay",
+             "mt" => "Maltese",
+             "my" => "Burmese",
+             "na" => "Nauru",
+             "nb" => "Norwegian Bokmal",
+             "nd" => "North Ndebele",
+             "ne" => "Nepali",
+             "ng" => "Ndonga",
+             "nl" => "Dutch",
+             "nn" => "Norwegian Nynorsk",
+             "no" => "Norwegian",
+             "nr" => "South Ndebele",
+             "nv" => "Navajo",
+             "ny" => "Chichewa",
+             "oc" => "Occitan",
+             "oj" => "Ojibwa",
+             "om" => "Oromo",
+             "or" => "Oriya",
+             "os" => "Ossetian",
+             "pa" => "Panjabi",
+             "pi" => "Pali",
+             "pl" => "Polish",
+             "ps" => "Pashto",
+             "pt" => "Portuguese",
+             "qu" => "Quechua",
+             "rm" => "Raeto-Romance",
+             "rn" => "Kirundi",
+             "ro" => "Romanian",
+             "ru" => "Russian",
+             "rw" => "Kinyarwanda",
+             "sa" => "Sanskrit",
+             "sc" => "Sardinian",
+             "sd" => "Sindhi",
+             "se" => "Northern Sami",
+             "sg" => "Sango",
+             "si" => "Sinhala",
+             "sk" => "Slovak",
+             "sl" => "Slovenian",
+             "sm" => "Samoan",
+             "sn" => "Shona",
+             "so" => "Somali",
+             "sq" => "Albanian",
+             "sr" => "Serbian",
+             "ss" => "Swati",
+             "st" => "Southern Sotho",
+             "su" => "Sundanese",
+             "sv" => "Swedish",
+             "sw" => "Swahili",
+             "ta" => "Tamil",
+             "te" => "Telugu",
+             "tg" => "Tajik",
+             "th" => "Thai",
+             "ti" => "Tigrinya",
+             "tk" => "Turkmen",
+             "tl" => "Tagalog",
+             "tn" => "Tswana",
+             "to" => "Tonga",
+             "tr" => "Turkish",
+             "ts" => "Tsonga",
+             "tt" => "Tatar",
+             "tw" => "Twi",
+             "ty" => "Tahitian",
+             "ug" => "Uighur",
+             "uk" => "Ukrainian",
+             "ur" => "Urdu",
+             "uz" => "Uzbek",
+             "ve" => "Venda",
+             "vi" => "Vietnamese",
+             "vo" => "Volapuk",
+             "wa" => "Walloon",
+             "wo" => "Wolof",
+             "xh" => "Xhosa",
+             "yi" => "Yiddish",
+             "yo" => "Yoruba",
+             "za" => "Zhuang",
+             "zh" => "Chinese",
+             "zu" => "Zulu"
+            );
+        ControlFactory::add_combobox(
+            $defs,
+            null,
+            null,
+            $name                   =  'preferredLanguage',
+            $title                  =  'Preferred language',
+            $initial_value          =  $value,
+            $value_caption_pairs    =  $languageCodes,
+            $width                  =  500,
+            $need_confirm           =  false,
+            $need_apply             =  false
+        );  
+
+
+
+        $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
+        $xml = HD::getAndParseXmlFromUrl($plexLocation);
+        // hd_print(__METHOD__ . ';' . print_r($xml, true));
+        foreach ($xml->Directory as $directory) {
+            foreach ($directory->Location as $location) {
+                //se já existir a chave e o valor for nfs usa a chave que já existe se não pega o valor do plex
+                if ($plugin_cookies->{$location->attributes()->path} && strpos($plugin_cookies->{$location->attributes()->path}, 'nfs://') !== false){
+                    $value = $plugin_cookies->{$location->attributes()->path};      
+                } else {
+                    $value = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path;
+                }   
+                
+                ControlFactory::add_text_field(
+                    $defs, 
+                    null, 
+                    null,
+                    $name            = (string)$location->attributes()->path, 
+                    $title           = (string)$location->attributes()->path,  
+                    $initial_value   = $value,  
+                    $numeric         = false, 
+                    $password        = false, 
+                    $has_osk         = false, 
+                    $always_active   = 0, 
+                    $width           = 500
+                );
+            }
+        }
+        ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
+        'saveAdvanceNfs', 'save', 200, $post_action);
 
 
         return ActionFactory::show_dialog($modalTitle, $defs);

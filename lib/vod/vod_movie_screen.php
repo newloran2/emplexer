@@ -9,12 +9,16 @@ class VodMovieScreen implements Screen, UserInputHandler
 {
     const ID = 'vod_movie';
 
-    public static function get_media_url_str($movie_id)
+    public static function get_media_url_str($movie_id, $extra=null)
     {
         return MediaURL::encode(
             array(
                 'screen_id' => self::ID,
-                'movie_id' => $movie_id));
+                'movie_id' => $movie_id,
+                'extra'    => $extra
+                )
+
+            );
     }
 
     
@@ -41,6 +45,8 @@ class VodMovieScreen implements Screen, UserInputHandler
 
     public function get_folder_view(MediaURL $media_url, &$plugin_cookies)
     {
+
+        hd_print(__METHOD__ . ': teste' . print_r($media_url, true));
         $this->vod->folder_entered($media_url, $plugin_cookies);
 
         $movie = $this->vod->get_loaded_movie($media_url->movie_id, $plugin_cookies);
@@ -73,9 +79,11 @@ class VodMovieScreen implements Screen, UserInputHandler
             PluginMovieFolderView::right_button_action => $right_button_action,
             PluginMovieFolderView::has_multiple_series => (count($movie->series_list) > 1),
             PluginMovieFolderView::series_media_url => VodSeriesListScreen::get_media_url_str($movie->id),
-            // PluginMovieFolderView::params => array(
-            //         PluginFolderViewParams::background_url => 'http://192.168.2.9:32400/library/metadata/351/art/1343089927'
-            //     )
+            PluginMovieFolderView::params => array(
+                    // PluginFolderViewParams::background_url => $media_url->extra->bgImage,
+                    PluginFolderViewParams::paint_path_box => false,
+                    PluginFolderViewParams::paint_content_box_background => true
+                )
 
         );
 
@@ -87,7 +95,7 @@ class VodMovieScreen implements Screen, UserInputHandler
             PluginFolderView::view_kind                 => PLUGIN_FOLDER_VIEW_MOVIE,
             PluginFolderView::data                      => $movie_folder_view,
         );
-        HD::print_backtrace();
+        // HD::print_backtrace();
         hd_print(__METHOD__ . ':' . print_r($a, true));
 
         return $a;

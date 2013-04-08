@@ -13,7 +13,7 @@
 		}
 		
 		public function try_load_movie($movie_id, &$plugin_cookies){
-			hd_print(__METHOD__  . ': ' . print_r($plugin_cookiesm, true)) ;
+			hd_print(__METHOD__  . ': ' . print_r($plugin_cookies, true)) ;
 
 			if (!$this->base_url){
 				$this->base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
@@ -34,7 +34,7 @@
 				$name = $grandparentTitle ,
 				$name_original =  $title ,
 				$description =  (string)$xml->Video->attributes()->summary ,
-				$poster_url = $this->base_url . (string)$xml->Video->attributes()->thumb  ,
+				$poster_url = $this->base_url . '/photo/:/transcode?width=320&height=480&url=' .$this->base_url . (string)$xml->Video->attributes()->thumb  ,
 				$length_min = ((float)$xml->Video->attributes()->duration) /1000/60 ,
 				$year = (string)$xml->Video->attributes()->year,
 				$directors_str =  $this->geDirectorStr($xml),
@@ -127,7 +127,9 @@
 		public function get_vod_info(MediaURL $media_url, &$plugin_cookies){
 			$movie = $this->get_cached_movie($media_url->movie_id);
 			hd_print(__METHOD__ . ':'  . print_r($movie, true));
-			
+
+			$m = HD::getAndParseXmlFromUrl($this->base_url . $media_url->movie_id);
+			$viewOffset = $m->Video->attributes()->viewOffset? (string)$m->Video->attributes()->viewOffset : 0;
 
 		// $params['selected_media_url'] = $toPlay->selected_media_url;
 			$series_array = array();
@@ -145,9 +147,9 @@
 				PluginVodInfo::poster_url => $movie->poster_url,
 				PluginVodInfo::initial_series_ndx => 0,
 				PluginVodInfo::buffering_ms => 6000,
-				// PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
+				PluginVodInfo::initial_position_ms =>$viewOffset,
 				PluginVodInfo::advert_mode => false,
-				// PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
+				PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
 			/*PluginVodInfo::actions => array(
 				GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
 				)*/
