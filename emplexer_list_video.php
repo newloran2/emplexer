@@ -15,7 +15,7 @@ class EmplexerListVideo extends EmplexerBaseChannel
 	public function get_folder_views()
 	{	
 		hd_print(__METHOD__);
-		return EmplexerConfig::GET_SECTIONS_LIST_VIEW();
+		return EmplexerConfig::getInstance()->GET_SECTIONS_LIST_VIEW();
 	}
 
 	public static function get_media_url_str($key, $type=TYPE_DIRECTORY,$videoMediaArray=null)
@@ -35,7 +35,7 @@ class EmplexerListVideo extends EmplexerBaseChannel
 	public function getThumbURL(SimpleXMLElement &$node)
 	{
 		$thumb = (string)$node->attributes()->thumb;
-		$thumb = $this->base_url . '/photo/:/transcode?width=340&height=480&url=' . urlencode($this->base_url . $thumb); 
+		$thumb = $this->base_url . '/photo/:/transcode?width='.THUMB_WIDTH. '&height='. THUMB_HEIGHT . '&url=' . urlencode($this->base_url . $thumb); 
 		hd_print(__METHOD__ . ':' . $thumb);
 		
 		
@@ -49,7 +49,7 @@ class EmplexerListVideo extends EmplexerBaseChannel
 
 	public function getVideoUrl(SimpleXMLElement &$node, &$plugin_cookies)
 	{
-		hd_print(__METHOD__);
+		// hd_print(__METHOD__);
 			
 			$httpVidelUrl = $this->base_url . (string)$node->Part->attributes()->key;
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$node->Part->attributes()->file; 
@@ -61,7 +61,6 @@ class EmplexerListVideo extends EmplexerBaseChannel
 			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
 			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
-			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
 			$v=null;
 			if ($node->Part->attributes()->file && $node->Part->attributes()->file != ""){
 				$v = $videoUrl[$plugin_cookies->connectionMethod];
@@ -75,7 +74,7 @@ class EmplexerListVideo extends EmplexerBaseChannel
 				$v = $httpVidelUrl;
 			}
 
-			hd_print("-----------videoUrl = $v-----------");
+			hd_print(__METHOD__ .  ":-----------videoUrl = $v-----------");
 
 		return $v;
 	}
@@ -85,7 +84,7 @@ class EmplexerListVideo extends EmplexerBaseChannel
 		$type = $parameters['type'];
 		$params = $parameters['params'];
 		$art = $params['art'];
-		$a = EmplexerConfig::GET_SECTIONS_LIST_VIEW();
+		$a = EmplexerConfig::getInstance()->GET_SECTIONS_LIST_VIEW();
 		$this->folder_views = $a ;
 		return $this->get_media_url_str($key, $type, $params);
 	}

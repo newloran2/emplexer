@@ -20,19 +20,43 @@ define('SECTION_SHOW', 'show');
 
 
 
+define('CREATE_LOG_FOLDER', true);
+define('DEFAULT_PLEX_PORT', '32400');
+
+define('THUMB_WIDTH', '200');
+define('THUMB_HEIGHT', '294');
+
+
+
 
 class EmplexerConfig 
 {
 
 
-    const DEFAULT_PLEX_PORT              = 32400; 
-    const USE_NFS                        = true; 
-    const USE_SMB                        = false; 
-    static $USE_CACHE                       = false;
-    static $HAS_PERSISTFS                = false;
-    const CREATE_LOG_FOLDER              = true;
-    const CREATE_CACHE_FOLDER_ON_MAIN_HD = false;
+    public $cacheDirExists;
+    public $hasPersistFs;
+    public $useCache;
+
     
+    private static $instance;
+
+
+    private function __construct()
+    {
+        $this->cacheDirExists = file_exists('/persistfs/plugins_archive/emplexer/emplexer_default_archive');
+        $this->useCache = false;
+        $this->hasPersistFs = file_exists('/persistfs/plugins_archive/emplexer');
+    }
+
+
+    public static function getInstance()
+    {
+        if (!isset($instance)){
+            $instance = new EmplexerConfig();
+        }
+        return $instance;
+    }
+
 
 
 
@@ -40,12 +64,12 @@ class EmplexerConfig
 
     //static $currentPlexBaseUR='';
 
-    public static function getPlexBaseUrl(&$plugin_cookies, $handler){
+    public function getPlexBaseUrl(&$plugin_cookies, $handler){
 //    hd_print(__METHOD__ . ':' . print_r($plugin_cookies, true));
     // if ($currentPlexBaseUR) {
     //     return $currentPlexBaseUR;
     // }else {
-        hd_print(__METHOD__);
+        // hd_print(__METHOD__);
         $plexIp   = $plugin_cookies->plexIp;
         $plexPort = $plugin_cookies->plexPort;
 
@@ -71,39 +95,36 @@ class EmplexerConfig
         }
 
         //checa se precisa criar o cache_dir;
-        EmplexerConfig::createCacheDirIfNeeded($plugin_cookies);
+        EmplexerConfig::getInstance()->createCacheDirIfNeeded($plugin_cookies);
 
         return "http://$plexIp:$plexPort";
     // }
     }
 
 
-    public static function createCacheDirIfNeeded(&$plugin_cookies){
+    public function createCacheDirIfNeeded(&$plugin_cookies){
     //se não existir o diretorio de cache devo criar
-        EmplexerConfig::$USE_CACHE  = $plugin_cookies->useCache;
-        hd_print(__METHOD__ . ': ' . EmplexerConfig::$USE_CACHE);
-        $cache_dir='/persistfs/plugins_archive/emplexer/emplexer_default_archive';
-        if (EmplexerConfig::$USE_CACHE && !file_exists($cache_dir)){
-            if (!file_exists($cache_dir )){
-                 $result = mkdir($cache_dir);
-                 hd_print("criação de diretório de cache em $cache_dir [" . $result ? 'OK' : 'FAIL' . "]" );
-            }
+        EmplexerConfig::getInstance()->useCache  = $plugin_cookies->useCache;
+        // hd_print(__METHOD__ . ': ' . EmplexerConfig::getInstance()->useCache);
+        if (EmplexerConfig::getInstance()->useCache && !EmplexerConfig::getInstance()->$CACE_DIR_EXISTS){
+            $result = mkdir($cache_dir);
+            hd_print("criação de diretório de cache em $cache_dir [" . $result ? 'OK' : 'FAIL' . "]" );
         }
     }
 
 
 
-    public static function getAllAvailableChannels(&$plugin_cookies, $handler)
+    public function getAllAvailableChannels(&$plugin_cookies, $handler)
     {    
         hd_print(__METHOD__);
-        $url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $handler) ;
+        $url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $handler) ;
         hd_print("BASE_URL=$url" );
         $xml = HD::getAndParseXmlFromUrl($url);
 
         hd_print(print_r($xml, true));
 
     // $validChannels = array('video', 'music', 'photos');
-        $validChannels = EmplexerConfig::getValidChannelsNames();
+        $validChannels = EmplexerConfig::getInstance()->getValidChannelsNames();
         $items = array();
         foreach ($xml as $d) {
             $key = (string)$d->attributes()->key;
@@ -127,14 +148,13 @@ class EmplexerConfig
     }
 
 
-    public static function getValidChannelsNames(){
+    public function getValidChannelsNames(){
         hd_print(__METHOD__);
         return  array('video', 'music', 'photos');
     }
 
-    public static function GET_SECTIONS_LIST_VIEW($art=null)
+    public function GET_SECTIONS_LIST_VIEW($art=null)
     {
-        hd_print(__METHOD__);
         return array(
             array
             (
@@ -165,8 +185,8 @@ class EmplexerConfig
             );
     }
 
-    public static function GET_VIDEOS_LIST_VIEW($art=null){
-        hd_print(__METHOD__);
+    public function GET_VIDEOS_LIST_VIEW($art=null){
+        
         return array(
 
             // large icons view
@@ -306,7 +326,98 @@ array
         ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
         ),
     ),
+// small icons view without path with details
+array
+(
+    PluginRegularFolderView::async_icon_loading => true,
 
+    PluginRegularFolderView::view_params => array
+    (
+        ViewParams::num_cols => 6,
+        ViewParams::num_rows => 4,
+        ViewParams::paint_sandwich => true,
+        ViewParams::sandwich_base => 'gui_skin://special_icons/sandwich_base.aai',
+        ViewParams::sandwich_mask => 'cut_icon://{name=sandwich_mask}',
+        ViewParams::sandwich_cover => 'cut_icon://{name=sandwich_cover}',
+        ViewParams::sandwich_width => 150,
+        ViewParams::sandwich_height => 190,
+        ViewParams::icon_selection_box_width => 150,
+        ViewParams::icon_selection_box_height => 222,
+        ViewParams::paint_details => true,
+        ViewParams::zoom_detailed_icon => true,
+        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+        ViewParams::background_path => $art,
+        ViewParams::optimize_full_screen_background => false,
+        ViewParams::paint_path_box => false,
+        ViewParams::background_order => 'before_all'
+        ),
+    PluginRegularFolderView::base_view_item_params => array
+    (
+        ViewItemParams::item_padding_top => 0,
+        ViewItemParams::item_padding_bottom => 0,
+        ViewItemParams::icon_valign => VALIGN_CENTER,
+        ViewItemParams::item_paint_caption => false,
+        ViewItemParams::icon_width => 120,
+        ViewItemParams::icon_height => 180,
+        ViewItemParams::icon_scale_factor => 1.0,
+        ViewItemParams::icon_sel_scale_factor => 1.2,
+        ),
+
+    PluginRegularFolderView::not_loaded_view_item_params => array
+    (
+        ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
+        ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
+        ),
+    ),
+
+// small icons view without path without details
+array
+(
+    PluginRegularFolderView::async_icon_loading => true,
+
+    PluginRegularFolderView::view_params => array
+    (
+        ViewParams::num_cols => 10,
+        ViewParams::num_rows => 1,
+        ViewParams::paint_sandwich => true,
+        ViewParams::sandwich_base => 'gui_skin://special_icons/sandwich_base.aai',
+        ViewParams::sandwich_mask => 'cut_icon://{name=sandwich_mask}',
+        ViewParams::sandwich_cover => 'cut_icon://{name=sandwich_cover}',
+        ViewParams::sandwich_width => 150,
+        ViewParams::sandwich_height => 190,
+        ViewParams::icon_selection_box_width => 150,
+        ViewParams::icon_selection_box_height => 222,
+        ViewParams::paint_details => false,
+        ViewParams::zoom_detailed_icon => true,
+        ViewParams::item_detailed_info_font_size => FONT_SIZE_SMALL,
+        ViewParams::background_path => $art,
+        ViewParams::optimize_full_screen_background => false,
+        ViewParams::paint_path_box => false,
+        ViewParams::paint_help_line => true,
+        ViewParams::paint_scrollbar => false,
+        ViewParams::content_box_y => 1500,
+        ViewParams::content_box_height=>200,
+        ViewParams::content_box_padding_left => 200,
+        ViewParams::background_order => 'before_all'
+        ),
+    PluginRegularFolderView::base_view_item_params => array
+    (
+        ViewItemParams::item_padding_top => 0,
+        ViewItemParams::item_padding_bottom => 0,
+        ViewItemParams::icon_valign => VALIGN_CENTER,
+        ViewItemParams::item_paint_caption => false,
+        ViewItemParams::icon_width => 120,
+        ViewItemParams::icon_height => 180,
+        ViewItemParams::icon_scale_factor => 1.0,
+        ViewItemParams::icon_sel_scale_factor => 1.2,
+        ),
+
+    PluginRegularFolderView::not_loaded_view_item_params => array
+    (
+        ViewItemParams::icon_path => 'plugin_file://icons/no-picture.png',
+        ViewItemParams::item_detailed_icon_path => 'plugin_file://icons/poster.png',
+        ),
+    ),
             // list view
 array
 (
@@ -340,7 +451,7 @@ array
 );
 }
 
-public static function GET_EPISODES_LIST_VIEW($art=null){
+public  function GET_EPISODES_LIST_VIEW($art=null){
     return array(
         // normal icons view
         array

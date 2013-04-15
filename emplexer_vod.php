@@ -8,15 +8,16 @@
 		private $base_url;
 		function __construct()
 		{
-			hd_print(__METHOD__);
+			// hd_print(__METHOD__);
 			parent::__construct(false, false, false);
 		}
 		
 		public function try_load_movie($movie_id, &$plugin_cookies){
-			hd_print(__METHOD__  . ': ' . print_r($plugin_cookies, true)) ;
+			// hd_print(__METHOD__  . ': ' . print_r($plugin_cookies, true)) ;
+			HD::print_backtrace();
 
 			if (!$this->base_url){
-				$this->base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+				$this->base_url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
 			}
 			$url = $this->base_url  . $movie_id;
 			$xml =  HD::getAndParseXmlFromUrl($url);
@@ -34,7 +35,7 @@
 				$name = $grandparentTitle ,
 				$name_original =  $title ,
 				$description =  (string)$xml->Video->attributes()->summary ,
-				$poster_url = $this->base_url . '/photo/:/transcode?width=320&height=480&url=' .$this->base_url . (string)$xml->Video->attributes()->thumb  ,
+				$poster_url = $this->base_url . '/photo/:/transcode?width='.THUMB_WIDTH. '&height='. THUMB_HEIGHT . '&url=' .$this->base_url . (string)$xml->Video->attributes()->thumb  ,
 				$length_min = ((float)$xml->Video->attributes()->duration) /1000/60 ,
 				$year = (string)$xml->Video->attributes()->year,
 				$directors_str =  $this->geDirectorStr($xml),
@@ -49,7 +50,7 @@
 
 				);
 
-			$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$xml->Video->Media->Part->attributes()->key;
+			$httpVidelUrl = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$xml->Video->Media->Part->attributes()->key;
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$xml->Video->Media->Part->attributes()->file; 
 			if ($plugin_cookies->connectionMethod == 'smb'){
 				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$xml->Video->Media->Part->attributes()->file;	
@@ -62,15 +63,13 @@
 			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
 			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
-			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
-			// 
 			
 			$v = $videoUrl[$plugin_cookies->connectionMethod];
-			hd_print("-----------videoUrl = $v-----------");
+			hd_print(__METHOD__ .  ":-----------videoUrl = $v-----------");
 
 			$movie->add_series_data(1,$movie->name,$v ,true);
 
-			hd_print(__METHOD__ . ':' . print_r($movie, true));
+			// hd_print(__METHOD__ . ':' . print_r($movie, true));
 			$this->set_cached_movie($movie);
 			hd_print(print_r($this,true));
 		}
@@ -100,7 +99,7 @@
 			$roles = null;
 
 			foreach ($xml->Video->Role as $role) {
-				$roles .= (string)$role->attributes()->tag  .  (!$role->attributes()->role ?"\n" :  ' as ' . (string)$role->attributes()->role . "\n" );
+				$roles .= (string)$role->attributes()->tag  .  (!$role->attributes()->role || trim($role->attributes()->role) == "" ?"\n" :  ' as ' . (string)$role->attributes()->role . "\n" );
 			}
 			return $roles;
 		}
@@ -126,7 +125,7 @@
 
 		public function get_vod_info(MediaURL $media_url, &$plugin_cookies){
 			$movie = $this->get_cached_movie($media_url->movie_id);
-			hd_print(__METHOD__ . ':'  . print_r($movie, true));
+			// hd_print(__METHOD__ . ':'  . print_r($movie, true));
 
 			$m = HD::getAndParseXmlFromUrl($this->base_url . $media_url->movie_id);
 			$viewOffset = $m->Video->attributes()->viewOffset? (string)$m->Video->attributes()->viewOffset : 0;
@@ -155,7 +154,7 @@
 				)*/
 			);	
 
-		hd_print(__METHOD__ . ':'  . print_r($toBeReturned, true));
+		// hd_print(__METHOD__ . ':'  . print_r($toBeReturned, true));
 
 			return $toBeReturned;
 		}

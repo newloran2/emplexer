@@ -49,8 +49,8 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 		$items = array();
 		// foreach ($this->servers as $server ) {
 			// print_r($server);
-			// $doc = HD::http_get_document( EmplexerConfig::DEFAULT_PLEX . '/library/sections/all');
-			$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/all');
+			// $doc = HD::http_get_document( EmplexerConfig::getInstance()->DEFAULT_PLEX . '/library/sections/all');
+			$doc = HD::http_get_document( EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/all');
 			// $doc = HD::http_get_document( "http://" . $server['Ip'].  ';' . $server['Port'] . "/library/sections/all");
 
 			//hd_print($doc);
@@ -77,7 +77,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 			}
 
-			$channels = EmplexerConfig::getAllAvailableChannels($plugin_cookies, $this);
+			$channels = EmplexerConfig::getInstance()->getAllAvailableChannels($plugin_cookies, $this);
 			if (count($channels)>0){
 				$items =  array_merge($items, $channels);
 			}
@@ -113,11 +113,11 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 			// hd_print("key = $key");
 
 			if ($key){
-	 			$url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key;
+	 			$url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key;
 	 			/*$popUp = new EmplexerPopUp(4);
 	 			$action = $popUp->showPopUpMenu($url);*/
 
-				$doc = HD::http_get_document( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
+				$doc = HD::http_get_document( EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
 				$pop_up_items =  array();
 				$xml = simplexml_load_string($doc);
 				foreach ($xml->Directory as $c){
@@ -194,7 +194,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 	public function get_folder_views()
 	{
-		return EmplexerConfig::GET_SECTIONS_LIST_VIEW();
+		return EmplexerConfig::getInstance()->GET_SECTIONS_LIST_VIEW();
 	}
 
 

@@ -28,7 +28,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 		hd_print(__METHOD__);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		if (!$this->base_url){
-			$this->base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+			$this->base_url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
 		}
 
 		if ($user_input->control_id == 'enter'){
@@ -88,7 +88,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	{
 		hd_print(__METHOD__);
 		if (!$this->base_url){
-			$this->base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+			$this->base_url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
 		}
 		$doc_url =  HD::is_url($media_url->key) ? $media_url->key : $this->base_url . (HD::starts_with($media_url->key , '/' ) ? $media_url->key : '/'. $media_url->key);
 		hd_print(__METHOD__ . ": $doc_url");
@@ -105,7 +105,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	public function get_folder_views()
 	{
 		hd_print(__METHOD__);
-		return EmplexerConfig::GET_EPISODES_LIST_VIEW();
+		return EmplexerConfig::getInstance()->GET_EPISODES_LIST_VIEW();
 	}
 
 
@@ -193,7 +193,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 
 	public function showSearchScreen($key, $title, &$plugin_cookies){
 		hd_print(__METHOD__);
-		// $base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+		// $base_url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
 		$url = $this->base_url . $key;
 		
 		$defs = array();

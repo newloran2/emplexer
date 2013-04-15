@@ -44,7 +44,7 @@ class EmplexerSecondarySection extends AbstractPreloadedRegularScreen
 		hd_print(__METHOD__);
 		//hd_print(__METHOD__ . ':' . print_r($media_url, true));
 		$doc = HD::http_get_document( 
-			EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . 
+			EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . 
 			'/library/sections/' . 
 			$media_url->category_id . 
 			'/' . $media_url->filter_name 
@@ -92,8 +92,8 @@ class EmplexerSecondarySection extends AbstractPreloadedRegularScreen
 	public function get_folder_views()
 	{
 		hd_print(__METHOD__);
-		// return EmplexerConfig::GET_SECTIONS_LIST_VIEW();
-		return EmplexerConfig::GET_SECTIONS_LIST_VIEW();
+		// return EmplexerConfig::getInstance()->GET_SECTIONS_LIST_VIEW();
+		return EmplexerConfig::getInstance()->GET_SECTIONS_LIST_VIEW();
 	}
 
 }

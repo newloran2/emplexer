@@ -20,7 +20,7 @@ require_once 'lib/abstract_controls_screen.php';
 			hd_print(__METHOD__  . ': ' . print_r($plugin_cookies, true));
 			$defs = array();
 			$plexIp     = isset($plugin_cookies->plexIp)   ? $plugin_cookies->plexIp   : '';
-			$plexPort   = isset($plugin_cookies->plexPort) ? $plugin_cookies->plexPort : EmplexerConfig::DEFAULT_PLEX_PORT;
+			$plexPort   = isset($plugin_cookies->plexPort) ? $plugin_cookies->plexPort : DEFAULT_PLEX_PORT;
 			$timeToMark   = isset($plugin_cookies->timeToMark) ? $plugin_cookies->timeToMark : DEFAULT_TIME_TO_MARK;
 			$connectionMethod   = isset($plugin_cookies->connectionMethod) ? $plugin_cookies->connectionMethod : HTTP_CONNECTION_TYPE;
 			$notSeenCaptionColor   = isset($plugin_cookies->notSeenCaptionColor) ? $plugin_cookies->notSeenCaptionColor : DEFAULT_NOT_SEEN_CAPTION_COLOR;
@@ -29,6 +29,7 @@ require_once 'lib/abstract_controls_screen.php';
 			$passWord   = isset($plugin_cookies->password) ? $plugin_cookies->password : "";
 			$showOnMainScreen = isset($plugin_cookies->showOnMainScreen) ? $plugin_cookies->showOnMainScreen : 'No';
 			$useCache = isset($plugin_cookies->useCache) ? $plugin_cookies->useCache : 'true';
+			$useVodPlayback = isset($plugin_cookies->useVodPlayback) ? $plugin_cookies->useVodPlayback : 'true';
 			
 			hd_print("password = $passWord userName = $userName" );
 			
@@ -196,16 +197,19 @@ require_once 'lib/abstract_controls_screen.php';
         		$need_apply = true
         	);
 
-			$this->add_button(
-				$defs,
-				$name          = "btnSubtitle",
-				$title         = "Subtitles",
-				$caption	   = "Subtitle Config",
-				$width         =  200     
-			);        	
-
         	// $this->getStorageLocations($plugin_cookies, $defs);
-        	
+			$useVodPlaybackOpts = array('true' => 'Vod Playback', 'false' => 'Dune Playback');
+
+        	$this->add_combobox(
+				$defs,
+        		$name		   			= 'useVodPlayback',
+        		$title		   			= 'PlayBack Type',
+        		$initial_value 			= $useVodPlayback,
+        		$value_caption_pairs 	= $useVodPlaybackOpts,
+        		$width					= 300,
+        		$need_confirm 			= false, 
+        		$need_apply = true
+        	);        	
 
 			$this->add_button(
 				$defs,
@@ -294,6 +298,8 @@ require_once 'lib/abstract_controls_screen.php';
 				$plugin_cookies->password = $plugin_cookies->password ;				
 			}
 			$plugin_cookies->showOnMainScreen = $user_input->showOnMainScreen;
+			
+			$plugin_cookies->useVodPlayback = $user_input->useVodPlayback;
 
 			// $plugin_cookies->connectionMethod = $user_input->connectionMethod ;
 
@@ -303,7 +309,7 @@ require_once 'lib/abstract_controls_screen.php';
 				$plugin_cookies->{$key} = $value;	
 			}
 			
-			if (!file_exists('/persistfs') && $user_input->useCache != 'false'){
+			if (!file_exists('/persistfs/plugins_archive/emplexer') && $user_input->useCache != 'false'){
 				hd_print('não existe');
 				$plugin_cookies->useCache = 'false';	
 				

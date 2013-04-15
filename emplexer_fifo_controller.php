@@ -55,7 +55,7 @@ class EmplexerFifoController
 	}
 
 	public function downloadToCache($fileName, $fileUrl){
-		if (EmplexerConfig::$HAS_PERSISTFS){
+		if (EmplexerConfig::getInstance()->hasPersistFs){
 			hd_print(__METHOD__);
 			// fwrite($this->fileDescriptor, "c|$fileName|$fileUrl");
 			$file_path = "/persistfs/plugins_archive/emplexer/emplexer_default_archive/$fileName";
@@ -107,9 +107,12 @@ class EmplexerFifoController
 		fwrite($this->fileDescriptor, $command);
 	}
 
-	public function startSetPlayBackPosition($position, $delay=2){
+	public function startSetPlayBackPosition($position, &$plugin_cookies, $id, $mark_time=40, $pooling_time=5, $delay=3){
 		$plugin_dir = dirname(__FILE__);
-		$command ="$plugin_dir/bin/setPlayBackPosition.sh $delay $position >> 1 2>/dev/null &";
+		// plex_notify.sh 32301 5 http://192.168.2.9:32400/ 40 
+		$base_url = 'http://'. $plugin_cookies->plexIp . ':'  . $plugin_cookies->plexPort  . '/';
+		
+		$command ="$plugin_dir/bin/setPlayBackPosition.sh $delay $position $plugin_dir $base_url $id $pooling_time $mark_time  >> 1 2>/dev/null &";
 		hd_print("executando comando = $command");
 		exec($command);	
 		

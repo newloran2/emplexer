@@ -12,7 +12,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	function __construct($id=null,$folder_views=null)
 	{
-		hd_print(__METHOD__);
+		// hd_print(__METHOD__);
 		if (!is_null($id) && !is_null($folder_views) ){
 			// hd_print('parent' . print_r($folder_views, true));
 			parent::__construct($id, $folder_views);
@@ -22,14 +22,15 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 	}
 
 	public function get_handler_id(){
-		hd_print(__METHOD__);
+		// hd_print(__METHOD__);
 		return self::ID;
 	}
 
 	public function handle_user_input(&$user_input, &$plugin_cookies){
-		hd_print(__METHOD__);
+		// hd_print(__METHOD__);
 		hd_print(print_r($user_input, true));
-		$base_url = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+		hd_print(print_r($plugin_cookies, true));
+		$base_url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		if ($user_input->control_id == 'play'){			
 			hd_print(__METHOD__ . ':' .  print_r($user_input, true));
@@ -59,11 +60,24 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				$basePlexURL = $base_url;
 				$pooling=5;
 				$time_action = UserInputHandlerRegistry::create_action($this, 'time', null);
-				// EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this).'/');
+				// EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this).'/');
 				// EmplexerFifoController::getInstance()->startDefaultPlayBack($url,$startPosition,$plexFileId,$timeToMark,$basePlexURL,$pooling);
 				// EmplexerFifoController::getInstance()->startSetPlayBackPosition(200);
 				// return ActionFactory::launch_media_url($media_url->video_url);
-				return ActionFactory::vod_play();
+				
+				$params = array('key' => $media_url->key, 'back_screen_id' => $media_url->back_screen_id , 'back_key' => $media_url->back_key, 'back_filter_name' => $media_url->back_filter_name);
+				$stop_action = UserInputHandlerRegistry::create_action($this , 'stop', $params);
+				// $time_action = UserInputHandlerRegistry::create_action($this->get_screen_by_id($handler), 'time', $params);
+
+				if ($plugin_cookies->useVodPlayback === "true"){
+					return ActionFactory::vod_play();	 
+				} else {					
+					// public function startSetPlayBackPosition($position, &$plugin_cookies, $id, $mark_time=40, $pooling_time=5, $delay=3){
+					$viewOffset = $media_url->viewOffset ? $media_url->viewOffset / 1000 : 0 ;
+					EmplexerFifoController::getInstance()->startSetPlayBackPosition($viewOffset, $plugin_cookies, $key);
+					return ActionFactory::launch_media_url($media_url->video_url, $stop_action);
+				}
+				
 			}
 		} 
 
@@ -82,7 +96,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		if ($user_input->control_id == 'time'){
 			$key = $user_input->key;
-			EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this).'/');
+			EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this).'/');
 		}
 
 
@@ -98,12 +112,12 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$url = null;
 			if ($was_seen){
 				// http://192.168.2.9:32400/:/unscrobble?key=19547&identifier=com.plexapp.plugins.library
-				$url= EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . "/:/unscrobble?key=$key&identifier=com.plexapp.plugins.library" ;
+				$url= EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . "/:/unscrobble?key=$key&identifier=com.plexapp.plugins.library" ;
 			} else {
 				// http://192.168.2.9:32400/:/scrobble?key=19547&identifier=com.plexapp.plugins.library
-				$url= EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . "/:/scrobble?key=$key&identifier=com.plexapp.plugins.library" ;
+				$url= EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . "/:/scrobble?key=$key&identifier=com.plexapp.plugins.library" ;
 			}
-			hd_print(__METHOD__ . 'url:' .$url );
+			// hd_print(__METHOD__ . 'url:' .$url );
 
 			$params['url'] = $url;
 
@@ -113,7 +127,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'mark', $params)
 				);
 
-			hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );		
+			// hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );		
 			return ActionFactory::show_popup_menu($pop_up_items);
 		}
 
@@ -138,7 +152,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
-		hd_print(__METHOD__);
+		// hd_print(__METHOD__);
 		UserInputHandlerRegistry::get_instance()->register_handler($this);
 		$play_action = UserInputHandlerRegistry::create_action($this, 'play');
 		$info_action = UserInputHandlerRegistry::create_action($this, 'info');
@@ -159,7 +173,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public static function get_media_url_str($key, $filter_name =null, $type='show')
 	{
-		hd_print(__METHOD__);
+		// hd_print(__METHOD__);
 		self::$type = $type;
 
 		return MediaURL::encode(
@@ -174,28 +188,29 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 	}
 
 	public function get_all_folder_items(MediaURL $media_url , &$plugin_cookies){
-		hd_print(__METHOD__);
-		hd_print(__METHOD__ . ': ' . print_r($media_url, true));
-		hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true));
+		// hd_print(__METHOD__);
+		// hd_print(__METHOD__ . ': ' . print_r($media_url, true));
+		// hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true));
+		// hd_print(__METHOD__ . ': ' . print_r($plugin_cookies->connectionMethod, true));
 
-		$base_url =  EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this);
+		$base_url =  EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
 		if (is_null ($media_url->filter_name)){
-			$xml =    HD::getAndParseXmlFromUrl(EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
+			$xml =    HD::getAndParseXmlFromUrl(EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this). $media_url->key );
 		} else {
-			$xml = HD::getAndParseXmlFromUrl( EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
+			$xml = HD::getAndParseXmlFromUrl( EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/'. $media_url->key . '/' . $media_url->filter_name);
 		}
 		$items = array();
 
 
 		foreach ($xml->Video as $c)
 		{
-			$thumb        = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width=320&height=480&url=' . EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;		
+			$thumb        = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width='.THUMB_WIDTH. '&height='. THUMB_HEIGHT . '&url=' . EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;		
 			$bgImage = $base_url .  (string)$c->attributes()->art;
-			// if (EmplexerConfig::$USE_CACHE  === 'false'){
-			// 	$thumb = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
+			// if (EmplexerConfig::getInstance()->useCache  === 'false'){
+			// 	$thumb = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			// }
 			$detailPhoto  = $thumb;
-			$httpVidelUrl = EmplexerConfig::getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
+			$httpVidelUrl = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file; 
 			if ($plugin_cookies->connectionMethod == 'smb'){
 				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$c->Media->Part->attributes()->file;	
@@ -205,8 +220,6 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
 			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
-			// $v = EmplexerConfig::USE_NFS ? $nfsVideoUrl : $httpVidelUrl;
-			// $v = $videoUrl[$plugin_cookies->connectionMethod];
 			
 			if ($plugin_cookies->connectionMethod == HTTP_CONNECTION_TYPE) 
 				$v = $httpVidelUrl;
@@ -218,7 +231,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				$v = $httpVidelUrl;
 			}
 
-			hd_print("-----------videoUrl = $v-----------");
+			hd_print(__METHOD__ .  ":-----------videoUrl = $v-----------");
 
 			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';				
 			
@@ -300,17 +313,18 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 	public  function get_folder_views()
 	{
-		hd_print(__METHOD__);
-		return EmplexerConfig::GET_EPISODES_LIST_VIEW();
+		// hd_print(__METHOD__);
+		return EmplexerConfig::getInstance()->GET_EPISODES_LIST_VIEW();
 	}
 
 	public function getDetailedInfo(SimpleXMLElement &$node){
-		hd_print(__METHOD__);
+		// hd_print(__METHOD__);
 		$info =
 		'Serie:' . (string)$node->attributes()->grandparentTitle . ' || ' .
 		'Episode Name :' . (string)$node->attributes()->title. ' || ' .
 		'EP:'  . 'S'.(string)$node->attributes()->parentIndex . 'E'. (string)$node->attributes()->index . '||' .
-		'summary:'. str_replace('"', '' , (string)$node->attributes()->summary);
+		'summary:'. str_replace('"', '' , (string)$node->attributes()->summary) ;
+
 
 		return $info;
 	}

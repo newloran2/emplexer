@@ -33,7 +33,7 @@ class EmplexerMovieList extends  EmplexerVideoList
 	public  function get_folder_views()
 	{
 		hd_print(__METHOD__);
-		return EmplexerConfig::GET_VIDEOS_LIST_VIEW();
+		return EmplexerConfig::getInstance()->GET_VIDEOS_LIST_VIEW();
 	}
 
 	public function getDetailedInfo(SimpleXMLElement &$node){

@@ -37,8 +37,7 @@ class Emplexer extends DefaultDunePlugin
 	
 	function __construct()
 	{
-		hd_print(__METHOD__);
-		if (EmplexerConfig::CREATE_LOG_FOLDER){
+		if (CREATE_LOG_FOLDER){
 			if (file_exists('/D') && is_dir('/D')){
 				if (!file_exists('/D/dune_plugin_logs/')){
 					mkdir('/D/dune_plugin_logs/');
@@ -46,10 +45,6 @@ class Emplexer extends DefaultDunePlugin
 				}
 			}
 		}
-
-		EmplexerConfig::$HAS_PERSISTFS =  file_exists('/persistfs/plugins_archive/emplexer/');
-
-		
 
 		
 
@@ -70,12 +65,10 @@ class Emplexer extends DefaultDunePlugin
 	}
 
 	public function get_handler_id(){
-		hd_print(__METHOD__);
 		return 'plex_root';
 	}
 
 	public function get_vod_info($media_url_str, &$plugin_cookies){
-		hd_print(__METHOD__);
 
 		// hd_print(print_r(debug_backtrace(), true));
 		HD::print_backtrace();
@@ -134,7 +127,6 @@ class Emplexer extends DefaultDunePlugin
 
 	private function get_right_media_url(MediaURL $media_url,$filter_name)
 	{
-		hd_print(__METHOD__);
 		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');
 		$season = array('all','recentlyViewedShows','unwatched');
 		
@@ -146,7 +138,6 @@ class Emplexer extends DefaultDunePlugin
 	}
 
 	private function open_popup_for_filter($current_url, $key){
-		hd_print(__METHOD__);
 		$key = (string) $media_url->category_id;
 
 		$doc = HD::http_get_document( $current_url . '/' . $key);
@@ -166,7 +157,6 @@ class Emplexer extends DefaultDunePlugin
 		$action = ActionFactory::show_popup_menu($pop_up_items);		
 	}
 	private function is_filfer($filter_name){
-		hd_print(__METHOD__);
 		$filter = array('firstCharacter','genre','year','contentRating','folder');
 		return in_array($filter_name, $filter);
 	}

@@ -64,8 +64,6 @@ class MediaURL
 
     public static function encode($m)
     { 
-        hd_print('resultado para encodar = ' .  $m);
-        hd_print('resultado para encodar = ' .  print_r($m, true));
         return json_encode($m); 
     }
 
@@ -73,17 +71,11 @@ class MediaURL
 
     public static function decode($s)
     {
-        // $s = str_replace(array("\r\n", "\r", "\n",  "\""), " ", utf8_encode($s));
-
-        // $s = str_replace(array("\n","\r"),"",$s); 
-
-        hd_print('resultado para decodificar = ' . print_r($s, true));
         if (substr($s, 0, 1) !== '{')
             return new MediaURL($s, null);
 
 
         $json =  json_decode($s);
-        hd_print("decodificando $s  resultado = " . print_r($json, true));
         return new MediaURL($s,$json);
     }
 }
