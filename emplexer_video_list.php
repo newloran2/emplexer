@@ -73,7 +73,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					return ActionFactory::vod_play();	 
 				} else {					
 					// public function startSetPlayBackPosition($position, &$plugin_cookies, $id, $mark_time=40, $pooling_time=5, $delay=3){
-					$viewOffset = $media_url->viewOffset ? $media_url->viewOffset / 1000 : 0 ;
+					$viewOffset = $media_url->viewOffset ? $media_url->viewOffset / 1000 : 1 ;
 					EmplexerFifoController::getInstance()->startSetPlayBackPosition($viewOffset, $plugin_cookies, $key);
 					return ActionFactory::launch_media_url($media_url->video_url, $stop_action);
 				}

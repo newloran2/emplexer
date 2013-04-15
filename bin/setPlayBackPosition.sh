@@ -10,11 +10,11 @@ do
 		break
 	else
 		#sleep for 0,5 seconds
-		usleep 5000
+		usleep 500000
 	fi
 done
 echo  "executei"  >> /tmp/1.txt
 commando="$3/bin/plex_notify.sh $5 $6 $4 $7 >> 1 2>/dev/null &"
-echo "vou execurtar o startNotify com o comando $commando" > /tmp/1.txt
+echo "vou execurtar o startNotify com o comando $commando" >> /tmp/1.txt
 sh $3/bin/plex_notify.sh $5 $6 $4 $7 >> 1 2>/dev/null &
 
