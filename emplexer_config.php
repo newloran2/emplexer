@@ -476,8 +476,7 @@ public  function GET_EPISODES_LIST_VIEW($art=null){
                 ViewParams::item_detailed_info_title_color => 6, #FFE040 ,
                 ViewParams::background_path => $art,
                 ViewParams::optimize_full_screen_background => true,
-                ViewParams::background_order => 'before_all',
-                ViewParams::cycle_mode_enabled => true
+                ViewParams::background_order => 'before_all'
                 ),
 
             PluginRegularFolderView::base_view_item_params => array
