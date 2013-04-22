@@ -27,8 +27,7 @@ class EmplexerArchive implements Archive
 			throw new Exception("A bigger size is necessary to create an archive" , 1);
 		}
 		$this->arquiveSize = $arquiveSize;
-		ArchiveCache::set_archive($this);
-
+		ArchiveCache::set_archive($this);		
 	}
 
 	//static methods
@@ -87,9 +86,9 @@ class EmplexerArchive implements Archive
 	
 	public function setFileToArchive($fileName, $fileUrl)	
 	{
-		// hd_print(__METHOD__);
+		hd_print(__METHOD__ . ': useCache = ' . EmplexerConfig::getInstance()->getUseCache() );
 		//no cache
-		if(EmplexerConfig::getInstance()->useCache === 'true'){
+		if(EmplexerConfig::getInstance()->getUseCache()){
 			// hd_print( __METHOD__ .  ': Entrou.... ' );
 			//hd_print(__METHOD__ . " fileName=$fileName, fileUrl=$fileUrl");
 			$this->urls[$fileName] = $fileUrl ;

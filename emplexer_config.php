@@ -28,6 +28,10 @@ define('THUMB_HEIGHT', '294');
 
 
 
+define('CACHE_DIR', '/persistfs/plugins_archive/emplexer/emplexer_default_archive');
+define('PERSISTFS_DIR', '/persistfs/plugins_archive/emplexer');
+
+
 
 class EmplexerConfig 
 {
@@ -37,30 +41,26 @@ class EmplexerConfig
     public $hasPersistFs;
     public $useCache;
 
-    
+    g
     private static $instance;
 
 
     private function __construct()
     {
-        $this->cacheDirExists = file_exists('/persistfs/plugins_archive/emplexer/emplexer_default_archive');
+        hd_print(__METHOD__);
+        $this->cacheDirExists = file_exists(CACHE_DIR);
         $this->useCache = false;
-        $this->hasPersistFs = file_exists('/persistfs/plugins_archive/emplexer');
+        $this->hasPersistFs = file_exists(PERSISTFS_DIR);
     }
 
 
     public static function getInstance()
     {
-        if (!isset($instance)){
-            $instance = new EmplexerConfig();
+        if (!isset(self::$instance)){
+            self::$instance = new EmplexerConfig();
         }
-        return $instance;
+        return self::$instance;
     }
-
-
-
-
-    
 
     //static $currentPlexBaseUR='';
 
@@ -104,12 +104,32 @@ class EmplexerConfig
 
     public function createCacheDirIfNeeded(&$plugin_cookies){
     //se não existir o diretorio de cache devo criar
-        EmplexerConfig::getInstance()->useCache  = $plugin_cookies->useCache;
+    hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true) );
+        $this->useCache  = $plugin_cookies->useCache;
+        hd_print( __METHOD__ . ': useCache = ' . $this->useCache . ' cacheDirExists =' . $this->cacheDirExists);
         // hd_print(__METHOD__ . ': ' . EmplexerConfig::getInstance()->useCache);
-        if (EmplexerConfig::getInstance()->useCache && !EmplexerConfig::getInstance()->$CACE_DIR_EXISTS){
-            $result = mkdir($cache_dir);
-            hd_print("criação de diretório de cache em $cache_dir [" . $result ? 'OK' : 'FAIL' . "]" );
+        if ($this->useCache && !$this->cacheDirExists){
+            $result = mkdir(CACHE_DIR);
+            hd_print("criação de diretório de cache em " .CACHE_DIR .  "[" . $result ? 'OK' : 'FAIL' . "]" );
         }
+    }
+
+
+    public function getUseCache(){
+        hd_print(__METHOD__ . ': useCache = ' . $this->useCache);
+        return $this->useCache;
+    }
+
+    public function __set($name, $value)
+    {
+        hd_print("Setting '$name' to '$value'");
+        $this->{$name} = $value;
+    }
+
+    public function __get($name)
+    {
+        hd_print("Getting '$name'\n");
+        return $this->{$name};
     }
 
 

@@ -95,6 +95,8 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		} 
 
 		if ($user_input->control_id == 'time'){
+			// hd_print(__METHOD__ . ':' .  ' aconteceu o evento time');
+			// HD::print_backtrace();
 			$key = $user_input->key;
 			EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this).'/');
 		}
