@@ -1,0 +1,3 @@
+[submodule "lib/php-plex"]
+	path = lib/php-plex
+	url = https://github.com/newloran2/php-plex.git
