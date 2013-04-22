@@ -41,7 +41,7 @@ class EmplexerConfig
     public $hasPersistFs;
     public $useCache;
 
-    g
+
     private static $instance;
 
 
