@@ -4,45 +4,16 @@
   <entry_points>
     <entry_point>
       <parent_media_url>root://applications</parent_media_url>
-      <media_url>emplexer_section_secreen</media_url>
+      <media_url>emplexer_main</media_url>
       <caption>emplexer</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
-          <type>plugin_open_folder</type>
+          <type>plugin_handle_user_input</type>
         </key_enter>
       </actions>
       <ip_address_required>yes</ip_address_required>
       <show_by_default>yes</show_by_default>
-    </entry_point>
-    <entry_point>
-      <parent_media_url>root://sources</parent_media_url>
-      <media_url>emplexer_section_secreen</media_url>
-      <caption>emplexer</caption>
-      <icon_url>plugin_file://icons/emplexer.aai</icon_url>
-      <actions>
-        <key_enter>
-          <type>plugin_open_folder</type>
-        </key_enter>
-      </actions>
-      <ip_address_required>yes</ip_address_required>
-      <show_by_default>no</show_by_default>
-      <show_cookie_name>showOnMainScreen</show_cookie_name>
-    </entry_point>
-    <entry_point>
-      <parent_media_url>setup://applications</parent_media_url>
-      <media_url>emplexer_setup_screen</media_url>
-      <caption>emplexer</caption>
-      <icon_url>plugin_file://icons/emplexer.aai</icon_url>
-      <actions>
-        <key_enter>
-          <type>plugin_open_folder</type>
-          </key_enter>
-      </actions>
-      <ip_address_required>no</ip_address_required>
-      <show_by_default>yes</show_by_default>
-      <show_default_value>yes</show_default_value>
-      <show_cookie_name>show_tv_entry_point</show_cookie_name>
     </entry_point>
   </entry_points>
   <type>php</type>

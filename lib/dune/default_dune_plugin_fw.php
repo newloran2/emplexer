@@ -1,8 +1,8 @@
 <?php
 
 
-require_once 'lib/action_factory.php';
-require_once 'lib/dune_exception.php';
+require_once 'lib/dune/action_factory.php';
+require_once 'lib/dune/dune_exception.php';
 
 
 
