@@ -1,6 +1,6 @@
 <?php
 
-require_once 'lib/archive_cache.php';
+// require_once 'lib/archive_cache.php';
 
 class DefaultArchive implements Archive
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-require_once 'lib/regular_screen.php';
+// require_once 'lib/regular_screen.php';
 
 abstract class AbstractRegularScreen implements RegularScreen
 {

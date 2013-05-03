@@ -1,6 +1,6 @@
 <dune_plugin>
-  <name>emplexer</name>
-  <caption>emplexer</caption>
+  <name>emplexer2</name>
+  <caption>emplexer2</caption>
   <entry_points>
     <entry_point>
       <parent_media_url>root://applications</parent_media_url>

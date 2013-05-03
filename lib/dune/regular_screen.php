@@ -1,7 +1,7 @@
 <?php
 
 
-require_once 'lib/screen.php';
+// require_once 'lib/screen.php';
 
 interface RegularScreen extends Screen
 {

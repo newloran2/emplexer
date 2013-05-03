@@ -1,10 +1,10 @@
 <?php
 
 
-require_once 'lib/tv/tv.php';
-require_once 'lib/tv/default_group.php';
-require_once 'lib/tv/favorites_group.php';
-require_once 'lib/tv/all_channels_group.php';
+// require_once 'lib/tv/tv.php';
+// require_once 'lib/tv/default_group.php';
+// require_once 'lib/tv/favorites_group.php';
+// require_once 'lib/tv/all_channels_group.php';
 
 abstract class AbstractTv implements Tv
 {

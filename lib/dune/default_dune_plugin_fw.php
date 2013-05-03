@@ -1,8 +1,9 @@
 <?php
 
 
-require_once 'lib/dune/action_factory.php';
-require_once 'lib/dune/dune_exception.php';
+// require_once 'lib/dune/action_factory.php';
+// require_once 'lib/dune/dune_exception.php';
+// require_once 'lib/dune/dune_core/dune_plugin_fw.php';
 
 
 
@@ -28,7 +29,7 @@ class DefaultDunePluginFw extends DunePluginFw
         $a = json_encode(
                 $this->call_plugin_impl(
                     json_decode($call_ctx_json))); 
-        // hd_print(__METHOD__ . ':' . print_r($a, true));
+        hd_print(__METHOD__ . ':' . print_r($a, true));
         return $a;
             
     }

@@ -1,7 +1,7 @@
 <?php
 
 
-require_once 'lib/vod/vod.php';
+// require_once 'lib/vod/vod.php';
 
 abstract class AbstractVod implements Vod
 {

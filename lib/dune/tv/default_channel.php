@@ -1,7 +1,7 @@
 <?php
 
 
-require_once 'lib/tv/channel.php';
+// require_once 'lib/tv/channel.php';
 
 
 

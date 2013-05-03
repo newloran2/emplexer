@@ -1,8 +1,8 @@
 <?php
 
 
-require_once 'lib/screen.php';
-require_once 'lib/user_input_handler.php';
+// require_once 'lib/screen.php';
+// require_once 'lib/user_input_handler.php';
 
 interface ControlsScreen extends Screen, UserInputHandler
 {

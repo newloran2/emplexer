@@ -5,3 +5,4 @@
 *.swp
 *.sublime*
 
+/nbproject/private/

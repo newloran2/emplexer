@@ -1,8 +1,8 @@
 <?php
 
 
-require_once 'lib/controls_screen.php';
-require_once 'lib/control_factory.php';
+// require_once 'lib/controls_screen.php';
+// require_once 'lib/control_factory.php';
 
 abstract class AbstractControlsScreen
     implements ControlsScreen

@@ -1,7 +1,7 @@
 <?php
 
 
-require_once 'lib/tv/epg_item.php';
+// require_once 'lib/tv/epg_item.php';
 
 
 

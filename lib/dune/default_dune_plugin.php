@@ -1,12 +1,12 @@
 <?php
 
 
-require_once 'lib/media_url.php';
-require_once 'lib/tv/epg_iterator.php';
-require_once 'lib/tv/tv.php';
-require_once 'lib/user_input_handler_registry.php';
-require_once 'lib/action_factory.php';
-require_once 'lib/control_factory.php';
+// require_once 'lib/media_url.php';
+// require_once 'lib/tv/epg_iterator.php';
+// require_once 'lib/tv/tv.php';
+// require_once 'lib/user_input_handler_registry.php';
+// require_once 'lib/action_factory.php';
+// require_once 'lib/control_factory.php';
 
 class DefaultDunePlugin implements DunePlugin
 {

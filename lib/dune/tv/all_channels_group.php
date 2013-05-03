@@ -1,7 +1,7 @@
 <?php
 
 
-require_once 'lib/tv/default_group.php';
+// require_once 'lib/tv/default_group.php';
 
 
 

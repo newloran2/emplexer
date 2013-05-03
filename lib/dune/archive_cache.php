@@ -1,6 +1,6 @@
 <?php
 
-require_once 'lib/archive.php';
+// require_once 'lib/archive.php';
 
 class ArchiveCache
 {

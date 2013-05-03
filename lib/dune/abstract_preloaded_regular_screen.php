@@ -1,7 +1,7 @@
 <?php
 
 
-require_once 'lib/abstract_regular_screen.php';
+// require_once 'lib/abstract_regular_screen.php';
 
 abstract class AbstractPreloadedRegularScreen
     extends AbstractRegularScreen

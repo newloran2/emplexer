@@ -1,7 +1,7 @@
 <?php
 
-require_once 'lib/tv/tv.php';
-require_once 'lib/abstract_preloaded_regular_screen.php';
+// require_once 'lib/tv/tv.php';
+// require_once 'lib/abstract_preloaded_regular_screen.php';
 
 class TvFavoritesScreen extends AbstractPreloadedRegularScreen
     implements UserInputHandler
