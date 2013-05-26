@@ -8,11 +8,23 @@ namespace lib\emplexer\menu;
 */
 class Menu extends PopUp
 {
-	
+	private $teste;
 	function __construct()
 	{
 		# code...
 	}
+        
+        
+        public function getTeste() {
+            return $this->teste;
+        }
+
+        public function setTeste($teste) {
+            $this->teste = $teste;
+        }
+
+
+        
 }
 
  ?>

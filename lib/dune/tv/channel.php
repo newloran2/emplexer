@@ -1,5 +1,5 @@
 <?php
-
+namespace lib\dune\tv;
 
 interface Channel
 {

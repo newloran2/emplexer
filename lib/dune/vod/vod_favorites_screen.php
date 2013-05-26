@@ -3,6 +3,18 @@
 // require_once 'lib/vod/vod.php';
 // require_once 'lib/abstract_preloaded_regular_screen.php';
 
+namespace lib\dune\vod;
+
+use GuiMenuItemDef;
+use lib\dune\AbstractPreloadedRegularScreen;
+use lib\dune\ActionFactory;
+use lib\dune\MediaURL;
+use lib\dune\UserInputHandler;
+use lib\dune\UserInputHandlerRegistry;
+use PluginRegularFolderItem;
+use ViewItemParams;
+
+
 class VodFavoritesScreen extends AbstractPreloadedRegularScreen
     implements UserInputHandler
 {

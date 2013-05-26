@@ -1,21 +1,13 @@
 <?php
 
-hd_print(memory_get_peak_usage() / 1024 / 1024);
-
-
 define('ROOT_DIR', dirname(__FILE__));
-
-
 require_once 'autoload.php';
-
-
-
+//sucks 
 require_once 'lib/php-plex/Plex.php';
-
 DefaultDunePluginFw::$plugin_class_name = 'EmplexerPlugin';
 
 /**
- * 
+ * Main class.
  */
 class EmplexerPlugin implements DunePlugin {
 
@@ -29,7 +21,12 @@ class EmplexerPlugin implements DunePlugin {
         $this->mainServer = $this->plexInstance->getServer('main');
     }
 
-    // GuiAction
+    /**
+     * 
+     * @param type $user_input
+     * @param type $plugin_cookies
+     * @return type
+     */
     public function handle_user_input(
     &$user_input, &$plugin_cookies) {
         hd_print(__METHOD__ . ':' . print_r($user_input, true));

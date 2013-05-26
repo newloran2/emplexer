@@ -1,6 +1,9 @@
 <?php
 
+namespace lib\dune\vod;
 
+use Exception;
+use lib\dune\MediaURL;
 // require_once 'lib/vod/vod.php';
 
 abstract class AbstractVod implements Vod

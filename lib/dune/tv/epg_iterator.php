@@ -1,5 +1,8 @@
 <?php
 
+namespace lib\dune\tv;
+
+use IteratorIterator;
 
 class EpgIterator implements Iterator
 {

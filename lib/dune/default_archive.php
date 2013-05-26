@@ -2,6 +2,12 @@
 
 // require_once 'lib/archive_cache.php';
 
+namespace lib\dune;
+
+use Exception;
+use lib\dune\Archive;
+use PluginArchiveDef;
+
 class DefaultArchive implements Archive
 {
     public static function clear_cache()

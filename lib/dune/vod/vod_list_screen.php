@@ -2,6 +2,19 @@
 
 
 // require_once 'lib/abstract_regular_screen.php';
+namespace lib\dune\vod;
+
+use GuiMenuItemDef;
+use lib\dune\AbstractRegularScreen;
+use lib\dune\ActionFactory;
+use lib\dune\HD;
+use lib\dune\MediaURL;
+use lib\dune\UserInputHandler;
+use lib\dune\UserInputHandlerRegistry;
+use PluginRegularFolderItem;
+use ViewItemParams;
+
+
 
 abstract class VodListScreen extends AbstractRegularScreen
     implements UserInputHandler

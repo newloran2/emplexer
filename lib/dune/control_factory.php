@@ -2,6 +2,14 @@
 
 
 // require_once 'lib/action_factory.php';
+namespace lib\dune;
+
+use GuiButtonDef;
+use GuiComboboxDef;
+use GuiControlDef;
+use GuiLabelDef;
+use GuiTextFieldDef;
+use GuiVGapDef;
 
 class ControlFactory
 {

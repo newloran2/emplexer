@@ -3,6 +3,10 @@
 
 // require_once('lib/user_input_handler.php');
 
+namespace lib\dune;
+
+use GuiAction;
+
 class UserInputHandlerRegistry
 {
     private static $instance = null;

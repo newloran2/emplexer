@@ -2,6 +2,11 @@
 
 
 // require_once 'lib/regular_screen.php';
+namespace lib\dune;
+
+use PluginFolderView;
+use PluginRegularFolderView;
+
 
 abstract class AbstractRegularScreen implements RegularScreen
 {

@@ -7,6 +7,11 @@
 // require_once 'lib/user_input_handler_registry.php';
 // require_once 'lib/action_factory.php';
 // require_once 'lib/control_factory.php';
+namespace lib\dune;
+
+use DunePlugin;
+use Exception;
+use lib\dune\MediaURL;
 
 class DefaultDunePlugin implements DunePlugin
 {

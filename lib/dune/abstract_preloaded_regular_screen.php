@@ -2,6 +2,9 @@
 
 
 // require_once 'lib/abstract_regular_screen.php';
+namespace lib\dune;
+
+
 
 abstract class AbstractPreloadedRegularScreen
     extends AbstractRegularScreen

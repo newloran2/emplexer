@@ -4,7 +4,11 @@
 // require_once 'lib/dune/action_factory.php';
 // require_once 'lib/dune/dune_exception.php';
 // require_once 'lib/dune/dune_core/dune_plugin_fw.php';
+namespace lib\dune;
 
+use DunePluginFw;
+use Exception;
+use PluginOutputData;
 
 
 class DefaultDunePluginFw extends DunePluginFw

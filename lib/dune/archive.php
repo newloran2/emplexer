@@ -1,5 +1,7 @@
 <?php
 
+namespace lib\dune;
+
 interface Archive
 {
     public function get_id();

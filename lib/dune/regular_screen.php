@@ -2,6 +2,10 @@
 
 
 // require_once 'lib/screen.php';
+namespace lib\dune; 
+
+use lib\dune\MediaURL;
+use lib\dune\Screen;
 
 interface RegularScreen extends Screen
 {

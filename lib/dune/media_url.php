@@ -1,5 +1,7 @@
 <?php
 
+namespace lib\dune;
+
 
 class MediaURL
 {

@@ -2,7 +2,17 @@
 
 
 // require_once 'lib/abstract_preloaded_regular_screen.php';
+namespace lib\dune\tv;
 
+use GuiMenuItemDef;
+use lib\dune\AbstractPreloadedRegularScreen;
+use lib\dune\ActionFactory;
+use lib\dune\HD;
+use lib\dune\MediaURL;
+use lib\dune\UserInputHandler;
+use lib\dune\UserInputHandlerRegistry;
+use PluginRegularFolderItem;
+use ViewItemParams;
 
 
 class TvChannelListScreen extends AbstractPreloadedRegularScreen

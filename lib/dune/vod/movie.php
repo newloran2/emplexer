@@ -1,5 +1,12 @@
 <?php
 
+namespace lib\dune\vod;
+
+use Exception;
+use PluginMovie;
+use PluginVodInfo;
+use PluginVodSeriesInfo;
+
 class ShortMovie
 {
     public $id;

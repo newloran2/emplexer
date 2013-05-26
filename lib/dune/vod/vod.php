@@ -1,5 +1,10 @@
 <?php
 
+namespace lib\dune\vod;
+
+use lib\dune\MediaURL;
+
+
 interface Vod
 {
     public function try_load_movie($movie_id, &$plugin_cookies);

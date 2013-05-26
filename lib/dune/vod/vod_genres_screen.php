@@ -1,4 +1,14 @@
 <?php
+namespace lib\dune\vod;
+
+use lib\dune\AbstractPreloadedRegularScreen;
+use lib\dune\ActionFactory;
+use lib\dune\MediaURL;
+use lib\dune\UserInputHandler;
+use lib\dune\UserInputHandlerRegistry;
+use PluginRegularFolderItem;
+use ViewItemParams;
+
 
 class VodGenresScreen extends AbstractPreloadedRegularScreen
     implements UserInputHandler

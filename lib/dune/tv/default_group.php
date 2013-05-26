@@ -2,7 +2,9 @@
 
 
 // require_once 'lib/tv/group.php';
+namespace lib\dune\tv;
 
+use lib\dune\HashedArray;
 
 
 class DefaultGroup implements Group

@@ -4,6 +4,18 @@
 // require_once 'lib/screen.php';
 // require_once 'lib/vod/vod.php';
 // require_once 'lib/vod/vod_series_list_screen.php';
+namespace lib\dune\vod;
+
+use lib\dune\ActionFactory;
+use lib\dune\HD;
+use lib\dune\MediaURL;
+use lib\dune\Screen;
+use lib\dune\UserInputHandler;
+use lib\dune\UserInputHandlerRegistry;
+use PluginFolderView;
+use PluginMovieFolderView;
+
+
 
 class VodMovieScreen implements Screen, UserInputHandler
 {

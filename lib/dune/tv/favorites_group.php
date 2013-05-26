@@ -3,7 +3,7 @@
 
 // require_once 'lib/tv/default_group.php';
 
-
+namespace lib\dune\tv;
 
 class FavoritesGroup extends DefaultGroup
 {

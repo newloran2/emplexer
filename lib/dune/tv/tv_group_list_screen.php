@@ -2,7 +2,13 @@
 
 
 // require_once 'lib/abstract_preloaded_regular_screen.php';
+namespace lib\dune\tv;
 
+use lib\dune\AbstractPreloadedRegularScreen;
+use lib\dune\ActionFactory;
+use lib\dune\MediaURL;
+use PluginRegularFolderItem;
+use ViewItemParams;
 
 
 class TvGroupListScreen extends AbstractPreloadedRegularScreen

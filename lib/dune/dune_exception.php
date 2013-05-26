@@ -1,5 +1,8 @@
 <?php
 
+namespace lib\dune;
+
+use Exception;
 
 class DuneException extends Exception
 {

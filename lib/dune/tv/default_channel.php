@@ -3,7 +3,7 @@
 
 // require_once 'lib/tv/channel.php';
 
-
+namespace lib\dune\tv;
 
 class DefaultChannel implements Channel
 {

@@ -3,6 +3,12 @@
 
 // require_once 'lib/abstract_controls_screen.php';
 
+namespace lib\dune\vod;
+
+use lib\dune\AbstractControlsScreen;
+use lib\dune\ActionFactory;
+use lib\dune\MediaURL;
+
 
 
 class VodSearchScreen extends AbstractControlsScreen

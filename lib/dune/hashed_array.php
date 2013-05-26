@@ -1,5 +1,8 @@
 <?php
 
+namespace lib\dune;
+
+use Iterator;
 
 class HashedArray implements Iterator
 {

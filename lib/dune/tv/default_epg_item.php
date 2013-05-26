@@ -2,7 +2,7 @@
 
 
 // require_once 'lib/tv/epg_item.php';
-
+namespace lib\dune\tv;
 
 
 class DefaultEpgItem implements EpgItem

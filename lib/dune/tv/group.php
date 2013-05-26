@@ -1,5 +1,6 @@
 <?php
 
+namespace lib\dune\tv;
 
 interface Group
 {

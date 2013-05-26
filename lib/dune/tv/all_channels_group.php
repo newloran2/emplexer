@@ -1,6 +1,6 @@
 <?php
 
-
+namespace lib\dune\tv;
 // require_once 'lib/tv/default_group.php';
 
 

@@ -1,6 +1,6 @@
 <?php
 
-
+namespace lib\dune;
 interface Screen
 {
     public function get_id();

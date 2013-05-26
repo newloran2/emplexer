@@ -1,5 +1,7 @@
 <?php
+namespace lib\dune\tv;
 
+use lib\dune\MediaURL;
 
 interface Tv
 {

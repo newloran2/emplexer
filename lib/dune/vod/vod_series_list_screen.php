@@ -3,6 +3,15 @@
 
 // require_once 'lib/vod/vod.php';
 // require_once 'lib/abstract_preloaded_regular_screen.php';
+namespace lib\dune\vod;
+
+use lib\dune\AbstractPreloadedRegularScreen;
+use lib\dune\ActionFactory;
+use lib\dune\MediaURL;
+use PluginRegularFolderItem;
+use PluginRegularFolderView;
+use ViewItemParams;
+use ViewParams;
 
 class VodSeriesListScreen extends AbstractPreloadedRegularScreen
 {

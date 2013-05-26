@@ -1,5 +1,10 @@
 <?php
 
+namespace lib\dune;
+
+use DateTime;
+use Exception;
+use PluginRegularFolderRange;
 
 class HD
 {

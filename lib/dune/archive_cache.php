@@ -1,6 +1,8 @@
 <?php
 
 // require_once 'lib/archive.php';
+namespace lib\dune;
+
 
 class ArchiveCache
 {

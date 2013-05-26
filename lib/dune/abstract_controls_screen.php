@@ -3,6 +3,10 @@
 
 // require_once 'lib/controls_screen.php';
 // require_once 'lib/control_factory.php';
+namespace lib\dune;
+
+use PluginControlsFolderView;
+use PluginFolderView;
 
 abstract class AbstractControlsScreen
     implements ControlsScreen

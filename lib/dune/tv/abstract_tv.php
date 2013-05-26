@@ -1,6 +1,14 @@
 <?php
 
+namespace lib\dune\tv;
 
+use Exception;
+use lib\dune\ActionFactory;
+use lib\dune\MediaURL;
+use PluginTvChannel;
+use PluginTvEpgProgram;
+use PluginTvGroup;
+use PluginTvInfo;
 // require_once 'lib/tv/tv.php';
 // require_once 'lib/tv/default_group.php';
 // require_once 'lib/tv/favorites_group.php';

@@ -1,5 +1,23 @@
 <?php
 
+namespace lib\dune;
+
+use BlurayPlayActionData;
+use CloseDialogAndRunActionData;
+use DvdPlayActionData;
+use GuiAction;
+use LaunchMediaUrlActionData;
+use PluginClearArchiveCacheActionData;
+use PluginInvalidateFoldersActionData;
+use PluginOpenFolderActionData;
+use PluginShowErrorActionData;
+use PluginUpdateFolderActionData;
+use PluginVodPlayActionData;
+use ResetControlsActionData;
+use ShowDialogActionData;
+use ShowPopupMenuActionData;
+use StatusActionData;
+
 
 class ActionFactory
 {
