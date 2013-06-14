@@ -66,7 +66,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				$items[] = array
 				(
 					 // EmplexerRootList::get_media_url_str((string)$c->attributes()->key, null), 
-					PluginRegularFolderItem::media_url =>  $this->get_right_media_url((string)$c->attributes()->type,(string)$c->attributes()->key),
+					PluginRegularFolderItem::media_url =>  $this->get_right_media_url((string)$c->attributes()->type,(string)$c->attributes()->key, $plugin_cookies),
 					PluginRegularFolderItem::caption => (string) $c->attributes()->title,
 					PluginRegularFolderItem::view_item_params =>
 					array
@@ -120,11 +120,19 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				$doc = HD::http_get_document( EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/library/sections/' . $key);
 				$pop_up_items =  array();
 				$xml = simplexml_load_string($doc);
+				$defaultFilter = 'all';
+				if ($media_url->type == 'show'){
+					$defaultFilter = isset($plugin_cookies->defaultShowFilter) ? $plugin_cookies->defaultShowFilter : 'all';
+				} 
+				if ($media_url->type == 'movie'){
+					$defaultFilter = isset($plugin_cookies->defaultMovieFilter) ? $plugin_cookies->defaultMovieFilter : 'all';
+				} 
+
 				foreach ($xml->Directory as $c){
 					$key = (string)$c->attributes()->key;
 					$prompt = (string)$c->attributes()->prompt;
 					$is_secondary = (string)$c->attributes()->secondary;
-					if ($key != 'all' &&  $key != 'folder' && !$prompt ){
+					if ($key != $defaultFilter &&  $key != 'folder' && !$prompt ){
 					// if ($key != 'all' ){
 						$pop_up_items[] = array(
 							GuiMenuItemDef::caption=> (string)$c->attributes()->title,
@@ -178,16 +186,19 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	}
 
 
-	private function get_right_media_url($type, $key)
+	private function get_right_media_url($type, $key,&$plugin_cookies)
 	{
 		hd_print(__METHOD__);
 
 		if ($type == "movie"){			
 			// hd_print ("key =$key type=$type  movie");
-			return EmplexerMovieList::get_media_url_str($key, 'all', 'movie');
+			return EmplexerMovieList::get_media_url_str($key, isset($plugin_cookies->defaultMovieFilter) ? $plugin_cookies->defaultMovieFilter : 'all' , 'movie');
+
+		} else if ( $type == "artist"){
+			return EmplexerMusicList::get_media_url_str("/library/sections/$key");
 		} else {
 			// hd_print ("key =$key type=$ddtype  show");
-			return EmplexerRootList::get_media_url_str($key,'all', 'show'); //all
+			return EmplexerRootList::get_media_url_str($key, isset($plugin_cookies->defaultShowFilter) ? $plugin_cookies->defaultShowFilter : 'all', 'show'); 
 		}
 	}
 

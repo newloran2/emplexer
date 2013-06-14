@@ -74,6 +74,20 @@ class ActionFactory
         );
     }
 
+    public static function playlist_play($url, $start_index=1)
+    {
+        return array
+        (
+            GuiAction::handler_string_id => PLAYLIST_PLAY_ACTION_ID,            
+            GuiAction::data =>
+             array
+             (
+                PlaylistPlayActionData::url => $url,
+                PlaylistPlayActionData::start_index => $start_index,
+             ),
+        );
+    }
+
 	 public static function launch_media_url($url,$post_action=null)
     {
         return array
@@ -606,9 +620,101 @@ class ActionFactory
         return ActionFactory::show_dialog($modalTitle, $defs);
     }
 
+    public static function show_default_filter_selecor_modal($modalTitle, &$plugin_cookies,$post_action= null){
+        $defs = array();
+
+        $movieFilters = array(
+            "all" => "All",
+            "unwatched" => "Unwatched",
+            "newest" => "Recently Released",
+            "recentlyAdded" => "Recently Added",
+            "recentlyViewed" => "Recently Viewed",
+            "onDeck" => "On Deck",
+            "collection" => "By Collection",
+            "genre" => "By Genre",
+            "year" => "By Year",
+            "decade" => "By Decade",
+            "director" => "By Director",
+            "actor" => "By Starring Actor",
+            "country" => "By Country",
+            "contentRating" => "By Content Rating",
+            "rating" => "By Rating",
+            "resolution" => "By Resolution",
+            "firstCharacter" => "By First Letter",
+            "folder" => "By Folder"
+        );
+
+        $showFilters = array(
+            "all" => "All",
+            "unwatched" => "Unwatched",
+            "newest" => "Recently Aired",
+            "recentlyAdded" => "Recently Added",
+            "recentlyViewed" => "Recently Viewed Episodes",
+            "recentlyViewedShows" => "Recently Viewed Shows",
+            "onDeck" => "On Deck",
+            "collection" => "By Collection",
+            "firstCharacter" => "By First Letter",
+            "genre" => "By Genre",
+            "year" => "By Year",
+            "contentRating" => "By Content Rating",
+            "folder" => "By Folder"
+        );
+
+        $artistFilters = array(
+            "all" => "All Artists",
+            "albums" => "By Album",
+            "genre" => "By Genre",
+            "decade" => "By Decade",
+            "year" => "By Year",
+            "collection" => "By Collection",
+            "recentlyAdded" => "Recently Added",
+            "folder" => "By Folder"
+        );
 
 
+        ControlFactory::add_combobox(
+            $defs,
+            null,
+            null,
+            $name                   =  'defaultMovieFilter',
+            $title                  =  'Default movie filter',
+            $initial_value          =  isset($plugin_cookies->defaultMovieFilter) ? $plugin_cookies->defaultMovieFilter : 'all',
+            $value_caption_pairs    =  $movieFilters,
+            $width                  =  600,
+            $need_confirm           =  false,
+            $need_apply             =  false
+        );  
+        ControlFactory::add_combobox(
+            $defs,
+            null,
+            null,
+            $name                   =  'defaultShowFilter',
+            $title                  =  'Default show filter',
+            $initial_value          =  isset($plugin_cookies->defaultShowFilter) ? $plugin_cookies->defaultShowFilter : 'all',
+            $value_caption_pairs    =  $showFilters,
+            $width                  =  600,
+            $need_confirm           =  false,
+            $need_apply             =  false
+        );  
+        ControlFactory::add_combobox(
+            $defs,
+            null,
+            null,
+            $name                   =  'defaultArtistFilter',
+            $title                  =  'Default music filter',
+            $initial_value          =  isset($plugin_cookies->defaultArtistFilter) ? $plugin_cookies->defaultArtistFilter : 'all',
+            $value_caption_pairs    =  $artistFilters,
+            $width                  =  600,
+            $need_confirm           =  false,
+            $need_apply             =  false
+        );  
+
+         ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
+            'saveDefaultFilters', 'save', 200, $post_action);
+
+
+        return ActionFactory::show_dialog($modalTitle, $defs);
+
+    }
 }
-
-
 ?>

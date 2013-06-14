@@ -67,6 +67,7 @@ class Movie
     public $rate_mpaa = '';
     public $country = '';
     public $budget = '';
+    public $details = array();
 
     public $series_list = null;
 
@@ -170,7 +171,8 @@ class Movie
             PluginMovie::rate_kinopoisk => $this->rate_kinopoisk,
             PluginMovie::rate_mpaa => $this->rate_mpaa,
             PluginMovie::country => $this->country,
-            PluginMovie::budget => $this->budget
+            PluginMovie::budget => $this->budget,
+            PluginMovie::details => $this->details
         );
     }
 

@@ -71,16 +71,13 @@ class EmplexerMusicList extends EmplexerBaseChannel{
         $xml = HD::getAndParseXmlFromUrl($url);   
         $musics = array();
         foreach ($xml->Directory as $dir) {
-            hd_print(__METHOD__ . ' Entrei no dir');
             $url = $this->base_url . $dir->attributes()->key;
             $musics = array_merge($musics, $this->getTrackUrlsFromUrl($url,$plugin_cookies));
         }
 
         foreach ($xml->Track as $track) {
             $title = $track->attributes()->title;
-            hd_print(__METHOD__ . " title = $title");
             if (!$title || $title == ""){
-                hd_print(__METHOD__ .   ' entrei no tile vazio ' . $title  );
                 $title = basename($track->Media->Part->attributes()->file);
             }
             $fileName = $this->base_url . $track->Media->Part->attributes()->key;
@@ -89,15 +86,10 @@ class EmplexerMusicList extends EmplexerBaseChannel{
                     
                     if (strstr($track->Media->Part->attributes()->file, $key) !== false){
                         $fileName = str_replace($key, $value, $track->Media->Part->attributes()->file);    
-                        hd_print( __METHOD__ . "$key =  $value $fileName");
                     }
                 } 
             }
-            
-            $a = array( "$title" =>  $fileName);
-
-            hd_print(__METHOD__ . print_r($a, true));
-            $musics = array_merge($musics, $a);
+            $musics = array_merge($musics, array( "$title" =>  $fileName));
         }
 
         return $musics;
@@ -118,8 +110,10 @@ class EmplexerMusicList extends EmplexerBaseChannel{
             fwrite($m3u, "$value\n");
         }
         fclose($m3u);
-
-        return "http://127.0.0.1/plugins/emplexer/emplexer_playlist.m3u";
+        $playlistUrl = "http://127.0.0.1/plugins/emplexer/emplexer_playlist.m3u";
+        //logo a playlist só pra efeito de posterior debug
+        hd_print(__METHOD__ . print(HD::http_get_document($playlistUrl, true)));
+        return $playlistUrl;
     }
  
 }

@@ -25,13 +25,11 @@ require_once 'lib/abstract_controls_screen.php';
 			$connectionMethod   = isset($plugin_cookies->connectionMethod) ? $plugin_cookies->connectionMethod : HTTP_CONNECTION_TYPE;
 			$notSeenCaptionColor   = isset($plugin_cookies->notSeenCaptionColor) ? $plugin_cookies->notSeenCaptionColor : DEFAULT_NOT_SEEN_CAPTION_COLOR;
 			$hasSeenCaptionColor   = isset($plugin_cookies->hasSeenCaptionColor) ? $plugin_cookies->hasSeenCaptionColor : DEFAULT_HAS_SEEN_CAPTION_COLOR;
-			$userName   = isset($plugin_cookies->userName) ? $plugin_cookies->userName : "";
-			$passWord   = isset($plugin_cookies->password) ? $plugin_cookies->password : "";
 			$showOnMainScreen = isset($plugin_cookies->showOnMainScreen) ? $plugin_cookies->showOnMainScreen : 'No';
 			$useCache = isset($plugin_cookies->useCache) ? $plugin_cookies->useCache : 'true';
 			$useVodPlayback = isset($plugin_cookies->useVodPlayback) ? $plugin_cookies->useVodPlayback : 'true';
+			$resumePlayBack = isset($plugin_cookies->resumePlayBack) ? $plugin_cookies->resumePlayBack : 'ask';
 			
-			hd_print("password = $passWord userName = $userName" );
 			
 			$this->add_text_field(
 				$defs,
@@ -75,52 +73,7 @@ require_once 'lib/abstract_controls_screen.php';
         		$need_apply = true
         	);
 
-			// if ($connectionMethod == 'smb'){
-			// 	$this->add_button(
-			// 		$defs,
-			// 		$name          = "configureSMB",
-			// 		$title         = "Advance SMB Configuration",
-			// 		$caption	   = "SMB Configuration",
-			// 		$width         =  200
-			// 	);
-
-	   //      	$this->add_text_field(
-				// 	$defs,
-				// 	$name          = "userName",
-				// 	$title         = "User Name",
-				// 	$initial_value = $userName,
-				// 	$numeric       = false,
-				// 	$password      = false,
-				// 	$has_osk       = false,
-				// 	$always_active = 0,
-				// 	$width         = 500     
-				// );
-
-				// $this->add_text_field(
-				// 	$defs,
-				// 	$name          = "password",
-				// 	$title         = "Password",
-				// 	$initial_value = $passWord,
-				// 	$numeric       = false,
-				// 	$password      = true,
-				// 	$has_osk       = false,
-				// 	$always_active = 0,
-				// 	$width         = 500     
-				// );
-			// }
-
-			// if ($connectionMethod == 'nfs'){
-			// 	$this->add_button(
-			// 		$defs,
-			// 		$name          = "configureNfs",
-			// 		$title         = "Advance Nfs Configuration",
-			// 		$caption	   = "Nfs Configuration",
-			// 		$width         =  200
-			// 	);
-			// }
-
-
-
+		
 			$colorSeenNames = array();
 			$colorSeenNames[] = 'white';
 			$colorSeenNames[] = 'black'; 				//000000
@@ -209,12 +162,33 @@ require_once 'lib/abstract_controls_screen.php';
         		$width					= 300,
         		$need_confirm 			= false, 
         		$need_apply = true
+        	);   
+
+			$resumePlaybackOpts = array('resume' => 'Resume', 'noresume' => "Don't resume", 'ask' => 'Ask');
+
+        	$this->add_combobox(
+				$defs,
+        		$name		   			= 'resumePlayBack',
+        		$title		   			= 'Resume options',
+        		$initial_value 			= $resumePlayBack,
+        		$value_caption_pairs 	= $resumePlaybackOpts,
+        		$width					= 300,
+        		$need_confirm 			= false, 
+        		$need_apply = true
         	);        	
+
+            $this->add_button(
+                $defs,
+                $name          = "btnDefaultFilter",
+                $title         = "Default Filters",
+                $caption       = "Default Filters",
+                $width         =  200     
+            );
 
 			$this->add_button(
 				$defs,
 				$name          = "btnSalvar",
-				$title         = "save",
+				$title         = null,
 				$caption	   = "save",
 				$width         =  200     
 			);
@@ -246,7 +220,12 @@ require_once 'lib/abstract_controls_screen.php';
 				$saveAdvanceSmbConfig = UserInputHandlerRegistry::create_action($this, 'saveAdvanceSmbConfig');
 				return ActionFactory::show_smb_advanced_configuration_modal('SMB advanced configuration',&$plugin_cookies, $saveAdvanceSmbConfig);
 
-			} else if ($user_input->selected_control_id == 'btnSalvar'){
+			} else if ($user_input->selected_control_id == 'btnDefaultFilter'){
+                
+                $saveDefaultFilters = UserInputHandlerRegistry::create_action($this, 'saveDefaultFilters');
+                return ActionFactory::show_default_filter_selecor_modal('Default filters configuration',&$plugin_cookies, $saveDefaultFilters);
+
+            } else if ($user_input->selected_control_id == 'btnSalvar'){
 
 				return EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies,ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies)));				
 
@@ -264,7 +243,12 @@ require_once 'lib/abstract_controls_screen.php';
 				}
 				
 
-			} else if ($user_input->selected_control_id == 'saveAdvanceNfs'){
+			} else if ($user_input->selected_control_id == 'saveDefaultFilters'){
+                
+                EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
+                return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));                  
+
+            } else if ($user_input->selected_control_id == 'saveAdvanceNfs'){
 
 				EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
 				return ActionFactory::reset_controls($this->do_get_control_defs($plugin_cookies));	
@@ -289,17 +273,12 @@ require_once 'lib/abstract_controls_screen.php';
 			$plugin_cookies->connectionMethod = $user_input->connectionMethod ? $user_input->connectionMethod : HTTP_CONNECTION_TYPE ;
 			$plugin_cookies->hasSeenCaptionColor = $user_input->hasSeenCaptionColor ? $user_input->hasSeenCaptionColor : DEFAULT_HAS_SEEN_CAPTION_COLOR ;
 			$plugin_cookies->notSeenCaptionColor = $user_input->notSeenCaptionColor ? $user_input->notSeenCaptionColor : DEFAULT_NOT_SEEN_CAPTION_COLOR;
-
-			if ($user_input->connectionMethod == 'smb'){
-				$plugin_cookies->userName = $user_input->userName ? $user_input->userName : $plugin_cookies->userName;
-				$plugin_cookies->password = $user_input->password ? $user_input->password : $plugin_cookies->password;				
-			} else {
-				$plugin_cookies->userName = $plugin_cookies->userName ;
-				$plugin_cookies->password = $plugin_cookies->password ;				
-			}
+			
 			$plugin_cookies->showOnMainScreen = $user_input->showOnMainScreen;
 			
 			$plugin_cookies->useVodPlayback = $user_input->useVodPlayback;
+			// $plugin_cookies->resumePlayBack = $user_input->resume;
+
 
 			// $plugin_cookies->connectionMethod = $user_input->connectionMethod ;
 

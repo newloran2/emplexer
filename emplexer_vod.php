@@ -47,8 +47,22 @@
 				$rate_mpaa = (string)$xml->Video->attributes()->contentRating ,
 				$country = $this->getCountryStr($xml),
 				$budget = null
-
 				);
+
+			$tab = '     ';
+			$details = array(
+				'Video' => '_',
+					$tab . 'Bitrate' => (string)$xml->Video->Media->attributes()->bitrate,
+					$tab . 'Width' => (string)$xml->Video->Media->attributes()->width,
+					$tab . 'Height' => (string)$xml->Video->Media->attributes()->height,
+					$tab . 'Aspect Ratio' => (string)$xml->Video->Media->attributes()->aspectRatio,
+					$tab . 'Video Resolution' => (string)$xml->Video->Media->attributes()->videoResolution,
+					$tab . 'Video Frame Rate' => (string)$xml->Video->Media->attributes()->videoFrameRate,
+					$tab . 'Container' => (string)$xml->Video->Media->attributes()->container,
+					$tab . 'Codec' => (string)$xml->Video->Media->attributes()->videoCodec
+			);
+			$movie->details = $details;
+
 
 			$httpVidelUrl = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$xml->Video->Media->Part->attributes()->key;
 			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$xml->Video->Media->Part->attributes()->file; 
@@ -124,6 +138,7 @@
 		}
 
 		public function get_vod_info(MediaURL $media_url, &$plugin_cookies){
+			HD::print_backtrace();
 			$movie = $this->get_cached_movie($media_url->movie_id);
 			// hd_print(__METHOD__ . ':'  . print_r($movie, true));
 
@@ -159,9 +174,17 @@
 			return $toBeReturned;
 		}
 
+		public function getAldioStreams(&$node, $tabs){			
+			$return = array('AUDIO' => $tabs);
+
+			foreach ($node->Video->Media->Part->getChildren() as $key => $value) {
+				
+			}
+			
 
 
-
+						
+		}
 
 	}
 

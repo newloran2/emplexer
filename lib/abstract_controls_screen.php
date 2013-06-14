@@ -33,6 +33,11 @@ abstract class AbstractControlsScreen
         (
             PluginControlsFolderView::defs => $defs,
             PluginControlsFolderView::initial_sel_ndx => -1,
+            PluginControlsFolderView::params => array(
+                PluginFolderViewParams::paint_path_box => false, // deveria ser temporario, pois a quantidade de items está estourando a tela.
+                PluginFolderViewParams::paint_content_box_background => true
+            ),
+
         );
 
         return array

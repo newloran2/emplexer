@@ -28,6 +28,7 @@ require_once 'emplexer_movie_description_screen.php';
 require_once 'emplexer_base_channel.php';
 require_once 'emplexer_list_video.php';
 require_once 'emplexer_secondary_section.php';
+require_once 'emplexer_music_list.php';
 
 require_once 'lib/vod/vod_movie_screen.php';
 
@@ -60,6 +61,7 @@ class Emplexer extends DefaultDunePlugin
 		$this->add_screen(new EmplexerBaseChannel());
 		$this->add_screen(new EmplexerListVideo());
 		$this->add_screen(new EmplexerSecondarySection());
+		$this->add_screen(new EmplexerMusicList());
 
 		EmplexerFifoController::getInstance(); // inicia o fifo
 	}
@@ -111,7 +113,7 @@ class Emplexer extends DefaultDunePlugin
 			PluginVodInfo::poster_url => $media_url->thumb,
 			PluginVodInfo::initial_series_ndx => 0,
 			PluginVodInfo::buffering_ms => 3000,
-			PluginVodInfo::initial_position_ms =>$media_url->viewOffset,
+			PluginVodInfo::initial_position_ms =>EmplexerVideoList::$viewOffset,
 			PluginVodInfo::advert_mode => false,
 			PluginVodInfo::timer =>  array(GuiTimerDef::delay_ms => 5000),
 			PluginVodInfo::actions => array(

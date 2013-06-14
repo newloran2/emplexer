@@ -1,14 +1,13 @@
 <?php 
 
-
-/**
-* 
-*/
 class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserInputHandler
 {
 	const ID = "emplexer_video_list";
 	static $type;
+	public static $viewOffset; 
 	private $last_media_url;
+
+
 
 	function __construct($id=null,$folder_views=null)
 	{
@@ -32,7 +31,39 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		hd_print(print_r($plugin_cookies, true));
 		$base_url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
 		$media_url = MediaURL::decode($user_input->selected_media_url);
-		if ($user_input->control_id == 'play'){			
+		if ($user_input->control_id == 'show_resume_menu'){
+
+			$play_action = UserInputHandlerRegistry::create_action($this, 'play');
+
+			if (!isset($plugin_cookies->resumePlayBack) || $plugin_cookies->resumePlayBack== "ask"){
+
+
+				if ($media_url->viewOffset <=0){
+					return $play_action;
+				}
+				$pop_up_items[] = array(
+					GuiMenuItemDef::caption=> 'Resume from ' . gmdate("H:i:s", $media_url->viewOffset/1000),
+					GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'play', array('viewOffset' => $media_url->viewOffset))
+					);
+				$pop_up_items[] = array(
+					GuiMenuItemDef::caption=> 'Start from beginning',
+					GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'play', array('viewOffset' => 0))
+				);
+
+				return ActionFactory::show_popup_menu($pop_up_items);
+			} else  if ($plugin_cookies->resumePlayBack == "resume"){
+				EmplexerVideoList::$viewOffset = $media_url->viewOffset;
+				return $play_action;
+			} else {
+				EmplexerVideoList::$viewOffset = 0;
+				return $play_action;
+			}
+			
+		} else if ($user_input->control_id == 'play'){	
+			if (isset($user_input->viewOffset)){
+				EmplexerVideoList::$viewOffset = $user_input->viewOffset; 	
+			}	
+			
 			hd_print(__METHOD__ . ':' .  print_r($user_input, true));
 			if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
 				$url = dirname($media_url->video_url);
@@ -69,7 +100,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				$stop_action = UserInputHandlerRegistry::create_action($this , 'stop', $params);
 				// $time_action = UserInputHandlerRegistry::create_action($this->get_screen_by_id($handler), 'time', $params);
 
-				if ($plugin_cookies->useVodPlayback === "true"){
+				if (!isset($plugin_cookies->useVodPlayback)  || $plugin_cookies->useVodPlayback === "true"){
 					return ActionFactory::vod_play();	 
 				} else {					
 					// public function startSetPlayBackPosition($position, &$plugin_cookies, $id, $mark_time=40, $pooling_time=5, $delay=3){
@@ -156,14 +187,14 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 	{
 		// hd_print(__METHOD__);
 		UserInputHandlerRegistry::get_instance()->register_handler($this);
-		$play_action = UserInputHandlerRegistry::create_action($this, 'play');
+		$show_resume_menu_action = UserInputHandlerRegistry::create_action($this, 'show_resume_menu');
 		$info_action = UserInputHandlerRegistry::create_action($this, 'info');
 		$pop_up_action = UserInputHandlerRegistry::create_action($this, 'pop_up', null,'Filtos');
 
 		$a = array
 		(
-			GUI_EVENT_KEY_ENTER => $play_action,
-			GUI_EVENT_KEY_PLAY => $play_action,
+			GUI_EVENT_KEY_ENTER => $show_resume_menu_action,
+			GUI_EVENT_KEY_PLAY => $show_resume_menu_action,
 			GUI_EVENT_KEY_POPUP_MENU => $pop_up_action,
 			GUI_EVENT_KEY_INFO => $info_action
 

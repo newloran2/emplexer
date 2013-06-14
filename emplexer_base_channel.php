@@ -53,6 +53,8 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 			return $this->doSavePrefs($user_input, $plugin_cookies);
 		} else if ( $user_input->control_id ==  'search') {
 			return $this->doSearch($user_input, $plugin_cookies);
+		} else {
+			return null;
 		}
 
 	}
@@ -275,7 +277,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	//enter Actions 
 
 	public function doEnterDirectory(&$user_input){
-		hd_print(__METHOD__);
+		hd_print(__METHOD__ . ':' . print_r($user_input, true));
 		return ActionFactory::open_folder($user_input->selected_media_url);	
 	}
 
@@ -304,7 +306,7 @@ class EmplexerBaseChannel extends AbstractPreloadedRegularScreen implements User
 	}	
 
 	public function doEnterMusic(&$user_input){
-		hd_print(__METHOD__ );
+		hd_print(__METHOD__  . ':' . print_r($user_input, true));
 		$media_url = MediaURL::decode($user_input->selected_media_url);
 		return ActionFactory::launch_media_url($media_url->video_media_array->key);
 	}	

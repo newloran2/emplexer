@@ -104,7 +104,7 @@ class EmplexerConfig
 
     public function createCacheDirIfNeeded(&$plugin_cookies){
     //se não existir o diretorio de cache devo criar
-    hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true) );
+    // hd_print(__METHOD__ . ': ' . print_r($plugin_cookies, true) );
         $this->useCache  = $plugin_cookies->useCache;
         hd_print( __METHOD__ . ': useCache = ' . $this->useCache . ' cacheDirExists =' . $this->cacheDirExists);
         // hd_print(__METHOD__ . ': ' . EmplexerConfig::getInstance()->useCache);
