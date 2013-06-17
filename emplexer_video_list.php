@@ -39,6 +39,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 
 				if ($media_url->viewOffset <=0){
+					self::$viewOffset = $media_url->viewOffset;
 					return $play_action;
 				}
 				$pop_up_items[] = array(
@@ -264,6 +265,9 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				$v = $httpVidelUrl;
 			}
 
+
+
+			$v = urldecode($v);
 			hd_print(__METHOD__ .  ":-----------videoUrl = $v-----------");
 
 			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';				
