@@ -1,6 +1,6 @@
-<?php 
+<?php
 	/**
-	* 
+	*
 	*/
 	class EmplexerVod extends AbstractVod
 	{
@@ -11,7 +11,7 @@
 			// hd_print(__METHOD__);
 			parent::__construct(false, false, false);
 		}
-		
+
 		public function try_load_movie($movie_id, &$plugin_cookies){
 			// hd_print(__METHOD__  . ': ' . print_r($plugin_cookies, true)) ;
 			HD::print_backtrace();
@@ -27,7 +27,7 @@
 
 			// $movie->set_data("American",'The American','Alone among assassins, Jack is a master craftsman. When a job in Sweden ends more harshly than expected for this American abroad, he vows to his contact Larry that his next assignment will be his last. Jack reports to the Italian countryside, where he holes up in a small town and relishes being away from death for a spell. The assignment, as specified by a Belgian woman, Mathilde, is in the offing as a weapon is constructed. Surprising himself, Jack seeks out the friendship of local priest Father Benedetto and pursues romance with local woman Clara. But by stepping out of the shadows, Jack may be tempting fate.','http://192.168.2.9:32400/library/metadata/4376/thumb/1342928192',1050,'2010','Anton Corbijn','Hiporã',
 				// "George Clooney \n Jack,Thekla Reuten|Mathilde,Bruce Altman|Larry,Violante Placido|Clara|,Paolo Bonacelli|Father Benedetto",'Crime,Drama,Suspense,Thriller',6.4000000953674299,10,'R','USA','1 real');
-			
+
 			$grandparentTitle = (string)$xml->Video->attributes()->grandparentTitle;
 			$title = $grandparentTitle ? "Episode " . (string)$xml->Video->attributes()->index . ' : ' . (string)$xml->Video->attributes()->title : (string)$xml->Video->attributes()->title;
 // (string)$xml->Video->attributes()->summary
@@ -65,19 +65,19 @@
 
 
 			$httpVidelUrl = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$xml->Video->Media->Part->attributes()->key;
-			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$xml->Video->Media->Part->attributes()->file; 
+			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$xml->Video->Media->Part->attributes()->file;
 			if ($plugin_cookies->connectionMethod == 'smb'){
-				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$xml->Video->Media->Part->attributes()->file;	
+				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$xml->Video->Media->Part->attributes()->file;
 				$videoUrl[SMB_CONNECTION_TYPE]  = $smbVideoUrl;
 			}
-			
+
 
 
 
 			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
 			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
-			
+
 			$v = $videoUrl[$plugin_cookies->connectionMethod];
 			hd_print(__METHOD__ .  ":-----------videoUrl = $v-----------");
 
@@ -140,10 +140,12 @@
 		public function get_vod_info(MediaURL $media_url, &$plugin_cookies){
 			HD::print_backtrace();
 			$movie = $this->get_cached_movie($media_url->movie_id);
-			// hd_print(__METHOD__ . ':'  . print_r($movie, true));
+			hd_print(__METHOD__ . ' teste:'  . print_r($movie, true));
 
 			$m = HD::getAndParseXmlFromUrl($this->base_url . $media_url->movie_id);
 			$viewOffset = $m->Video->attributes()->viewOffset? (string)$m->Video->attributes()->viewOffset : 0;
+
+
 
 		// $params['selected_media_url'] = $toPlay->selected_media_url;
 			$series_array = array();
@@ -167,23 +169,23 @@
 			/*PluginVodInfo::actions => array(
 				GUI_EVENT_PLAYBACK_STOP => UserInputHandlerRegistry::create_action($this, 'enter', $params),
 				)*/
-			);	
+			);
 
 		// hd_print(__METHOD__ . ':'  . print_r($toBeReturned, true));
 
 			return $toBeReturned;
 		}
 
-		public function getAldioStreams(&$node, $tabs){			
+		public function getAldioStreams(&$node, $tabs){
 			$return = array('AUDIO' => $tabs);
 
 			foreach ($node->Video->Media->Part->getChildren() as $key => $value) {
-				
+
 			}
-			
 
 
-						
+
+
 		}
 
 	}

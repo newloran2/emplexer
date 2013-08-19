@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserInputHandler
 {
 	const ID = "emplexer_video_list";
 	static $type;
-	public static $viewOffset; 
+	public static $viewOffset;
 	private $last_media_url;
 
 
@@ -15,7 +15,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		if (!is_null($id) && !is_null($folder_views) ){
 			// hd_print('parent' . print_r($folder_views, true));
 			parent::__construct($id, $folder_views);
-		}else {			
+		}else {
 			parent::__construct(self::ID, $this->get_folder_views());
 		}
 	}
@@ -39,7 +39,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 
 				if ($media_url->viewOffset <=0){
-					self::$viewOffset = $media_url->viewOffset;
+					self::$viewOffset = 0;
 					return $play_action;
 				}
 				$pop_up_items[] = array(
@@ -51,6 +51,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'play', array('viewOffset' => 0))
 				);
 
+
 				return ActionFactory::show_popup_menu($pop_up_items);
 			} else  if ($plugin_cookies->resumePlayBack == "resume"){
 				EmplexerVideoList::$viewOffset = $media_url->viewOffset;
@@ -59,12 +60,12 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				EmplexerVideoList::$viewOffset = 0;
 				return $play_action;
 			}
-			
-		} else if ($user_input->control_id == 'play'){	
+
+		} else if ($user_input->control_id == 'play'){
 			if (isset($user_input->viewOffset)){
-				EmplexerVideoList::$viewOffset = $user_input->viewOffset; 	
-			}	
-			
+				EmplexerVideoList::$viewOffset = $user_input->viewOffset;
+			}
+
 			hd_print(__METHOD__ . ':' .  print_r($user_input, true));
 			if (strpos($media_url->video_url, "VIDEO_TS.IFO")){
 				$url = dirname($media_url->video_url);
@@ -81,12 +82,12 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			}
 			else if (strpos(strtolower($media_url->video_url), ".m2ts")){
 				return ActionFactory::launch_media_url($media_url->video_url);
-				
+
 			} else {
-				
+
 				$url = $media_url->video_url;
 				$key = $media_url->key;
-				$startPosition = $media_url->viewOffset / 1000; 
+				$startPosition = $media_url->viewOffset / 1000;
 				$plexFileId = $media_url->key;
 				$timeToMark=DEFAULT_TIME_TO_MARK;
 				$basePlexURL = $base_url;
@@ -96,26 +97,35 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				// EmplexerFifoController::getInstance()->startDefaultPlayBack($url,$startPosition,$plexFileId,$timeToMark,$basePlexURL,$pooling);
 				// EmplexerFifoController::getInstance()->startSetPlayBackPosition(200);
 				// return ActionFactory::launch_media_url($media_url->video_url);
-				
+
 				$params = array('key' => $media_url->key, 'back_screen_id' => $media_url->back_screen_id , 'back_key' => $media_url->back_key, 'back_filter_name' => $media_url->back_filter_name);
 				$stop_action = UserInputHandlerRegistry::create_action($this , 'stop', $params);
 				// $time_action = UserInputHandlerRegistry::create_action($this->get_screen_by_id($handler), 'time', $params);
 
+
 				if (!isset($plugin_cookies->useVodPlayback)  || $plugin_cookies->useVodPlayback === "true"){
-					return ActionFactory::vod_play();	 
-				} else {					
+					hd_print('vou chamar o vod_play');
+					return ActionFactory::vod_play();
+				} else {
 					// public function startSetPlayBackPosition($position, &$plugin_cookies, $id, $mark_time=40, $pooling_time=5, $delay=3){
-					$viewOffset = $media_url->viewOffset ? $media_url->viewOffset / 1000 : 1 ;
-					EmplexerFifoController::getInstance()->startSetPlayBackPosition($viewOffset, $plugin_cookies, $key);
+					// $viewOffset = $media_url->viewOffset ? $media_url->viewOffset / 1000 : 1 ;
+					hd_print(__METHOD__ . ': viewOffset = ' . self::$viewOffset);
+					EmplexerFifoController::getInstance()->startSetPlayBackPosition(self::$viewOffset, $plugin_cookies, $key);
+//					$this->downLoadSubtitleFromPlex(&$user_input, &$plugin_cookies, $media_url->video_url, 'por');
+
 					return ActionFactory::launch_media_url($media_url->video_url, $stop_action);
 				}
-				
+
 			}
-		} 
+		}
 
 		if ($user_input->control_id == 'stop')
 		{
-			hd_print('ENTREI NO EVENTO STOP');
+			//try to stop my transcoded session (if not a transcoded session nothing happend)
+			TranscodeManager::getInstance($plugin_cookies->plexIp,$plugin_cookies->plexPort)->stopSession();
+
+			hd_print('ENTREI NO EVENTO STOP' .  print_r($user_input, true));
+			hd_print('ENTREI NO EVENTO STOP' .  print_r($plugin_cookies, true));
 			$media_url =  $this->get_media_url_str($user_input->back_key, $user_input->back_filter_name);
 			EmplexerFifoController::getInstance()->killPlexNotify();
 			$action =  ActionFactory::invalidate_folders(
@@ -124,10 +134,10 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					)
 				);
 			return $action;
-		} 
+		}
 
 		if ($user_input->control_id == 'time'){
-			// hd_print(__METHOD__ . ':' .  ' aconteceu o evento time');
+			hd_print(__METHOD__ . ':' .  ' aconteceu o evento time ' . print_r($user_input, true));
 			// HD::print_backtrace();
 			$key = $user_input->key;
 			EmplexerFifoController::getInstance()->startPlexNotify($key, 5 , EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this).'/');
@@ -161,13 +171,13 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 				GuiMenuItemDef::action =>  UserInputHandlerRegistry::create_action($this, 'mark', $params)
 				);
 
-			// hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );		
+			// hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true) );
 			return ActionFactory::show_popup_menu($pop_up_items);
 		}
 
 		if ($user_input->control_id == 'mark'){
 			hd_print('mark = '. print_r($user_input, true));
-			
+
 			$back_media_url =  MediaURL::decode($user_input->selected_media_url);
 			$media_url = $this->get_media_url_str($media_url->back_key, $media_url->back_filter_name);
 
@@ -182,7 +192,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		}
 
-	}   
+	}
 
 	public function get_action_map(MediaURL $media_url, &$plugin_cookies)
 	{
@@ -238,24 +248,24 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 		foreach ($xml->Video as $c)
 		{
-			$thumb        = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width='.THUMB_WIDTH. '&height='. THUMB_HEIGHT . '&url=' . EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;		
+			$thumb        = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . '/photo/:/transcode?width='.THUMB_WIDTH. '&height='. THUMB_HEIGHT . '&url=' . EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			$bgImage = $base_url .  (string)$c->attributes()->art;
 			// if (EmplexerConfig::getInstance()->useCache  === 'false'){
 			// 	$thumb = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$c->attributes()->thumb;
 			// }
 			$detailPhoto  = $thumb;
 			$httpVidelUrl = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this) . (string)$c->Media->Part->attributes()->key;
-			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file; 
+			$nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . (string)$c->Media->Part->attributes()->file;
 			if ($plugin_cookies->connectionMethod == 'smb'){
-				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$c->Media->Part->attributes()->file;	
+				$smbVideoUrl  = 'smb://' . $plugin_cookies->userName . ':' .  $plugin_cookies->password . '@' . $plugin_cookies->plexIp . '/' . (string)$c->Media->Part->attributes()->file;
 				$videoUrl[SMB_CONNECTION_TYPE]  = $smbVideoUrl;
 			}
-			
+
 			$videoUrl[HTTP_CONNECTION_TYPE] = $httpVidelUrl;
 			$videoUrl[NFS_CONNECTION_TYPE]  = $nfsVideoUrl;
 
-			
-			if ($plugin_cookies->connectionMethod == HTTP_CONNECTION_TYPE) 
+
+			if ($plugin_cookies->connectionMethod == HTTP_CONNECTION_TYPE)
 				$v = $httpVidelUrl;
 			else
 				$v = $this->getPlayBackUrl($plugin_cookies, (string)$c->Media->Part->attributes()->file, $plugin_cookies->connectionMethod);
@@ -270,15 +280,15 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 			$v = urldecode($v);
 			hd_print(__METHOD__ .  ":-----------videoUrl = $v-----------");
 
-			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';				
-			
+			$cacheKey = (string)$c->attributes()->ratingKey. '.jpg';
+
 			if ($c->attributes()->thumb){
-				EmplexerArchive::getInstance()->setFileToArchive($cacheKey, $thumb );				
+				EmplexerArchive::getInstance()->setFileToArchive($cacheKey, $thumb );
 			}
 
 			$media = MediaURL::encode(
 				array(
-					'movie_id'=>$v, 
+					'movie_id'=>$v,
 					'video_url' => $v,
 					'viewOffset' => (string)$c->attributes()->viewOffset,
 					'duration' => (string)$c->Media->attributes()->duration,
@@ -294,7 +304,8 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					'back_key' => $media_url->key,
 					'back_filter_name' => $media_url->filter_name,
 					'was_seen' => $c->attributes()->viewCount ? true : false,
-					'detail_info_key' =>(string)$c->attributes()->key
+					'detail_info_key' =>(string)$c->attributes()->key,
+                    'librarySectionID'  => (string)$xml->attributes()->librarySectionID
 					)
 				);
 
@@ -329,21 +340,21 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 					ViewItemParams::item_detailed_info        => $info,
 					ViewItemParams::item_caption_color        => $item_caption_color,
 					// ViewItemParams::icon_dx                   =>  100,
-					
+
 					// ViewItemParams::icon_dy                   =>  100,
 					// ViewItemParams::icon_sel_dx               =>  100,
-					// ViewItemParams::icon_sel_dy               =>  100,					
+					// ViewItemParams::icon_sel_dy               =>  100,
 					// ViewItemParams::item_caption_dx           =>  -200,
 					// ViewItemParams::item_caption_dy           =>  500,
 					// ViewItemParams::item_caption_sel_dy		  =>  0,
 					// ViewItemParams::item_caption_wrap_enabled => true,
-					// ViewItemParams::item_caption_width 		  => 500 
+					// ViewItemParams::item_caption_width 		  => 500
 
 
 				)
 			);
 		}
-		hd_print(print_r($items, true));
+//		hd_print(print_r($items, true));
 		return $items;
 	}
 
@@ -368,15 +379,49 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 
 
 	public function getPlayBackUrl(&$plugin_cookies, $filePath, $type=HTTP_CONNECTION_TYPE){
-
+		hd_print(print_r($plugin_cookies, true));
 		if ($type == HTTP_CONNECTION_TYPE) return $filePath;
-
+//		hd_print("filePath = $filePath");
+		$filePath = str_replace(':\\\\', '_', $filePath);
+//		hd_print("filePath = $filePath");
+		$filePath = str_replace('\\\\', '_', $filePath);
+        $filePath = str_replace('\\', '/', $filePath);
+//		hd_print("filePath = $filePath");
 		foreach ($plugin_cookies as $key => $value) {
+//			hd_print(__METHOD__ . ": key = $key value= $value filePath = $filePath" );
 			if (strpos($filePath, $key) !== false){
-				return str_replace($key, $value, $filePath);
+				$a=  str_replace($key, $value, $filePath);
+				hd_print("entrou e a substituicao e : $a");
+				return $a;
 			}
 		}
-		// $nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . $filePath; 
+		// $nfsVideoUrl  = 'nfs://' . $plugin_cookies->plexIp . ':' . $filePath;
+	}
+
+	public function downLoadSubtitleFromPlex(&$user_input, &$plugin_cookies, $video_url, $languageCode = 'por'){
+		$media_url = MediaURL::decode($user_input->selected_media_url);
+		$base_url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $this);
+		$url = $base_url . $media_url->detail_info_key;
+		$xml = HD::getAndParseXmlFromUrl($url);
+		$subtitleFileName = str_replace(array(".mkv", ".avi", ".mp4"), '.srt', HD::nfsUrlToSystemPath($video_url));
+
+
+		foreach ($xml->Video->Media->Part->Stream as $stream) {
+			//is subtitle?
+			//is languageCode == $languageCode?
+			//Subtititle dosen't exists local?
+			if ($stream->attributes()->streamType == "3" &&
+				$stream->attributes()->languageCode == $languageCode &&
+				!file_exists($subtitleFileName)
+				) { //download the subtitle
+
+				hd_print(__METHOD__ .  ' não existe legenda local e existe no plex a legenda com o código: ' . $languageCode . ' vou baixar e colocar com o nome ' . $subtitleFileName);
+				$subtitleUrl = $base_url . $stream->attributes()->key;
+				$subData = HD::http_get_document($subtitleUrl);
+				file_put_contents($subtitleFileName, $subData);
+			}
+		}
+
 	}
 
 

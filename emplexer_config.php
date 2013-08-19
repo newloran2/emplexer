@@ -1,11 +1,11 @@
-®<?php 
+®<?php
 
 define('HTTP_CONNECTION_TYPE', 'http');
 define('NFS_CONNECTION_TYPE' , 'nfs');
 define('SMB_CONNECTION_TYPE' , 'smb');
 define('DEFAULT_NOT_SEEN_CAPTION_COLOR', 'FFFFFF');
 define('DEFAULT_HAS_SEEN_CAPTION_COLOR', 'FFFFFF');
-define('DEFAULT_TIME_TO_MARK', 40);
+define('DEFAULT_TIME_TO_MARK', 8);
 
 define('TYPE_DIRECTORY', 'directory');
 define('TYPE_VIDEO', 'video');
@@ -26,6 +26,8 @@ define('DEFAULT_PLEX_PORT', '32400');
 define('THUMB_WIDTH', '200');
 define('THUMB_HEIGHT', '294');
 
+define('DEFAULT_PERCENTAGE_TO_MARK_AS_VIEWED', 5);
+
 
 
 define('CACHE_DIR', '/persistfs/plugins_archive/emplexer/emplexer_default_archive');
@@ -33,7 +35,7 @@ define('PERSISTFS_DIR', '/persistfs/plugins_archive/emplexer');
 
 
 
-class EmplexerConfig 
+class EmplexerConfig
 {
 
 
@@ -135,7 +137,7 @@ class EmplexerConfig
 
 
     public function getAllAvailableChannels(&$plugin_cookies, $handler)
-    {    
+    {
         hd_print(__METHOD__);
         $url = EmplexerConfig::getInstance()->getPlexBaseUrl($plugin_cookies, $handler) ;
         hd_print("BASE_URL=$url" );
@@ -206,7 +208,7 @@ class EmplexerConfig
     }
 
     public function GET_VIDEOS_LIST_VIEW($art=null){
-        
+
         return array(
 
             // large icons view
@@ -222,8 +224,8 @@ class EmplexerConfig
                     ViewParams::sandwich_base => 'gui_skin://special_icons/sandwich_base.aai',
                     ViewParams::sandwich_mask => 'cut_icon://{name=sandwich_mask}',
                     ViewParams::sandwich_cover => 'cut_icon://{name=sandwich_cover}',
-                    ViewParams::sandwich_width => 200, 
-                    ViewParams::sandwich_height => 300, 
+                    ViewParams::sandwich_width => 200,
+                    ViewParams::sandwich_height => 300,
                     ViewParams::sandwich_icon_upscale_enabled => true,
                     ViewParams::sandwich_icon_keep_aspect_ratio => true,
                     //ViewParams::icon_selection_box_width => 180, //150,
@@ -271,8 +273,8 @@ array
         ViewParams::sandwich_base => 'gui_skin://special_icons/sandwich_base.aai',
         ViewParams::sandwich_mask => 'cut_icon://{name=sandwich_mask}',
         ViewParams::sandwich_cover => 'cut_icon://{name=sandwich_cover}',
-        ViewParams::sandwich_width => 200, 
-        ViewParams::sandwich_height => 300, 
+        ViewParams::sandwich_width => 200,
+        ViewParams::sandwich_height => 300,
         ViewParams::sandwich_icon_upscale_enabled => true,
         ViewParams::sandwich_icon_keep_aspect_ratio => true,
                     //ViewParams::icon_selection_box_width => 180, //150,

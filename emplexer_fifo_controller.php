@@ -20,7 +20,8 @@ class EmplexerFifoController
 		hd_print(__METHOD__);
 		$plugin_dir = dirname(__FILE__);
 		if (!$this->isRuning()){
-			exec("$plugin_dir/bin/emplexer_fifo_controller.sh '$plugin_dir/bin/' >> /D/dune_plugin_logs/fifo.txt 2>/dev/null &");	
+            hd_print("$plugin_dir/bin/emplexer_fifo_controller.sh '$plugin_dir/bin/' >> /D/dune_plugin_logs/fifo.txt 2>/dev/null &");
+			exec("/bin/sh $plugin_dir/bin/emplexer_fifo_controller.sh '$plugin_dir/bin/' >> /D/dune_plugin_logs/fifo.txt 2>/dev/null &");
 		}
 		
 //		hd_print(__METHOD__ . ': iniciado fifo' );
@@ -112,7 +113,7 @@ class EmplexerFifoController
 		// plex_notify.sh 32301 5 http://192.168.2.9:32400/ 40 
 		$base_url = 'http://'. $plugin_cookies->plexIp . ':'  . $plugin_cookies->plexPort  . '/';
 		
-		$command ="$plugin_dir/bin/setPlayBackPosition.sh $delay $position $plugin_dir $base_url $id $pooling_time $mark_time  >> 1 2>/dev/null &";
+		$command ="/bin/sh $plugin_dir/bin/setPlayBackPosition.sh $delay $position $plugin_dir $base_url $id $pooling_time $mark_time  >> 1 2>/dev/null &";
 		hd_print("executando comando = $command");
 		exec($command);	
 		

@@ -38,7 +38,7 @@ class ActionFactory
         $a= array
         (
             GuiAction::handler_string_id => PLUGIN_VOD_PLAY_ACTION_ID,
-            GuiAction::data => 
+            GuiAction::data =>
             array (
                 PluginVodPlayActionData::vod_info =>$vod_info
             )
@@ -52,7 +52,7 @@ class ActionFactory
     {
         return array
         (
-            GuiAction::handler_string_id => DVD_PLAY_ACTION_ID,            
+            GuiAction::handler_string_id => DVD_PLAY_ACTION_ID,
             GuiAction::data =>
              array
              (
@@ -65,7 +65,7 @@ class ActionFactory
     {
         return array
         (
-            GuiAction::handler_string_id => BLURAY_PLAY_ACTION_ID,            
+            GuiAction::handler_string_id => BLURAY_PLAY_ACTION_ID,
             GuiAction::data =>
              array
              (
@@ -78,7 +78,7 @@ class ActionFactory
     {
         return array
         (
-            GuiAction::handler_string_id => PLAYLIST_PLAY_ACTION_ID,            
+            GuiAction::handler_string_id => PLAYLIST_PLAY_ACTION_ID,
             GuiAction::data =>
              array
              (
@@ -267,34 +267,34 @@ class ActionFactory
     }
 
     public static function show_configuration_modal($title, &$plugin_cookies, $post_action= null){
-      
+
         $defs = array();
 
         ControlFactory::add_text_field(
-            $defs, 
-            null, 
+            $defs,
             null,
-            $name            = 'plexIp', 
-            $title           = 'Plex IP',  
+            null,
+            $name            = 'plexIp',
+            $title           = 'Plex IP',
             $initial_value   = $plugin_cookies->plexIp,
-            $numeric         = false, 
-            $password        = false, 
-            $has_osk         = false, 
-            $always_active   = 0, 
+            $numeric         = false,
+            $password        = false,
+            $has_osk         = false,
+            $always_active   = 0,
             $width           = 500
         );
 
         ControlFactory::add_text_field(
-            $defs, 
-            null, 
+            $defs,
             null,
-            $name            = 'plexPort', 
-            $title           = 'Plex Port',  
+            null,
+            $name            = 'plexPort',
+            $title           = 'Plex Port',
             $initial_value   = $plugin_cookies->plexIp ? $plugin_cookies->plexIp : 32400,
-            $numeric         = false, 
-            $password        = false, 
-            $has_osk         = false, 
-            $always_active   = 0, 
+            $numeric         = false,
+            $password        = false,
+            $has_osk         = false,
+            $always_active   = 0,
             $width           = 500
         );
 
@@ -306,31 +306,54 @@ class ActionFactory
     }
 
      public static function show_nfs_advanced_configuration_modal($modalTitle, &$plugin_cookies,$post_action= null){
-      
+
         $defs = array();
         $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
         $xml = HD::getAndParseXmlFromUrl($plexLocation);
         // hd_print(__METHOD__ . ';' . print_r($xml, true));
         foreach ($xml->Directory as $directory) {
             foreach ($directory->Location as $location) {
+                $path = (string)$location->attributes()->path;
+                $normalizedPath = str_replace(array(':\\\\', '\\\\') , '_', $path);
+                $normalizedPath = str_replace(array('\\') , '/', $normalizedPath);
+
+
+
+                hd_print("antes " . $path. ' depois ' . $normalizedPath);
+
+
                 //se já existir a chave e o valor for nfs usa a chave que já existe se não pega o valor do plex
-                if ($plugin_cookies->{$location->attributes()->path} && strpos($plugin_cookies->{$location->attributes()->path}, 'nfs://') !== false){
-                    $value = $plugin_cookies->{$location->attributes()->path};      
+                if ($plugin_cookies->{$normalizedPath} && strpos($plugin_cookies->{$normalizedPath}, 'nfs://') !== false){
+                    $value = $plugin_cookies->{$normalizedPath};
                 } else {
-                    $value = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path;
-                }   
-                
+                    $value = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$normalizedPath;
+                }
+
+
+                //windows path correction.
+                // if the section location looks like \\machine\path this is convertered to _machine/machine and does not have / ant end
+                // if the section location looks like c:\ this is convertered to c:/ and have the / at end.
+                // on plex part file when location is c:\ looks like  C:\Beasts.Of.The.Southern.Wild.2012.1080p.BluRay.x264-SPARKS [PublicHD]\beasts.of.the.southern.wild.2012.limited.1080p.bluray.x264-sparks.mkv
+                // with \\machine syntax file location looks like \\DISKSTATION\Filmes2\Beasts.Of.The.Southern.Wild.2012.1080p.BluRay.x264-SPARKS [PublicHD]\beasts.of.the.southern.wild.2012.limited.1080p.bluray.x264-sparks.mkv
+                // when emplexer mount the smb path  any \ are convertered to / and \\ convertered to _
+                // if the c:\ path directly the path needed one / at end.
+//                hd_print("teste = " .  substr($normalizedPath , -1));
+                if (substr($normalizedPath ,-1) === '/' && substr($value, -1) !== '/'){
+                    $value .= '/';
+                }
+
+
                 ControlFactory::add_text_field(
-                    $defs, 
-                    null, 
+                    $defs,
                     null,
-                    $name            = (string)$location->attributes()->path, 
-                    $title           = (string)$location->attributes()->path,  
-                    $initial_value   = $value,  
-                    $numeric         = false, 
-                    $password        = false, 
-                    $has_osk         = false, 
-                    $always_active   = 0, 
+                    null,
+                    $name            = $normalizedPath,
+                    $title           = $path,
+                    $initial_value   = $value,
+                    $numeric         = false,
+                    $password        = false,
+                    $has_osk         = false,
+                    $always_active   = 0,
                     $width           = 500
                 );
             }
@@ -345,7 +368,7 @@ class ActionFactory
 
 
     public static function show_smb_advanced_configuration_modal($modalTitle, &$plugin_cookies,$post_action= null){
-      
+
         $defs = array();
         $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
         $xml = HD::getAndParseXmlFromUrl($plexLocation);
@@ -353,23 +376,43 @@ class ActionFactory
         foreach ($xml->Directory as $directory) {
             foreach ($directory->Location as $location) {
                 //se já existir a chave e o valor for smb usa a chave que já existe se não pega o valor do plex
-                if ($plugin_cookies->{$location->attributes()->path} && strpos($plugin_cookies->{$location->attributes()->path}, 'smb://') !== false){
-                    $value = $plugin_cookies->{$location->attributes()->path};      
+                $path = (string)$location->attributes()->path;
+                $normalizedPath = str_replace(array(':\\\\', '\\\\') , '_', $path);
+                $normalizedPath = str_replace(array('\\') , '/', $normalizedPath);
+
+
+
+                hd_print("antes " . $path. ' depois ' . $normalizedPath);
+
+                if ($plugin_cookies->{$normalizedPath} && strpos($plugin_cookies->{$normalizedPath}, 'smb://') !== false){
+                    $value = $plugin_cookies->{$normalizedPath};
                 } else {
-                    $value = 'smb://user:password@'. $plugin_cookies->plexIp .  (string)$location->attributes()->path;
-                }   
-                 
+                    $value = 'smb://user:password@'. $plugin_cookies->plexIp .  (string)$normalizedPath;
+                }
+
+                //windows path correction.
+                // if the section location looks like \\machine\path this is convertered to _machine/machine and does not have / ant end
+                // if the section location looks like c:\ this is convertered to c:/ and have the / at end.
+                // on plex part file when location is c:\ looks like  C:\Beasts.Of.The.Southern.Wild.2012.1080p.BluRay.x264-SPARKS [PublicHD]\beasts.of.the.southern.wild.2012.limited.1080p.bluray.x264-sparks.mkv
+                // with \\machine syntax file location looks like \\DISKSTATION\Filmes2\Beasts.Of.The.Southern.Wild.2012.1080p.BluRay.x264-SPARKS [PublicHD]\beasts.of.the.southern.wild.2012.limited.1080p.bluray.x264-sparks.mkv
+                // when emplexer mount the smb path  any \ are convertered to / and \\ convertered to _
+                // if the c:\ path directly the path needed one / at end.
+//                hd_print("teste = " .  substr($normalizedPath , -1));
+                if (substr($normalizedPath ,-1) === '/' && substr($value, -1) !== '/'){
+                    $value .= '/';
+                }
+
                 ControlFactory::add_text_field(
-                    $defs, 
-                    null, 
+                    $defs,
                     null,
-                    $name            = (string)$location->attributes()->path, 
-                    $title           = (string)$location->attributes()->path,  
+                    null,
+                    $name            = $normalizedPath,
+                    $title           = $path,
                     $initial_value   = $value,
-                    $numeric         = false, 
-                    $password        = false, 
-                    $has_osk         = false, 
-                    $always_active   = 0, 
+                    $numeric         = false,
+                    $password        = false,
+                    $has_osk         = false,
+                    $always_active   = 0,
                     $width           = 500
                 );
             }
@@ -382,7 +425,7 @@ class ActionFactory
     }
 
      public static function show_subtitle_config_modal($modalTitle, &$plugin_cookies,$post_action= null){
-      
+
         $defs = array();
 
         $languageCodes = array(
@@ -582,7 +625,7 @@ class ActionFactory
             $width                  =  500,
             $need_confirm           =  false,
             $need_apply             =  false
-        );  
+        );
 
 
 
@@ -593,22 +636,22 @@ class ActionFactory
             foreach ($directory->Location as $location) {
                 //se já existir a chave e o valor for nfs usa a chave que já existe se não pega o valor do plex
                 if ($plugin_cookies->{$location->attributes()->path} && strpos($plugin_cookies->{$location->attributes()->path}, 'nfs://') !== false){
-                    $value = $plugin_cookies->{$location->attributes()->path};      
+                    $value = $plugin_cookies->{$location->attributes()->path};
                 } else {
                     $value = 'nfs://'. $plugin_cookies->plexIp . ':' . (string)$location->attributes()->path;
-                }   
-                
+                }
+
                 ControlFactory::add_text_field(
-                    $defs, 
-                    null, 
+                    $defs,
                     null,
-                    $name            = (string)$location->attributes()->path, 
-                    $title           = (string)$location->attributes()->path,  
-                    $initial_value   = $value,  
-                    $numeric         = false, 
-                    $password        = false, 
-                    $has_osk         = false, 
-                    $always_active   = 0, 
+                    null,
+                    $name            = (string)$location->attributes()->path,
+                    $title           = (string)$location->attributes()->path,
+                    $initial_value   = $value,
+                    $numeric         = false,
+                    $password        = false,
+                    $has_osk         = false,
+                    $always_active   = 0,
                     $width           = 500
                 );
             }
@@ -683,7 +726,7 @@ class ActionFactory
             $width                  =  600,
             $need_confirm           =  false,
             $need_apply             =  false
-        );  
+        );
         ControlFactory::add_combobox(
             $defs,
             null,
@@ -695,7 +738,7 @@ class ActionFactory
             $width                  =  600,
             $need_confirm           =  false,
             $need_apply             =  false
-        );  
+        );
         ControlFactory::add_combobox(
             $defs,
             null,
@@ -707,7 +750,7 @@ class ActionFactory
             $width                  =  600,
             $need_confirm           =  false,
             $need_apply             =  false
-        );  
+        );
 
          ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
             'saveDefaultFilters', 'save', 200, $post_action);

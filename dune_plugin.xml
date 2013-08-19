@@ -1,4 +1,4 @@
-<dune_plugin>
+    <dune_plugin>
   <name>emplexer</name>
   <caption>emplexer</caption>
   <entry_points>

@@ -11,7 +11,7 @@ class HD
 
     public static function is_url($url){
         $urlregex = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
-        if (eregi($urlregex, $url)) 
+        if (eregi($urlregex, $url))
             return true;
         else
             return false;
@@ -24,21 +24,21 @@ class HD
         $arr = (array) $obj;
         return isset($arr[$n]);
     }
-    
+
 
     public static function get_map_element($map, $key)
     {
         return isset($map[$key]) ? $map[$key] : null;
     }
 
-    
+
 
     public static function starts_with($str, $pattern)
     {
         return strpos($str, $pattern) === 0;
     }
 
-    
+
 
     public static function format_timestamp($ts, $fmt = null)
     {
@@ -52,7 +52,7 @@ class HD
         return $dt->format($fmt);
     }
 
-    
+
 
     public static function format_duration($msecs)
     {
@@ -77,7 +77,7 @@ class HD
         }
     }
 
-    
+
 
     public static function encode_user_data($a, $b = null)
     {
@@ -101,7 +101,7 @@ class HD
         return $media_url;
     }
 
-    
+
 
     public static function decode_user_data($media_url_str, &$media_url, &$user_data)
     {
@@ -118,7 +118,7 @@ class HD
         $user_data = json_decode(substr($media_url_str, $idx + 2));
     }
 
-    
+
 
     public static function create_regular_folder_range($items,
         $from_ndx = 0, $total = -1, $more_items_available = false)
@@ -176,7 +176,7 @@ class HD
             );
 
 
-        
+
         if (isset($opts))
         {
             foreach ($opts as $k => $v)
@@ -195,7 +195,7 @@ class HD
             $err_msg = "HTTP request failed ($http_code)";
             hd_print($err_msg);
             HD::print_backtrace();
-            
+
 
             switch ($http_code) {
                 case '0': //timeout
@@ -220,10 +220,10 @@ class HD
         hd_print("HTTP OK ($http_code)");
 
         curl_close($ch);
-        
+
         if ($http_code == 200) {
             return $content;
-        } 
+        }
         elseif ($http_code == 403)
         {
             $session_expired = array(
@@ -233,7 +233,7 @@ class HD
                 );
             return json_encode($session_expired);
         }
-        
+
     }
 
     public static function http_head_document($url)
@@ -257,17 +257,14 @@ class HD
     }
 
 
-    public static function http_post_document($url, $post_data)
+    public static function http_post_document($url, $post_data, $opts = null)
     {
-        return self::http_get_document($url,
-            array
-            (
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => $post_data
-                ));
+        $post  = array(CURLOPT_POST => true,CURLOPT_POSTFIELDS => $post_data);
+        return self::http_get_document($url,array_merge($post, $opts));
     }
 
-    
+
+
 
     public static function parse_xml_document($doc)
     {
@@ -286,18 +283,18 @@ class HD
     public static function getAndParseXmlFromUrl($url)
     {
 
-        
+
         $time_start = microtime(true);
         $get_start = microtime(true);
-        $doc = HD::http_get_document($url); 
-            
+        $doc = HD::http_get_document($url);
+
 
         $get_end = microtime(true);
         $parse_start =  microtime(true);
         $xml = HD::parse_xml_document($doc);
         $parse_end = microtime(true);
         $time_end =  microtime(true);
-        
+
 
         $time  = $time_end - $time_start;
         $get_time = $get_end - $get_start;
@@ -323,7 +320,7 @@ class HD
         return $request;
     }
 
-    
+
 
     public static function get_mac_addr()
     {
@@ -342,7 +339,7 @@ class HD
         return $mac_addr;
     }
 
-    
+
 
     // TODO: localization
     private static $MONTHS = array(
@@ -381,11 +378,11 @@ class HD
         foreach (debug_backtrace() as $f)
         {
             hd_print(
-                '  - ' . $f['function'] . 
+                '  - ' . $f['function'] .
                 ' at ' . $f['file'] . ':' . $f['line']);
         }
     }
-    
+
 
 
     public static function getPlexServers($timeout=2){
@@ -396,12 +393,12 @@ class HD
 
         $response_buffer_len=4096;
 
-        $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP); 
-        socket_set_option($sock, SOL_SOCKET, SO_BROADCAST, 1); 
-        socket_sendto($sock, $broadcast_string, strlen($broadcast_string), 0, '255.255.255.255', $port); 
+        $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        socket_set_option($sock, SOL_SOCKET, SO_BROADCAST, 1);
+        socket_sendto($sock, $broadcast_string, strlen($broadcast_string), 0, '255.255.255.255', $port);
         $servers = array();
 
-        
+
         for(;;){
             $a= $sock;
             $read = array($a);
@@ -417,22 +414,38 @@ class HD
                         $a= explode(':', $line);
 
                         if (count($a) >1){
-                            $server[$a[0]] = $a[1]; 
+                            $server[$a[0]] = $a[1];
                         }
                     }
                 }
-                $servers[] =$server; 
+                $servers[] =$server;
             }else {
                 break;
-            }   
-        }    
+            }
+        }
         socket_close($sock);
         return $servers;
     }
 
 
+    public static function nfsUrlToSystemPath($nfsUrl){
+        $mounts = `mount`;
+        $mounts =  split("\n", $mounts);
+        foreach ($mounts as $m) {
+            $mount = explode(' on ', $m);
+            $nfsPoint = $mount[0];
+            $tmp = explode(' ', $mount[1]);
+            $sysPath = $tmp[0];
 
-    
+            if (strstr($nfsUrl, $nfsPoint)){
+                return str_replace($nfsPoint, $sysPath, str_replace('nfs://', '', $nfsUrl));
+            }
+        }
+    }
+
+
+
+
 }
 
 

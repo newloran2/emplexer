@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 
 class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements UserInputHandler
 {
 
-	const ID = "emplexer_section_secreen"; 	
+	const ID = "emplexer_section_secreen";
 	private $servers;
 
 	function __construct()
@@ -31,7 +31,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 		// hd_print(__METHOD__ . ':' . print_r($pop_up_action, true));
 		$enter_action = ActionFactory::open_folder();
 
-	
+
 		return array
 		(
 			GUI_EVENT_KEY_ENTER => $enter_action,
@@ -44,7 +44,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	public function get_all_folder_items(MediaURL $media_url, &$plugin_cookies)
 	{
 		hd_print(__METHOD__);
-		// hd_print('get_all_folder_items em ' .  self::ID);	
+		// hd_print('get_all_folder_items em ' .  self::ID);
 
 		$items = array();
 		// foreach ($this->servers as $server ) {
@@ -59,13 +59,13 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 
 			//hd_print(print_r($xml, true));
 
-			
-			
-			foreach ($xml->Directory as $c)			
+
+
+			foreach ($xml->Directory as $c)
 			{
 				$items[] = array
 				(
-					 // EmplexerRootList::get_media_url_str((string)$c->attributes()->key, null), 
+					 // EmplexerRootList::get_media_url_str((string)$c->attributes()->key, null),
 					PluginRegularFolderItem::media_url =>  $this->get_right_media_url((string)$c->attributes()->type,(string)$c->attributes()->key, $plugin_cookies),
 					PluginRegularFolderItem::caption => (string) $c->attributes()->title,
 					PluginRegularFolderItem::view_item_params =>
@@ -82,18 +82,18 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				$items =  array_merge($items, $channels);
 			}
 
-			// $items[] = array
-   //          (
-   //              PluginRegularFolderItem::media_url =>  EmplexerListVideo::get_media_url_str('/library/sections'),
-   //              PluginRegularFolderItem::caption => 'teste',
-   //              PluginRegularFolderItem::view_item_params =>
-   //              array
-   //              (
-   //                  ViewItemParams::icon_path => 'plugin_file://icons/sudoku.png',
-   //              )
-   //          );
+			$items[] = array
+            (
+                PluginRegularFolderItem::media_url =>  EmplexerSMBSetup::get_media_url_str(),
+                PluginRegularFolderItem::caption => 'REDE',
+                PluginRegularFolderItem::view_item_params =>
+                array
+                (
+                    ViewItemParams::icon_path => 'plugin_luginfile://icons/sudoku.png',
+                )
+            );
 
-		
+
 
 
 		// hd_print(print_r($items, true));
@@ -104,7 +104,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	public function handle_user_input(&$user_input, &$plugin_cookies){
 		hd_print(__METHOD__);
 		hd_print(__METHOD__ . ":" . print_r($user_input, true));
-		
+
 
 		if ($user_input->control_id == 'pop_up') {
 			$media_url = MediaURL::decode($user_input->selected_media_url);
@@ -123,10 +123,10 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 				$defaultFilter = 'all';
 				if ($media_url->type == 'show'){
 					$defaultFilter = isset($plugin_cookies->defaultShowFilter) ? $plugin_cookies->defaultShowFilter : 'all';
-				} 
+				}
 				if ($media_url->type == 'movie'){
 					$defaultFilter = isset($plugin_cookies->defaultMovieFilter) ? $plugin_cookies->defaultMovieFilter : 'all';
-				} 
+				}
 
 				foreach ($xml->Directory as $c){
 					$key = (string)$c->attributes()->key;
@@ -141,19 +141,19 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 						);
 					}
 				}
-				hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true));		
-				$action = ActionFactory::show_popup_menu($pop_up_items);	
+				hd_print(__METHOD__ . ' pop_up_items:' .print_r($pop_up_items, true));
+				$action = ActionFactory::show_popup_menu($pop_up_items);
 				// hd_print(__METHOD__ . ': ' . print_r($action, true));
 				return $action;
 			} else {
 				return null;
 			}
-			
+
 		} if ($user_input->control_id == 'savePref') {
             hd_print(__METHOD__ . ':' . print_r($user_input, true));
             hd_print(__METHOD__ . ':' . print_r($plugin_cookies, true));
             EmplexerSetupScreen::savePreferences($user_input, $plugin_cookies);
-            
+
         }
 
 
@@ -164,10 +164,10 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	{
 
 		hd_print(__METHOD__ . ':'. print_r($media_url, true)) ;
-		
+
 		$episodes = array( 'newest' , 'recentlyAdded', 'recentlyViewed', 'onDeck');
 		$season = array('all','recentlyViewedShows','unwatched');
-		
+
 		if ($is_secondary){
 			hd_print('entrou ' .  $filter_name);
 			return EmplexerSecondarySection::get_media_url_str($media_url->category_id,$filter_name,$media_url->type);
@@ -177,7 +177,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 			return EmplexerMovieList::get_media_url_str($media_url->category_id, $filter_name, $media_url->type);
 		}
 
-		if (in_array($filter_name , $episodes)){			
+		if (in_array($filter_name , $episodes)){
 			return EmplexerVideoList::get_media_url_str($media_url->category_id, $filter_name, $media_url->type);
 		} else {
 			return EmplexerRootList::get_media_url_str($media_url->category_id, $filter_name);
@@ -190,7 +190,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 	{
 		hd_print(__METHOD__);
 
-		if ($type == "movie"){			
+		if ($type == "movie"){
 			// hd_print ("key =$key type=$type  movie");
 			return EmplexerMovieList::get_media_url_str($key, isset($plugin_cookies->defaultMovieFilter) ? $plugin_cookies->defaultMovieFilter : 'all' , 'movie');
 
@@ -198,7 +198,7 @@ class EmplexerSectionScreen extends	AbstractPreloadedRegularScreen implements Us
 			return EmplexerMusicList::get_media_url_str("/library/sections/$key");
 		} else {
 			// hd_print ("key =$key type=$ddtype  show");
-			return EmplexerRootList::get_media_url_str($key, isset($plugin_cookies->defaultShowFilter) ? $plugin_cookies->defaultShowFilter : 'all', 'show'); 
+			return EmplexerRootList::get_media_url_str($key, isset($plugin_cookies->defaultShowFilter) ? $plugin_cookies->defaultShowFilter : 'all', 'show');
 		}
 	}
 
