@@ -30,9 +30,9 @@ require_once 'emplexer_secondary_section.php';
 require_once 'emplexer_music_list.php';
 
 require_once 'lib/vod/vod_movie_screen.php';
-require_once 'emplexer_smb_setup.php';
+//require_once 'emplexer_smb_setup.php';
 
-require_once 'emplexer_trasnscode_manager.php';
+//require_once 'emplexer_trasnscode_manager.php';
 
 //implements UserInputHandler
 class Emplexer extends DefaultDunePlugin {
@@ -62,7 +62,7 @@ class Emplexer extends DefaultDunePlugin {
         $this->add_screen(new EmplexerListVideo());
         $this->add_screen(new EmplexerSecondarySection());
         $this->add_screen(new EmplexerMusicList());
-        $this->add_screen(new EmplexerSMBSetup());
+//        $this->add_screen(new EmplexerSMBSetup());
 
 
         EmplexerFifoController::getInstance(); // inicia o fifo
@@ -131,18 +131,18 @@ class Emplexer extends DefaultDunePlugin {
         return $toBeReturned;
     }
 
-    private function getTranscodeSessionPlayList(&$media_url, &$plugin_cookies) {
-        $plexIp = $plugin_cookies->plexIp;
-        $plexPort = $plugin_cookies->plexPort;
-
-        $transcodeVideoUrl = "http://$plexIp:$plexPort" . $media_url->detail_info_key;
-        $transcodedPlaylist = TranscodeManager::getInstance($plexIp, $plexPort)->startSession(urlencode($transcodeVideoUrl), $media_url->viewOffset);
-        file_put_contents('/tmp/www/plugins/emplexer/video.m3u8', $transcodedPlaylist);
-
-        hd_print(__METHOD__ . ':' . print_r($transcodedPlaylist, true));
-
-        return 'http://127.0.0.1/plugins/emplexer/video.m3u8';
-    }
+//    private function getTranscodeSessionPlayList(&$media_url, &$plugin_cookies) {
+//        $plexIp = $plugin_cookies->plexIp;
+//        $plexPort = $plugin_cookies->plexPort;
+//
+//        $transcodeVideoUrl = "http://$plexIp:$plexPort" . $media_url->detail_info_key;
+//        $transcodedPlaylist = TranscodeManager::getInstance($plexIp, $plexPort)->startSession(urlencode($transcodeVideoUrl), $media_url->viewOffset);
+//        file_put_contents('/tmp/www/plugins/emplexer/video.m3u8', $transcodedPlaylist);
+//
+//        hd_print(__METHOD__ . ':' . print_r($transcodedPlaylist, true));
+//
+//        return 'http://127.0.0.1/plugins/emplexer/video.m3u8';
+//    }
 
     private function get_right_media_url(MediaURL $media_url, $filter_name) {
         $episodes = array('newest', 'recentlyAdded', 'recentlyViewed', 'onDeck');

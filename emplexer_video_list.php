@@ -122,7 +122,7 @@ class EmplexerVideoList extends AbstractPreloadedRegularScreen implements UserIn
 		if ($user_input->control_id == 'stop')
 		{
 			//try to stop my transcoded session (if not a transcoded session nothing happend)
-			TranscodeManager::getInstance($plugin_cookies->plexIp,$plugin_cookies->plexPort)->stopSession();
+//			TranscodeManager::getInstance($plugin_cookies->plexIp,$plugin_cookies->plexPort)->stopSession();
 
 			hd_print('ENTREI NO EVENTO STOP' .  print_r($user_input, true));
 			hd_print('ENTREI NO EVENTO STOP' .  print_r($plugin_cookies, true));
