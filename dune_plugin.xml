@@ -1,10 +1,10 @@
-    <dune_plugin>
+<dune_plugin>
   <name>emplexer</name>
   <caption>emplexer</caption>
   <entry_points>
     <entry_point>
       <parent_media_url>root://applications</parent_media_url>
-      <media_url>emplexer_section_secreen</media_url>
+      <media_url>main</media_url>
       <caption>emplexer</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>

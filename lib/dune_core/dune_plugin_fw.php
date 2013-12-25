@@ -21,7 +21,8 @@ abstract class DunePluginFw
 
     public function invoke_operation($plugin, $call_ctx)
     {
-        
+
+
         if ($call_ctx->op_type_code === PLUGIN_OP_GET_FOLDER_VIEW ||
             $call_ctx->op_type_code === PLUGIN_OP_GET_NEXT_FOLDER_VIEW ||
             $call_ctx->op_type_code === PLUGIN_OP_GET_TV_INFO ||
