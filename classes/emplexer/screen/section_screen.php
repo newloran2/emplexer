@@ -1,5 +1,4 @@
 <?php 
-	require_once 'BaseScreen.php';
 	/**
 	* List all sections available in plex
 	*/
@@ -7,20 +6,24 @@
 	{
 		
 		public function generateScreen(){
-			$data =  Client::getInstance()->getByPath('/library/sections');
-			$output = $this->generateSingleList($this->generateItensArray($data));
+			$path =  '/library/sections';
+			$data =  Client::getInstance()->getByPath($path);
+			// print_r($a);
+			// if ($data->attr)
+			$output = $this->generateSingleList($this->generateItensArray($path, $data));
 			// print_r($output);
 			return $output;
 		}
 
-		private function generateItensArray($data) {
+		private function generateItensArray($lastUrl, $data) {
 			$directories = $data->Directory;
 			$items = array();
 
 			foreach ($directories as $value) {
 				$items[] = array(
 					'caption' =>  (string)$value->attributes()->title,	
-					'url' => 'teste'
+					'url' => "$lastUrl/". (string)$value->attributes()->key ,
+					'type' =>  (string)$value->attributes()->show
 				);
 			}
 			return $items;

@@ -3,6 +3,7 @@ class autoloader {
 
     public static $loader;
     private $isDune = false;
+    private $includes ;
 
     public static function init()
     {
@@ -12,91 +13,59 @@ class autoloader {
         return self::$loader;
     }
 
+    private function rglob($pattern, $flags = 0) {
+        $files = glob($pattern, $flags); 
+        foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+            $files = array_merge($files, $this->rglob($dir.'/'.basename($pattern), $flags));
+        }
+        return $files;
+    }
+
     public function __construct()
     {
+
+        $classes  =  $this->rglob(dirname(__FILE__)."/classes/*.php");
+        $dune     =  $this->rglob(dirname(__FILE__)."/lib/*.php");
+        
+        $this->includes = array_merge($classes, $dune);
     	$this->isDune =  file_exists("/tmp/run");
 		if (!$this->isDune){
-			spl_autoload_register(array($this,'duneCore'));	
+			// spl_autoload_register(array($this,'duneCore'));	
 		}
-		spl_autoload_register(array($this,'emplexer'));
-        spl_autoload_register(array($this,'plex'));
-        spl_autoload_register(array($this,'dune'));
+
+        spl_autoload_register(array($this,'generic'));
    	}
 
    	private function putUndersCoreOnCamelCase($class){
    		$pattern = '/(.*?[a-z]{1})([A-Z]{1}.*?)/'; 
 		$replace = '${1}_${2}'; 	
 		$fileName =  strtolower(preg_replace($pattern, $replace, $class));
-		return $fileName;
+    	return $fileName;
    	}
 
+    public function generic($class){
+        $fileName  = $this->putUndersCoreOnCamelCase($class);
+        $files = preg_grep("/.*\/$fileName.php/", $this->includes);
+        if (count($files) == 1){
+            require_once current($files) ;
+        } else {
+            echo "arquivo $fileName não existe ou há mais de um com o mesmo nome\n";
+            print_r($files);
+        }
+    }
     
-    public function emplexer($class)
-    {
-    	// echo "autoload emplexer $class\n";
-        $fileName = $this->putUndersCoreOnCamelCase($class);
-    	$s = explode('_', $fileName);
-        
-        if (count($s) >=2){
-            $type = $s[1];
-            $name = $s[0];
-
-            
-            $fileName = strtolower("classes/emplexer/$type/$fileName.php"); 
-            
-            if (file_exists($fileName)){
-                require_once "$fileName";    
-            } else {
-                echo "Arquivo não existe : $fileName.php\n" ;
-            }
-        } else { 
-            $fileName = strtolower("classes/emplexer/$class.php"); 
-            if (file_exists($fileName)){
-                require_once "$fileName";    
-            }  else {
-                echo "arquivo não existe $fileName\n";
-            }
-        }
-    	
-    }
-
-
-    public function plex($class)
-    {
-        // echo "autoload dune $class\n";    
-
-        $fileName = $this->putUndersCoreOnCamelCase($class);
-
-        $fileName = "classes/plex/$fileName.php"; 
-        
-        if (file_exists($fileName)){
-            require_once "$fileName";    
-        }
-
-    }    
-
-    public function dune($class)
-    {
-		// echo "autoload dune $class\n";    
-
-		$fileName = $this->putUndersCoreOnCamelCase($class);
-
-		$fileName = "lib/$fileName.php"; 
-        
-        if (file_exists($fileName)){
-            require_once "$fileName";    
-        }
-
-    }
-
     public function duneCore($class)
     {
-		// echo "autoload duneCore $class\n";    
+		echo "autoload duneCore $class\n";    
 		$fileName = $this->putUndersCoreOnCamelCase($class);
         $fileName = "lib/dune_core/$fileName.php"; 
         
+        echo "$fileName \n\n";
         if (file_exists($fileName)){
+            echo "incluindo $fileName\n";
             require_once "$fileName";    
+        } else {
+            echo "arquivo não existe $fileName\n";
         }
         
     }

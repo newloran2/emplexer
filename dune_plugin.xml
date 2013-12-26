@@ -1,11 +1,11 @@
 <dune_plugin>
-  <name>emplexer</name>
-  <caption>emplexer</caption>
+  <name>emplexer2</name>
+  <caption>emplexer2</caption>
   <entry_points>
     <entry_point>
       <parent_media_url>root://applications</parent_media_url>
       <media_url>main</media_url>
-      <caption>emplexer</caption>
+      <caption>emplexer2</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>

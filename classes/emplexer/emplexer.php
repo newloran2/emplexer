@@ -1,17 +1,30 @@
 <?php
     
+    // namespace classes\emplexer;
     // require_once 'lib/default_dune_plugin_fw.php';
     // require_once 'Plex/Client.php';
     
     require_once 'AutoLoad.php';
+
 
     class Emplexer implements DunePlugin {
 
         public $stream_name;
         
         public function get_folder_view($media_url, &$plugin_cookies) {
-
-            $menu = new SectionScreen();
+            switch ($media_url) {
+                case 'main':
+                    $c = new Conf('emplexer_plugin_cookies.properties');
+                    $c->updateWthPluginCookies($plugin_cookies);
+                    // print_r($c);
+                    // $menu = new SectionScreen('/library/sections');
+                    $menu = new PlexScreen();
+                    break;                
+                default:
+                    $menu =  new PlexScreen($media_url);
+                    break;
+            }
+            
             return $menu->generateScreen();
         }
 

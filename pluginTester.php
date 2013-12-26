@@ -9,11 +9,16 @@
 
 	// print_r($xml);
 
-	$options = getopt("e:");
+	$options = getopt("e:m:");
 
 	$optionEntry = $options['e'];
+	$optionMediaUrl = $options['m'];
 
 	$entry = null;
+
+
+	$config =  new Conf('emplexer_plugin_cookies.properties');
+
 
 	foreach ($xml->entry_points->entry_point as $e) {
 		if ($e->parent_media_url == $optionEntry){
@@ -32,9 +37,9 @@
 			'op_type_code' => (string)$entry->actions->key_enter->type == "plugin_open_folder" ? "get_folder_view" :  (string)$entry->actions->key_enter->type ,
 			'op_id' => "1",
 			'input_data' => array(
-				"media_url" => (string)$entry->media_url
+				"media_url" => $optionMediaUrl == null ? (string)$entry->media_url :  $optionMediaUrl
 			),
-			"plugin_cookies" => array()
+			"plugin_cookies" => $config->getData
 		 );
 	// print_r(json_encode($output));
 
