@@ -8,10 +8,8 @@
 		public function generateScreen(){
 			$path =  '/library/sections';
 			$data =  Client::getInstance()->getByPath($path);
-			// print_r($a);
-			// if ($data->attr)
+
 			$output = $this->generateSingleList($this->generateItensArray($path, $data));
-			// print_r($output);
 			return $output;
 		}
 

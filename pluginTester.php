@@ -9,23 +9,17 @@
 
 	// print_r($xml);
 
-	$options = getopt("e:m:");
+	$options = getopt("t:m:");
 
-	$optionEntry = $options['e'];
-	$optionMediaUrl = $options['m'];
+	$optionType = isset($options['t']) ?  $options['t'] : 'get_folder_view';
+	$optionMediaUrl = isset($options['m']) ? $options['m'] :  'main';
+
 
 	$entry = null;
 
 
-	$config =  new Conf('emplexer_plugin_cookies.properties');
+	// $config =  new Conf('emplexer_plugin_cookies.properties');
 
-
-	foreach ($xml->entry_points->entry_point as $e) {
-		if ($e->parent_media_url == $optionEntry){
-			$entry = $e; 
-			break;
-		}
-	}
 
 	echo("incluindo arquivo ". (string)$xml->params->program);
 	require_once (string)$xml->params->program;
@@ -34,7 +28,7 @@
 
 	// print ($entry->actions->key_enter->type . "\n");
 	$output = array(
-			'op_type_code' => (string)$entry->actions->key_enter->type == "plugin_open_folder" ? "get_folder_view" :  (string)$entry->actions->key_enter->type ,
+			'op_type_code' => $optionType ,
 			'op_id' => "1",
 			'input_data' => array(
 				"media_url" => $optionMediaUrl == null ? (string)$entry->media_url :  $optionMediaUrl
