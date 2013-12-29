@@ -2,29 +2,30 @@
 
 class Client 
 {
-	private $plexIp   = '192.168.2.8';
-	private $plexPort = '32400';
+    private $plexIp   = '127.0.0.1';
+    private $plexPort = '32400';
 
-	private static $instance;
+    private static $instance;
 
-	private function __construct() {
-		$this->plexIp   = '192.168.2.8';
-		$this->plexPort = '32400';
-	}
-	public static function getInstance(){
-		if (!isset(self::$instance)){
-			self::$instance = new Client;
-		}
-		return self::$instance;
-	}
+    private function __construct() {
+        $this->plexIp   = '192.168.2.8';
+        $this->plexPort = '32400';
+    }
+    public static function getInstance(){
+        if (!isset(self::$instance)){
+            self::$instance = new Client;
+        }
+        return self::$instance;
+    }
 
-	private function get($url, $opts = null){
-		$ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 	false);
+    public function get($url, $opts = null){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,    false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    10);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,    true);
         curl_setopt($ch, CURLOPT_TIMEOUT,           10);
         curl_setopt($ch, CURLOPT_USERAGENT,         'DuneHD/1.0');
+        curl_setopt($ch,CURLOPT_ENCODING ,           "gzip");
         curl_setopt($ch, CURLOPT_URL,               $url);
 
         if (isset($opts))
@@ -60,13 +61,31 @@ class Client
         curl_close($ch);
 
         return $content;
-	}
+    }
 
-	public function getByPath($path){
-		$url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $path);
-		$data =  $this->get($url);
-		return simplexml_load_string($data);
-	}
+    public function getThumbUrl($key, $with=250, $height=250){
+        $url = $this->getUrl(null, $key);
+        return sprintf("http://%s:%d/photo/:/transcode?width=%d&height=%d&url=%s", $this->plexIp, $this->plexPort,$with, $height, $url );
+        // http://192.168.2.8:32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2F%3A%2Fresources%2Fmovie.png&width=150&height=150&X-Plex-Token=Fdxv1u7Rk97GspiQwqPy
+    }
+    public function getUrl($lastKey, $newKey)
+    {
+        if (strpos($newKey, "http") === 0){
+            return $newKey;
+        }
+        if (strpos($newKey, "/") !== 0){
+            $url = sprintf("http://%s:%d%s/%s", $this->plexIp, $this->plexPort, $lastKey, $newKey);    
+        } else {
+            $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
+        }
+
+        // echo ("url = $url\n");
+        return $url;
+    }
+    public function getAndParse($url){
+        $data =  $this->get($url);
+        return simplexml_load_string($data);
+    }
 }
 
 ?>

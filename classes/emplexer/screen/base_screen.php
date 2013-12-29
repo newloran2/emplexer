@@ -10,22 +10,25 @@ abstract class BaseScreen
 	protected $path;
 	protected $data;
 	protected $nextTemplate = false;
+	protected $templates =array();
+
 	function __construct($key=null, $nextTemplate=false) {
 		if (!$key)
 			$key = '/library/sections';
-		$this->path = $key;
-		$this->data = Client::getInstance()->getByPath($this->path);		
-		$this->nextTemplate = $nextTemplate;
+		$this->path = Client::getInstance()->getUrl(null, $key);
+		$this->data = Client::getInstance()->getAndParse($this->path);	
+		$this->nextTemplate = $nextTemplate != null ? $nextTemplate :  array();
+
+		$this->templates = json_decode(Config::getInstance()->templateViewNumber);
+
+		hd_print(__METHOD__ .  ':' .  print_r($this->templates, true));
+
 	}	
 
 	public function getTemplateByType($type){
 
-		// print_r($this);
 		$fun = 'template'.ucwords($type);
-		$v =  isset(Config::getInstance()->templateViewNumber) ? Config::getInstance()->templateViewNumber : 0;
-		$val = $this->nextTemplate ?  $this->getTemplateIndexAndUpdate($fun) : $v;
-		// echo "valor = $val \n\n\n";
-		return $this->$fun($val);
+		return $this->$fun();
 	}
 
 	private function getTemplateIndexAndUpdate($key){
@@ -33,24 +36,21 @@ abstract class BaseScreen
 		$templateIndex != null ? json_decode($templateIndex) :  array();
 		$index = isset($templateIndex->{$key}) ? (int)$templateIndex->{$key}+1 : 1;
 		$templateIndex->{$key} = $index;
-		// print_r(Config::getInstance());
 		Config::getInstance()->templateViewNumber = json_encode($templateIndex);
 
-		// print_r(Config::getInstance());
-		echo "index== $index \n\n\n";
 		return $index;
 
 	}
 
 	//without 	viewGroup i considerer that screnn a generic with directories index
-	protected function template($templateIndex=0){
+	protected function template(){
 		$itens = array();
 		$folderItems = array();
 		foreach ($this->data as $item)
 		{
 			$folderItems[] = array(
 				PluginRegularFolderItem::media_url			=> $this->path . "/" .(string)$item->attributes()->key,
-				PluginRegularFolderItem::caption			=> isset($item->attributes()->caption)? (string)$item->attributes()->caption : (string)	$item->attributes()->title ,
+				PluginRegularFolderItem::caption			=> isset($item->attributes()->caption)? (string)$item->attributes()->caption : (string)	$item->attributes()->title,
 				PluginRegularFolderItem::view_item_params	=> array()
 			);	
 		}
@@ -93,19 +93,22 @@ abstract class BaseScreen
 			)
 		);
 	}	
-	protected function templateSecondary($templateIndex=0){
+	protected function templateSecondary(){
 		return $this->template();
 	}
-	protected function templateMovie($templateIndex=0){
-		echo ("templateIndex= " . $templateIndex . " \n"); 
+	protected function templateMovie(){
+		hd_print("\n\nTest = " . __FUNCTION__);
+
 		$itens = array();
 		$folderItems = array();
 		foreach ($this->data as $item)
 		{
 			$folderItems[] = array(
-				PluginRegularFolderItem::media_url			=> $this->path . "/" .(string)$item->attributes()->key,
+				PluginRegularFolderItem::media_url			=> Client::getInstance()->getUrl($this->path , (string)$item->attributes()->key),
 				PluginRegularFolderItem::caption			=> isset($item->attributes()->caption)? (string)$item->attributes()->caption : (string)	$item->attributes()->title ,
-				PluginRegularFolderItem::view_item_params	=> array()
+				PluginRegularFolderItem::view_item_params	=> array(
+					ViewItemParams::icon_path => Client::getInstance()->getThumbUrl((string)$item->attributes()->thumb)
+				)
 			);	
 		}
 
@@ -197,18 +200,36 @@ abstract class BaseScreen
 				)
 			);
 
+		
+		if (!isset($this->nextTemplate) || $this->nextTemplate == null ){
+			$this->nextTemplate->{__FUNCTION__} = 0;
+		}else if ($this->nextTemplate){
+			$this->templates->{__FUNCTION__} +=1;
+		}
+		if (!isset($this->templates->{__FUNCTION__}) && $this->templates->{__FUNCTION__} >= count($availableTemplates)){
+			$this->templates->{__FUNCTION__} = 0;
+		}
+
+		echo ("index = " . $this->templates->{__FUNCTION__});
+
+
 
 		return array(
 			PluginFolderView::view_kind								=>	PLUGIN_FOLDER_VIEW_REGULAR,
-			PluginFolderView::data									=> $availableTemplates[$templateIndex]
+			PluginFolderView::data									=> $availableTemplates[0]
 		);
 	}
-	protected function templateSeason($templateIndex=0){
-		# code...
+
+	protected function templateShow(){
+		return $this->templateMovie();
 	}
 
-	protected function templateEpisode($templateIndex=0){
-		# code...
+	protected function templateSeason(){
+		return $this->templateMovie();
+	}
+
+	protected function templateEpisode(){
+		return $this->templateMovie();
 	}
 
 	protected function generateSingleList($items)
@@ -261,7 +282,13 @@ abstract class BaseScreen
 			)
 		);
 	}
+
+	public function __destruct()
+	{
+		Config::getInstance()->templateViewNumber = json_encode($this->templates);
+	}		
 	abstract public function generateScreen();
+
 }
 
 

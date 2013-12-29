@@ -33,7 +33,7 @@
 			'input_data' => array(
 				"media_url" => $optionMediaUrl == null ? (string)$entry->media_url :  $optionMediaUrl
 			),
-			"plugin_cookies" => $config->getData
+			"plugin_cookies" => Config::getInstance()->pluginCookies
 		 );
 	// print_r(json_encode($output));
 
@@ -44,5 +44,12 @@
 	// print_r(DunePluginFw::$instance);
 	 // {"op_type_code":"get_folder_view","op_id":"1","input_data":{"media_url":"main_menu"},"plugin_cookies":{}}	
 
+function convert($size)
+ {
+    $unit=array('b','kb','mb','gb','tb','pb');
+    return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+ }	
+
+echo ("memoria = " .  convert(memory_get_peak_usage(true)) . "\n");
 
 ?>
