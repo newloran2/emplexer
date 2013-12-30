@@ -76,6 +76,7 @@ abstract class DunePluginFw
 
         // PluginOperationType::PLUGIN_OP_HANDLE_USER_INPUT
 
+        
         return
             $plugin->handle_user_input(
                 $call_ctx->input_data,
@@ -108,7 +109,7 @@ abstract class DunePluginFw
 
         if (!isset($map[$op_code]))
         {
-            hd_print("Error: get_out_type_code(): unknown operation code: '$op_code'.");
+            //hd_print("Error: get_out_type_code(): unknown operation code: '$op_code'.");
             throw new Exception("Uknown operation code");
         }
 

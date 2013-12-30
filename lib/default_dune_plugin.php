@@ -32,7 +32,7 @@ class DefaultDunePlugin implements DunePlugin
     {
         if (isset($this->screens[$scr->get_id()]))
         {
-            hd_print("Error: screen (id: " . $scr->get_id() . ") already registered.");
+            //hd_print("Error: screen (id: " . $scr->get_id() . ") already registered.");
             throw new Exception('Screen already registered');
         }
 
@@ -46,7 +46,7 @@ class DefaultDunePlugin implements DunePlugin
         if (isset($this->screens[$screen_id]))
             return $this->screens[$screen_id];
 
-        hd_print("Error: no screen with id '$screen_id' found.");
+        //hd_print("Error: no screen with id '$screen_id' found.");
         throw new Exception('Screen not found');
     }
 

@@ -25,10 +25,11 @@ class DefaultDunePluginFw extends DunePluginFw
         // $ret = $this->call_plugin_impl($call_ctx);
         // return json_encode($ret);
         // HD::print_backtrace();
+
         $a = json_encode(
                 $this->call_plugin_impl(
                     json_decode($call_ctx_json))); 
-        hd_print(__METHOD__ . ':' . print_r(json_decode($a), true));
+        //hd_print(__METHOD__ . ':' . print_r(json_decode($a), true));
         // HD::print_backtrace();
         return $a;
             
@@ -44,13 +45,13 @@ class DefaultDunePluginFw extends DunePluginFw
         {
             try
             {
-                hd_print('Instantiating plugin...');
+                //hd_print('Instantiating plugin...');
                 $plugin = $this->create_plugin();
-                hd_print('Plugin instance created.');
+                //hd_print('Plugin instance created.');
             }
             catch (Exception $e)
             {
-                hd_print('Error: can not instantiate plugin (' . $e->getMessage() . ')');
+                //hd_print('Error: can not instantiate plugin (' . $e->getMessage() . ')');
 
                 return
                     array
@@ -71,6 +72,8 @@ class DefaultDunePluginFw extends DunePluginFw
 
         // assert($plugin);
 
+
+
         $out_data = null;
 
         try
@@ -79,7 +82,7 @@ class DefaultDunePluginFw extends DunePluginFw
         }
         catch (DuneException $e)
         {
-            hd_print("Error: DuneException caught: " . $e->getMessage());
+            //hd_print("Error: DuneException caught: " . $e->getMessage());
             return
                 array
                 (
@@ -91,7 +94,7 @@ class DefaultDunePluginFw extends DunePluginFw
         }
         catch (Exception $e)
         {
-            hd_print("Error: Exception caught: " . $e->getMessage());
+            //hd_print("Error: Exception caught: " . $e->getMessage());
 
             return
                 array
@@ -121,7 +124,7 @@ class DefaultDunePluginFw extends DunePluginFw
         );
 
         if ($plugin_output_data[PluginOutputData::has_data])
-        {
+        {            
             $plugin_output_data[PluginOutputData::data_type] =
                 $this->get_out_type_code($call_ctx->op_type_code);
 

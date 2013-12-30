@@ -46,7 +46,7 @@ class VodMovieScreen implements Screen, UserInputHandler
     public function get_folder_view(MediaURL $media_url, &$plugin_cookies)
     {
 
-        hd_print(__METHOD__ . ': teste' . print_r($media_url, true));
+        //hd_print(__METHOD__ . ': teste' . print_r($media_url, true));
         $this->vod->folder_entered($media_url, $plugin_cookies);
 
         $movie = $this->vod->get_loaded_movie($media_url->movie_id, $plugin_cookies);
@@ -96,7 +96,7 @@ class VodMovieScreen implements Screen, UserInputHandler
             PluginFolderView::data                      => $movie_folder_view,
         );
         // HD::print_backtrace();
-        hd_print(__METHOD__ . ':' . print_r($a, true));
+        //hd_print(__METHOD__ . ':' . print_r($a, true));
 
         return $a;
 
@@ -106,9 +106,9 @@ class VodMovieScreen implements Screen, UserInputHandler
 
     public function handle_user_input(&$user_input, &$plugin_cookies)
     {
-        hd_print('Movie: handle_user_input:');
+        //hd_print('Movie: handle_user_input:');
         foreach ($user_input as $key => $value)
-            hd_print("  $key => $value");
+            //hd_print("  $key => $value");
 
         if ($user_input->control_id == 'favorites')
         {

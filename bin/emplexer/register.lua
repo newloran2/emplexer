@@ -51,21 +51,16 @@ end
 
 
 local continue = false
-function plex:startRegister()
+function plex:startRegister(serverName)
+	serverName =  serverName or "emplexer"
+	if (continue) then
+		return
+	end
 	continue = true
 	utils.spawn(function()
 
 		local hello_broadcast_string =
-[[HELLO * HTTP/1.0
-Content-Type: plex/media-player
-Resource-Identifier: blablablablabla2
-Device-Class: HTPC
-Name: emplexer
-Port: 3000
-Product: emplexer
-Protocol: xbmcjson
-Version: 2.0
-]]
+"HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3000\r\nProduct: emplexer\r\nProtocol: xbmcjson\r\nVersion: 2.0"
 		local bye_broadcast_string ="BYE * HTTP/1.0\r\n"
 		local port =32413
 		local ip="255.255.255.255"

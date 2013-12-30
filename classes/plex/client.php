@@ -34,7 +34,7 @@ class Client
                 curl_setopt($ch, $k, $v);
         }
 
-        hd_print("HTTP fetching '$url'...");
+        //hd_print("HTTP fetching '$url'...");
 
         $content = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -45,18 +45,18 @@ class Client
                 "HTTP error: $http_code; " .
                 "CURL errno: " . curl_errno($ch) .
                 " (" . curl_error($ch) . ')';
-            hd_print($err_msg);
+            //hd_print($err_msg);
             throw new Exception($err_msg);
         }
 
         if ($http_code != 200)
         {
             $err_msg = "HTTP request failed ($http_code)";
-            hd_print($err_msg);
+            //hd_print($err_msg);
             throw new Exception($err_msg);
         }
 
-        hd_print("HTTP OK ($http_code)");
+        //hd_print("HTTP OK ($http_code)");
 
         curl_close($ch);
 
@@ -69,7 +69,7 @@ class Client
         // http://192.168.2.8:32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2F%3A%2Fresources%2Fmovie.png&width=150&height=150&X-Plex-Token=Fdxv1u7Rk97GspiQwqPy
     }
     public function getUrl($lastKey, $newKey)
-    {
+    {    
         if (strpos($newKey, "http") === 0){
             return $newKey;
         }
@@ -79,7 +79,7 @@ class Client
             $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
         }
 
-        // echo ("url = $url\n");
+        // //echo ("url = $url\n");
         return $url;
     }
     public function getAndParse($url){

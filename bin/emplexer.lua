@@ -5,6 +5,7 @@ local utils    = require 'lem.utils'
 local io       = require 'lem.io'
 local hathaway = require 'lem.hathaway'
 local register = require "register"
+local lfs   = require 'lem.lfs'
 local json = require ("dkjson")
 
 hathaway.debug = print -- must be set before import()
@@ -41,10 +42,31 @@ GET('/', function(req, res)
 	
 end)
 
-GET('/startServer', function ( req, res )
-	print(req.client:getpeer())	
-	res:add('startServer')
-	register:startRegister()
+GETM('^/startServer/([^/]+)$', function(req, res, name)
+  print(req.client:getpeer()) 
+  res:add('startServer')
+  table_print(req)
+  register:startRegister(name)
+end)
+
+GETM('^/startNotifier/([^/]+)/([^/]+)$', function (req, res, key, percentToDone )
+  res:add(key .. ": " .. percentToDone)
+  utils.spawn(function()
+    attrs = lfs.attributes('/tmp/run/ext_command.state')
+    lastAttrs = nil
+    file = io.streamfile('/tmp/run/ext_command.state')
+    -- while attrs['modification'] >
+    if not file then
+      io.stderr:write(format("Error opening '%s': %s\n", arg[1], err))
+      utils.exit(1)
+    else 
+      for i=1,10 do
+
+        print(file:lines())
+        utils.newsleeper():sleep(5)
+      end
+    end
+  end)
 end)
 
 GET('/stopServer', function ( req, res )
@@ -55,9 +77,10 @@ end)
 
 GET('/findServers' , function ( req, res )
 	print('findServers');
-	res:add (json.encode(register:getPlexServers()))
-	
+	res:add (json.encode(register:getPlexServers()))	
 end)
+
+
 
 if arg[1] == 'socket' then
 	local sock = assert(io.unix.listen('socket', 666))

@@ -21,17 +21,17 @@ class Conf
 
         if ($lines === false)
         {
-            hd_print("Configuration file '$conf_file_path' does not exist.");
+            //hd_print("Configuration file '$conf_file_path' does not exist.");
             return false;
         }
 
-        hd_print("Reading configuration from '$conf_file_path'...");
+        //hd_print("Reading configuration from '$conf_file_path'...");
 
         for ($i = 0; $i < count($lines); ++$i)
         {
             if (preg_match('/^ *(\S+) *= *(\S+)$/', $lines[$i], $matches) != 1)
             {
-                hd_print(
+                //hd_print(
                     "Warning: line " . ($i + 1) . ": unknown format. " .
                     "Data: '" . $lines[$i] . "'.");
                 continue;
@@ -45,7 +45,7 @@ class Conf
 
     public function updateWthPluginCookies(&$pluginCookies){
         foreach ($pluginCookies as $key => $value) {
-            // echo "key = $key, value = $value\n";
+            // //echo "key = $key, value = $value\n";
             $this->$key = $value;
         }
     }
@@ -64,7 +64,7 @@ class Conf
     {
         if (!isset($this->data[$key]))
         {
-            hd_print("Warning: no value for key '$key'. Using default: '$value'");
+            //hd_print("Warning: no value for key '$key'. Using default: '$value'");
             $this->data[$key] = $value;
         }
     }

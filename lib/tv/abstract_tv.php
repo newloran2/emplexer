@@ -104,7 +104,7 @@ abstract class AbstractTv implements Tv
 
         foreach ($this->get_groups() as $g)
         {
-            hd_print('DEBUG: group '.$g->get_id());
+            //hd_print('DEBUG: group '.$g->get_id());
         }
 
         foreach ($this->get_channels() as $c)

@@ -34,7 +34,7 @@ class DefaultArchive implements Archive
 
         if (is_null($doc))
         {
-            hd_print("Failed to fetch archive versions.txt from $version_url.");
+            //hd_print("Failed to fetch archive versions.txt from $version_url.");
         }
         else
         {
@@ -44,7 +44,7 @@ class DefaultArchive implements Archive
                 $pos = strrpos($tok, ' ');
                 if ($pos === false)
                 {
-                    hd_print("Invalid line in versions.txt for archive '$id'.");
+                    //hd_print("Invalid line in versions.txt for archive '$id'.");
                     continue;
                 }
 
@@ -55,20 +55,20 @@ class DefaultArchive implements Archive
                 $tok = strtok("\n");
             }
 
-            hd_print("Archive $id: " . count($version_by_name) . " files.");
+            //hd_print("Archive $id: " . count($version_by_name) . " files.");
 
             $size_url = $url_prefix . '/size.txt';
             $doc = HD::http_get_document($size_url);
             if (is_null($doc))
             {
-                hd_print("Failed to fetch archive size.txt from $size_url.");
+                //hd_print("Failed to fetch archive size.txt from $size_url.");
 
                 $version_by_name = array();
             }
             else
             {
                 $total_size = intval($doc);
-                hd_print("Archive $id: size = $total_size");
+                //hd_print("Archive $id: size = $total_size");
             }
         }
 

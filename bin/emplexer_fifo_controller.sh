@@ -14,7 +14,7 @@ current_dir=$1
 while true
 do
     if read line <$pipe; then
-    	echo $line
+    	//echo $line
 
         if [[ "$line" == 'quit' ]]; then
             break
@@ -40,7 +40,7 @@ do
         	#s|id do arquivo no plex|tempo do pooling|url base do plex (http://192.168.2.9:32400/)|tempo para marcar como visto"
             IFS="|"
             read -ra splitedLine <<< "$line"  
-            echo ${splitedLine[@]}
+            //echo ${splitedLine[@]}
             # markTime=${line#*|*|*|*|} #somente o ultimo campo (url)
             # tmp=${line#*|*|*|} #pega os dois ultimos campos
             # url=${tmp%*|*} #somente o ultimo campo (url)
@@ -56,31 +56,31 @@ do
             time_to_position=${splitedLine[5]}
 
 
-        	echo "iniciando plex_notify com comando plex_notify.sh $key $sleepTime '$url' $markTime  & "
+        	//echo "iniciando plex_notify com comando plex_notify.sh $key $sleepTime '$url' $markTime  & "
         	sh $current_dir/plex_notify.sh $key $sleepTime "$url" $markTime $time_to_position &
-        	echo `pidof plex_notify.sh`
+        	//echo `pidof plex_notify.sh`
         fi
 
 
         if [[ $type == 'p' ]]; then
-            echo "iniciando startDefaultPlayBack line=$line"
+            //echo "iniciando startDefaultPlayBack line=$line"
             #start default playback
             #p|url para play|posição inicial|id do arquivo no plex|tempo do pooling|url base do plex (http://192.168.2.9:32400)|tempo para marcar como visto
             IFS="|";
             read -ra splitedLine <<< "$line"
-            echo ${splitedLine[@]}
+            //echo ${splitedLine[@]}
             key=${splitedLine[0]}
             url=${splitedLine[1]}
             position=${splitedLine[2]}
             notify="s|${splitedLine[3]}|${splitedLine[4]}|${splitedLine[5]}|${splitedLine[6]}"
-            echo $notify
-            echo "wget http://127.0.0.1/cgi-bin/do?cmd=start_file_playback&media_url=$url  -O /tmp/emplexer_default_playback.xml >> /tmp/wget.log"
-            echo "wget http://127.0.0.1/cgi-bin/do?cmd=set_playback_state&speed=256&position=$position -O /tmp/emplexer_default_playback.xml >> /tmp/wget.log"
+            //echo $notify
+            //echo "wget http://127.0.0.1/cgi-bin/do?cmd=start_file_playback&media_url=$url  -O /tmp/emplexer_default_playback.xml >> /tmp/wget.log"
+            //echo "wget http://127.0.0.1/cgi-bin/do?cmd=set_playback_state&speed=256&position=$position -O /tmp/emplexer_default_playback.xml >> /tmp/wget.log"
 
             wget "\"http://127.0.0.1/cgi-bin/do?cmd=start_file_playback&media_url=$url\""  -O /tmp/emplexer_default_playback.xml
             wget "http://127.0.0.1/cgi-bin/do?cmd=set_playback_state&speed=256&position=$position" -O /tmp/emplexer_default_playback.xml
             #inicia a notificação
-            echo  "$notify" > $current_dir/plex_notify 
+            //echo  "$notify" > $current_dir/plex_notify 
 
         fi
 
@@ -93,4 +93,4 @@ do
 
 done
 
-echo "Reader exiting"
+//echo "Reader exiting"

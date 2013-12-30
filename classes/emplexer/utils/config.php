@@ -14,7 +14,7 @@ class Config {
 	 * Read initial plugin cookies from /config dir
 	 */
 	private function __construct(){
-		// echo ("config criado\n");
+		// //echo ("config criado\n");
 		$this->read_conf_file("/config/emplexer_plugin_cookies.properties");
 		// print_r($this->pluginCookies);
 	}
@@ -34,11 +34,11 @@ class Config {
         
         if ($lines === false)
         {
-            // hd_print("Configuration file '$conf_file_path' does not exist.");
+            // //hd_print("Configuration file '$conf_file_path' does not exist.");
             return false;
         }
 
-        // hd_print("Reading configuration from '$conf_file_path'...");
+        // //hd_print("Reading configuration from '$conf_file_path'...");
 
         for ($i = 0; $i < count($lines); ++$i)
         {
@@ -63,9 +63,9 @@ class Config {
 	public function __get($key)
 	{
 
-		// echo ("key = $key\n");
+		// //echo ("key = $key\n");
 		if ($key === "pluginCookies") {
-			echo "retornando pluginCookies\n";
+			//echo "retornando pluginCookies\n";
 			return  $this->pluginCookies;
 		}
 
@@ -89,7 +89,7 @@ class Config {
 			$data .= "$key = $value\n";
 		}
 
-		file_put_contents("/config/emplexer_plugin_cookies.properties", $data);
+		// file_put_contents("/config/emplexer_plugin_cookies.properties", $data);
 	}
 }
 

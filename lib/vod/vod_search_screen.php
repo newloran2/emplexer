@@ -52,9 +52,9 @@ class VodSearchScreen extends AbstractControlsScreen
 
     public function handle_user_input(&$user_input, &$plugin_cookies)
     {
-        hd_print('Vod search: handle_user_input:');
+        //hd_print('Vod search: handle_user_input:');
         foreach ($user_input as $key => $value)
-            hd_print("  $key => $value");
+            //hd_print("  $key => $value");
 
         if ($user_input->action_type === 'apply')
         {
@@ -66,7 +66,7 @@ class VodSearchScreen extends AbstractControlsScreen
 
                 $plugin_cookies->vod_search_pattern = $pattern;
 
-                hd_print("Vod search: applying pattern '$pattern'");
+                //hd_print("Vod search: applying pattern '$pattern'");
 
                 $defs = $this->do_get_control_defs($plugin_cookies);
 

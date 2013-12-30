@@ -23,10 +23,10 @@ class SMBServer {
     }
 
     private function fillShares() {
-        // echo " vou executar\n";
+        // //echo " vou executar\n";
         $command = '/tango/firmware/bin/smbtree  -U admin  -A /tmp/emplexer_auth.conf --debuglevel=0 --server-shares=' . $this->serverName;
         $strShares = ExecUtils::execute($command);
-        // echo "strShares = $strShares\n";
+        // //echo "strShares = $strShares\n";
         $tmpShares = array_filter(explode("\n", $strShares));
 
         // print_r($tmpShares);
@@ -66,7 +66,7 @@ class SMBLookUp {
     private $servers = array();
 
     public function __construct() {
-        // echo "oi1\n";
+        // //echo "oi1\n";
         // $this->workgroup = $workgroup;
         $domains = $this->listDomains();
         $this->listServersForDomains($domains);
@@ -105,7 +105,7 @@ class SMBLookUp {
 
 }
 
-// echo "vou iniciar\n";
+// //echo "vou iniciar\n";
 // $a = new SMBLookUp();
 // print_r($a->getServers());
 ?>

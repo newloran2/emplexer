@@ -23,7 +23,7 @@ abstract class AbstractRegularScreen implements RegularScreen
     
 
     public function __get($name){
-        hd_print($name);
+        //hd_print($name);
         if(property_exists(get_class($this), $name)){
             return $this->{$name};
         }
@@ -31,10 +31,10 @@ abstract class AbstractRegularScreen implements RegularScreen
 
     public function __set($name, $value){
         $this->{$name} = $value;
-        hd_print("$name=$name value=". is_array($value)? print_r($value, true) : $value);
+        //hd_print("$name=$name value=". is_array($value)? print_r($value, true) : $value);
         
         if ($name == "folder_views" ){
-            hd_print("folder_view");
+            //hd_print("folder_view");
             $this->set_default_folder_view_index_attr_name();
         }
     }
@@ -58,11 +58,11 @@ abstract class AbstractRegularScreen implements RegularScreen
 
     public function get_folder_view(MediaURL $media_url, &$plugin_cookies)
     {
-        // hd_print("----> count: " . count($this->folder_views));
+        // //hd_print("----> count: " . count($this->folder_views));
 
         $idx = $this->get_folder_view_index($plugin_cookies);
 
-        // hd_print("----> idx: $idx");
+        // //hd_print("----> idx: $idx");
 
         $folder_view = $this->folder_views[$idx];
 

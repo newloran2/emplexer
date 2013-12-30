@@ -146,7 +146,7 @@ abstract class AbstractVod implements Vod
 
     public function get_vod_info(MediaURL $media_url, &$plugin_cookies)
     {
-        hd_print(__METHOD__ . ': ' . print_r($media_url, true));
+        //hd_print(__METHOD__ . ': ' . print_r($media_url, true));
         $movie = $this->get_loaded_movie($media_url->movie_id, $plugin_cookies);
         if ($movie === null)
         {
@@ -218,7 +218,7 @@ abstract class AbstractVod implements Vod
 
         $this->do_add_favorite_movie($movie_id, $plugin_cookies);
 
-        hd_print('Added favorite movie ' . $movie_id);
+        //hd_print('Added favorite movie ' . $movie_id);
 
         array_unshift($this->fav_movie_ids, $movie_id);
         $this->fav_movie_ids_set[$movie_id] = true;
@@ -235,7 +235,7 @@ abstract class AbstractVod implements Vod
 
         $this->do_remove_favorite_movie($movie_id, $plugin_cookies);
 
-        hd_print('Removed favorite movie ' . $movie_id);
+        //hd_print('Removed favorite movie ' . $movie_id);
 
         $k = array_search($movie_id, $this->fav_movie_ids);
         if ($k !== false)

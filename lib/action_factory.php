@@ -263,7 +263,7 @@ class ActionFactory
 
     public static function notify($value)
     {
-        hd_print("notify=$value");
+        //hd_print("notify=$value");
     }
 
     public static function show_configuration_modal($title, &$plugin_cookies, $post_action= null){
@@ -310,7 +310,7 @@ class ActionFactory
         $defs = array();
         $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
         $xml = HD::getAndParseXmlFromUrl($plexLocation);
-        // hd_print(__METHOD__ . ';' . print_r($xml, true));
+        // //hd_print(__METHOD__ . ';' . print_r($xml, true));
         foreach ($xml->Directory as $directory) {
             foreach ($directory->Location as $location) {
                 $path = (string)$location->attributes()->path;
@@ -319,7 +319,7 @@ class ActionFactory
 
 
 
-                hd_print("antes " . $path. ' depois ' . $normalizedPath);
+                //hd_print("antes " . $path. ' depois ' . $normalizedPath);
 
 
                 //se já existir a chave e o valor for nfs usa a chave que já existe se não pega o valor do plex
@@ -337,7 +337,7 @@ class ActionFactory
                 // with \\machine syntax file location looks like \\DISKSTATION\Filmes2\Beasts.Of.The.Southern.Wild.2012.1080p.BluRay.x264-SPARKS [PublicHD]\beasts.of.the.southern.wild.2012.limited.1080p.bluray.x264-sparks.mkv
                 // when emplexer mount the smb path  any \ are convertered to / and \\ convertered to _
                 // if the c:\ path directly the path needed one / at end.
-//                hd_print("teste = " .  substr($normalizedPath , -1));
+//                //hd_print("teste = " .  substr($normalizedPath , -1));
                 if (substr($normalizedPath ,-1) === '/' && substr($value, -1) !== '/'){
                     $value .= '/';
                 }
@@ -372,7 +372,7 @@ class ActionFactory
         $defs = array();
         $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
         $xml = HD::getAndParseXmlFromUrl($plexLocation);
-        // hd_print(__METHOD__ . ';' . print_r($xml, true));
+        // //hd_print(__METHOD__ . ';' . print_r($xml, true));
         foreach ($xml->Directory as $directory) {
             foreach ($directory->Location as $location) {
                 //se já existir a chave e o valor for smb usa a chave que já existe se não pega o valor do plex
@@ -382,7 +382,7 @@ class ActionFactory
 
 
 
-                hd_print("antes " . $path. ' depois ' . $normalizedPath);
+                //hd_print("antes " . $path. ' depois ' . $normalizedPath);
 
                 if ($plugin_cookies->{$normalizedPath} && strpos($plugin_cookies->{$normalizedPath}, 'smb://') !== false){
                     $value = $plugin_cookies->{$normalizedPath};
@@ -397,7 +397,7 @@ class ActionFactory
                 // with \\machine syntax file location looks like \\DISKSTATION\Filmes2\Beasts.Of.The.Southern.Wild.2012.1080p.BluRay.x264-SPARKS [PublicHD]\beasts.of.the.southern.wild.2012.limited.1080p.bluray.x264-sparks.mkv
                 // when emplexer mount the smb path  any \ are convertered to / and \\ convertered to _
                 // if the c:\ path directly the path needed one / at end.
-//                hd_print("teste = " .  substr($normalizedPath , -1));
+//                //hd_print("teste = " .  substr($normalizedPath , -1));
                 if (substr($normalizedPath ,-1) === '/' && substr($value, -1) !== '/'){
                     $value .= '/';
                 }
@@ -631,7 +631,7 @@ class ActionFactory
 
         $plexLocation = 'http://' . $plugin_cookies->plexIp . ':' . $plugin_cookies->plexPort . '/library/sections';
         $xml = HD::getAndParseXmlFromUrl($plexLocation);
-        // hd_print(__METHOD__ . ';' . print_r($xml, true));
+        // //hd_print(__METHOD__ . ';' . print_r($xml, true));
         foreach ($xml->Directory as $directory) {
             foreach ($directory->Location as $location) {
                 //se já existir a chave e o valor for nfs usa a chave que já existe se não pega o valor do plex

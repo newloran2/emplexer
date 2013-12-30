@@ -43,9 +43,9 @@ class VodGenresScreen extends AbstractPreloadedRegularScreen
 
     public function handle_user_input(&$user_input, &$plugin_cookies)
     {
-        hd_print('Vod genres: handle_user_input:');
+        //hd_print('Vod genres: handle_user_input:');
         foreach ($user_input as $key => $value)
-            hd_print("  $key => $value");
+            //hd_print("  $key => $value");
 
         if ($user_input->control_id == 'select_genre')
         {

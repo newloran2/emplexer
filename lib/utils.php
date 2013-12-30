@@ -183,17 +183,17 @@ class HD
                 curl_setopt($ch, $k, $v);
         }
 
-        hd_print("HTTP fetching \nurl:'$url'...");
+        //hd_print("HTTP fetching \nurl:'$url'...");
 
         $content = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         $acceptedHeaders = array(200, 403);
-        hd_print('http_code = ' . $http_code);
+        //hd_print('http_code = ' . $http_code);
         if ( !in_array($http_code, $acceptedHeaders) )
         {
             $err_msg = "HTTP request failed ($http_code)";
-            hd_print($err_msg);
+            //hd_print($err_msg);
             HD::print_backtrace();
 
 
@@ -217,7 +217,7 @@ class HD
                 );
         }
 
-        hd_print("HTTP OK ($http_code)");
+        //hd_print("HTTP OK ($http_code)");
 
         curl_close($ch);
 
@@ -252,15 +252,16 @@ class HD
         $info = curl_getinfo($curl);
         curl_close($curl);
         $end =  microtime(true);
-        hd_print("executed head request to $url in " . ($end - $init));
+        //hd_print("executed head request to $url in " . ($end - $init));
         return $info;
     }
 
 
-    public static function http_post_document($url, $post_data, $opts = null)
+    public static function http_post_document($url, $post_data, $opts = array())
     {
         $post  = array(CURLOPT_POST => true,CURLOPT_POSTFIELDS => $post_data);
-        return self::http_get_document($url,array_merge($post, $opts));
+        print_r(array_merge($post, $opts));
+        return self::http_get_document($url,$post);
     }
 
 
@@ -272,8 +273,8 @@ class HD
 
         if ($xml === false)
         {
-            hd_print("Error: can not parse XML document.");
-            hd_print("XML-text: $doc.");
+            //hd_print("Error: can not parse XML document.");
+            //hd_print("XML-text: $doc.");
             throw new Exception('Illegal XML document');
         }
 
@@ -301,7 +302,7 @@ class HD
         $parse_time = $parse_end - $parse_start;
 
 
-        hd_print(__METHOD__ . ':' . " xml obtained in $get_time seconds and parsed in $parse_time seconds total =$time" );
+        //hd_print(__METHOD__ . ':' . " xml obtained in $get_time seconds and parsed in $parse_time seconds total =$time" );
         return $xml;
     }
 
@@ -333,7 +334,7 @@ class HD
 
             $mac_addr = trim($mac_addr);
 
-            hd_print("MAC Address: '$mac_addr'");
+            //hd_print("MAC Address: '$mac_addr'");
         }
 
         return $mac_addr;
@@ -374,7 +375,7 @@ class HD
 
     public static function print_backtrace()
     {
-        hd_print('Back trace:');
+        //hd_print('Back trace:');
         foreach (debug_backtrace() as $f)
         {
             hd_print(
@@ -410,7 +411,7 @@ class HD
                 $server['Ip' ] = $ip;
                 foreach ($data as $line ) {
                     if ($line != "" && $line != "\n" && (strpos($line, 'HTTP') === false)){
-                //echo "$line\n";
+                ////echo "$line\n";
                         $a= explode(':', $line);
 
                         if (count($a) >1){
