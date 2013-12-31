@@ -39,11 +39,11 @@ end
 GET('/', function(req, res)
 	print(req.client:getpeer())
 	res:add("erik")
-	
+
 end)
 
 GETM('^/startServer/([^/]+)$', function(req, res, name)
-  print(req.client:getpeer()) 
+  print(req.client:getpeer())
   res:add('startServer')
   table_print(req)
   register:startRegister(name)
@@ -59,7 +59,7 @@ GETM('^/startNotifier/([^/]+)/([^/]+)$', function (req, res, key, percentToDone 
     if not file then
       io.stderr:write(format("Error opening '%s': %s\n", arg[1], err))
       utils.exit(1)
-    else 
+    else
       for i=1,10 do
 
         print(file:lines())
@@ -70,23 +70,26 @@ GETM('^/startNotifier/([^/]+)/([^/]+)$', function (req, res, key, percentToDone 
 end)
 
 GET('/stopServer', function ( req, res )
-	print(req.client:getpeer())	
+	print(req.client:getpeer())
 	res:add('stopServer')
 	register:stopRegister()
 end)
 
 GET('/findServers' , function ( req, res )
 	print('findServers');
-	res:add (json.encode(register:getPlexServers()))	
+	res:add (json.encode(register:getPlexServers()))
 end)
 
+POST('/jsonrpc', function(req, res)
+  table_print(req:body())
+end)
 
 
 if arg[1] == 'socket' then
 	local sock = assert(io.unix.listen('socket', 666))
 	Hathaway(sock)
 else
-	Hathaway('*', arg[1] or '8080')
+	Hathaway('*', arg[1] or '3000')
 end
 utils.exit(0) -- otherwise open connections will keep us running
 

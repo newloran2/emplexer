@@ -14,7 +14,7 @@ _M = {}
 
 local plex ={}
 
-function plex:getPlexServers( )	
+function plex:getPlexServers( )
 	broadcast_string ="M-SEARCH * HTTP/1.1\r\n\r\n"
 	port =32414
 	ip="255.255.255.255"
@@ -31,7 +31,7 @@ function plex:getPlexServers( )
 			break;
 		else
 			v= a:gsub("\r\n\r\n", "\r\nHost: " .. b)
-			
+
 			a=stringUtils.split(v, "\r\n")
 			-- print (a[4])
 			p = {}
@@ -60,20 +60,20 @@ function plex:startRegister(serverName)
 	utils.spawn(function()
 
 		local hello_broadcast_string =
-"HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3000\r\nProduct: emplexer\r\nProtocol: xbmcjson\r\nVersion: 2.0"
+"HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 32400\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1"
 		local bye_broadcast_string ="BYE * HTTP/1.0\r\n"
 		local port =32413
 		local ip="255.255.255.255"
 		local response_buffer_len=4096
 		local sock = nil
-		
-		sock = socket.udp()	
+
+		sock = socket.udp()
 		sock:setoption('broadcast', true)
 		sock:settimeout(1)
 
 		while continue do
 			print ("chamando", collectgarbage("count"))
-			sock:sendto(hello_broadcast_string,ip, port)			
+			sock:sendto(hello_broadcast_string,ip, port)
 			sleep(5)
 		end
 		sock:sendto(bye_broadcast_string, ip, port)

@@ -1,6 +1,6 @@
-<?php  
+<?php
 
-class Client 
+class Client
 {
     private $plexIp   = '127.0.0.1';
     private $plexPort = '32400';
@@ -64,17 +64,21 @@ class Client
     }
 
     public function getThumbUrl($key, $with=250, $height=250){
+        if (!$height) $height = 250;
+        if (!$with) $with = 250;
         $url = $this->getUrl(null, $key);
         return sprintf("http://%s:%d/photo/:/transcode?width=%d&height=%d&url=%s", $this->plexIp, $this->plexPort,$with, $height, $url );
         // http://192.168.2.8:32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2F%3A%2Fresources%2Fmovie.png&width=150&height=150&X-Plex-Token=Fdxv1u7Rk97GspiQwqPy
     }
+
+
     public function getUrl($lastKey, $newKey)
-    {    
+    {
         if (strpos($newKey, "http") === 0){
             return $newKey;
         }
         if (strpos($newKey, "/") !== 0){
-            $url = sprintf("http://%s:%d%s/%s", $this->plexIp, $this->plexPort, $lastKey, $newKey);    
+            $url = sprintf("http://%s:%d%s/%s", $this->plexIp, $this->plexPort, $lastKey, $newKey);
         } else {
             $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
         }

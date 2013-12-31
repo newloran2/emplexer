@@ -1,28 +1,27 @@
 
 <?php
-    
+
     // namespace classes\emplexer;
     // require_once 'lib/default_dune_plugin_fw.php';
     // require_once 'Plex/Client.php';
-    
-    require_once 'AutoLoad.php';
 
+    require_once 'AutoLoad.php';
 
     class Emplexer implements DunePlugin {
 
         public $stream_name;
-        
-        public function get_folder_view($media_url, &$plugin_cookies) {            
+
+        public function get_folder_view($media_url, &$plugin_cookies) {
             Config::getInstance()->setPluginCookies($plugin_cookies);
             switch ($media_url) {
                 case 'main':
                     $menu = new PlexScreen();
-                    break;                
+                    break;
                 default:
                     $menu =  new PlexScreen($media_url);
                     break;
             }
-            
+
             return $menu->generateScreen();
         }
 
@@ -46,7 +45,7 @@
             // if (strpos($media_url, "stream_name:") === 0) {
             //     $stream = new GamePlay(substr($media_url, 12),$this->stream_name);
             //     return $stream->generatePlayInfo();
-            // }   
+            // }
         }
 
         public function get_vod_stream_url($media_url, &$plugin_cookies) {
