@@ -1,0 +1,4 @@
+templates:
+
+suporte para json encadeado.
+modo de adicionar um elemento condicionalmente: ex colocar um icone especifico caso o tipo do item seja movie.

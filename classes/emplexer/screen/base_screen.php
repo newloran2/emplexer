@@ -64,7 +64,7 @@ abstract class BaseScreen
 	protected function templateMovie(){
 
 		$a = TemplateManager::getInstance()->getTemplate("movie", $this->path,  $this->data);
-		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));
 		$a['data']['actions'] = $actions;
 		return $a;
 	}

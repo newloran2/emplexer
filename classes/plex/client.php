@@ -74,8 +74,18 @@ class Client
 
     public function getUrl($lastKey, $newKey)
     {
+        // hd_print("parametros = $lastKey, $newKey");
         if (strpos($newKey, "http") === 0){
             return $newKey;
+        }
+
+        if (strpos($lastKey, "http") === 0 && strpos($newKey, "/") === 0){
+            $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
+            return $url;
+        }
+
+        if (strpos($lastKey, "http") === 0 && strpos($newKey, "/") !== 0){
+            return sprintf("%s/%s", $lastKey, $newKey);
         }
         if (strpos($newKey, "/") !== 0){
             $url = sprintf("http://%s:%d%s/%s", $this->plexIp, $this->plexPort, $lastKey, $newKey);
@@ -83,7 +93,7 @@ class Client
             $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
         }
 
-        // //echo ("url = $url\n");
+        // echo ("url = $url\n");
         return $url;
     }
     public function getAndParse($url){

@@ -3,13 +3,37 @@
     "items": {
       "caption": "plex_item_field:titleSort||plex_item_field:title",
       "view_item_params": {
-        "icon_path": "plex_thumb_item_field:thumb:400:400||plex_thumb_field:thumb:400:400"
+        "icon_path": "plex_image_item_field:banner||plex_thumb_item_field:thumb:200:300"
       }
     },
     "view_params": {
-      "num_cols": 5,
-      "num_rows": 2,
-      "paint_sandwich": false,
+      "num_cols": 1,
+      "num_rows": 20,
+      "paint_path_box": false,
+      "paint_scrollbar": false,
+      "paint_help_line": false,
+      "paint_details": false,
+      "content_box_x": 0,
+      "content_box_y": 0,
+      "content_box_width": 1920,
+      "content_box_height": 1080
+    },
+    "base_view_item_params": {
+      "item_paint_icon": false,
+      "item_paint_caption": true,
+      "item_layout": 0
+    },
+    "not_loaded_view_item_params": {}
+  },
+  "secondary": {
+    "inherits": "base"
+  },
+  "movie": {
+    "inherits": "base",
+    "view_params": {
+      "num_cols": 7,
+      "num_rows": 3,
+      "paint_sandwich": true,
       "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
       "sandwich_mask": "cut_icon://{name=sandwich_mask}",
       "sandwich_cover": "cut_icon://{name=sandwich_cover}",
@@ -17,55 +41,43 @@
       "sandwich_height": 300,
       "sandwich_icon_upscale_enabled": true,
       "sandwich_icon_keep_aspect_ratio": true,
-      "paint_details": true,
-      "zoom_detailed_icon": true,
       "paint_item_info_in_details": true,
-      "item_detailed_info_font_size": "small",
-      "optimize_full_screen_background": false,
-      "background_order": "before_all",
-      "paint_icon_selection_box": false
+      "paint_icon_selection_box": false,
+      "item_paint_caption_within_icon": true
     },
     "base_view_item_params": {
+      "item_paint_icon": true,
       "item_padding_top": 0,
       "item_padding_bottom": 0,
       "icon_valign": 1,
       "item_paint_caption": false,
       "icon_scale_factor": 1,
-      "icon_sel_scale_factor": 1.2
+      "icon_sel_scale_factor": 1.2,
+      "item_layout": 1
     },
     "not_loaded_view_item_params": {
-      "icon_path": "plugin_file://icons/poster.png",
-      "item_detailed_icon_path": "plugin_file://icons/poster.png",
-      "item_paint_caption_within_icon": true,
-      "item_caption_within_icon_color": "white",
-      "item_caption_font_size": 1
+      "icon_path": "plugin_file://icons/poster.png"
     }
   },
-  "secondary": {
-    "inherits": "base",
+  "show": {
+    "inherits": "movie",
     "view_params": {
-      "unset": true,
-      "num_cols": 1,
-      "num_rows": 11
-    }
-  },
-  "movie": {
-    "inherits": "base",
-    "view_params": {
-      "unset": true,
-      "num_cols": 10,
-      "num_rows": 11
+      "num_cols": 2,
+      "num_rows": 5,
+      "sandwich_width": 800,
+      "sandwich_height": 150
     }
   },
   "season": {
-    "inherits": "base",
-    "view_params": {
-      "unset": false,
-      "num_cols": 10,
-      "num_rows": 11
-    },
-    "not_loaded_view_item_params": {
-        "unset": true
+    "inherits": "movie"
+  },
+  "episode": {
+    "inherits": "movie",
+    "view_params" :{
+      "num_cols": 6,
+      "num_rows": 5,
+      "sandwich_width": 250,
+      "sandwich_height": 150
     }
   }
 }

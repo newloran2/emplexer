@@ -63,8 +63,10 @@ class TemplateManager
         foreach ($data as $item)
         {
             $viewItemParams = array();
-            foreach ($this->templateJson->base->items->view_item_params as $key => $value) {
-                $viewItemParams[$key] = $this->getPlexField($value, $currentPath,   $item, $data);
+            if (isset($this->templateJson->base->items->view_item_params)){
+                foreach ($this->templateJson->base->items->view_item_params as $key => $value) {
+                    $viewItemParams[$key] = $this->getPlexField($value, $currentPath,   $item, $data);
+                }
             }
             $folderItems[] = array(
                 PluginRegularFolderItem::media_url          => Client::getInstance()->getUrl($currentPath , (string)$item->attributes()->key),
