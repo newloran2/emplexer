@@ -3,9 +3,10 @@
 /**
 *
 */
-class SetupScreen implements ScreenInterface
+class SetupScreen implements ScreenInterface, TemplateCallbackInterface
 {
     protected $screenName;
+    private $data=array();
     function __construct($name='rootSetup') {
         if (strstr(strtolower($name), ':' )){ //necessário chamar o metodo primeiro
             $s = explode(':', $name);
@@ -14,6 +15,8 @@ class SetupScreen implements ScreenInterface
         } else {
             $this->screenName =  $name;
         }
+
+        $this->data= array("plexSetup"=>"Plex Setup");
     }
 
     public function generateScreen(){
@@ -26,46 +29,32 @@ class SetupScreen implements ScreenInterface
         return $this->$fun();
     }
 
+
+    public function getField($name, $item){
+        if ($item){
+            return $item;
+        }
+        return isset($this->data[$name])?$this->data[$name] :  $name ;
+    }
+    public function getData(){
+        return $this->data;
+
+    }
+    public function getMediaUrl($item){
+        // hd_print(__METHOD__ );
+        foreach ($this->data as $key => $value) {
+            if ($value === $item){
+                return $key;
+            }
+        }
+    }
+
+
     public function getRootSetup(){
-      $itens = array();
-        $folderItems = array();
-        $folderItems[] = array(
-            PluginRegularFolderItem::media_url          => "plexSetup",
-            PluginRegularFolderItem::caption            => "Plex Setup" ,
-            PluginRegularFolderItem::view_item_params   => array()
-        );
-
-        // var_dump($folderItems);
-
-        $availableTemplates = array(
-            PluginRegularFolderView::async_icon_loading             => true,
-            PluginRegularFolderView::initial_range                  =>
-            array(
-                PluginRegularFolderRange::items                         =>  $folderItems,
-                PluginRegularFolderRange::total                         =>  count($folderItems),
-                PluginRegularFolderRange::count                         =>  count($folderItems),
-                PluginRegularFolderRange::more_items_available          =>  false,
-                PluginRegularFolderRange::from_ndx                      =>  0
-                ),
-            PluginRegularFolderView::view_params                    => array (
-                ViewParams::num_cols  => 1,
-                ViewParams::num_rows  => 10
-            ),
-
-            PluginRegularFolderView::base_view_item_params          => array(
-            ),
-            PluginRegularFolderView::not_loaded_view_item_params    => array(),
-            PluginRegularFolderView::actions => array(
-                GUI_EVENT_KEY_ENTER => array(
-                    GuiAction::handler_string_id => PLUGIN_OPEN_FOLDER_ACTION_ID)
-            )
-        );
-
-        $a = array(
-            PluginFolderView::view_kind                             =>  PLUGIN_FOLDER_VIEW_REGULAR,
-            PluginFolderView::data                                  => $availableTemplates
-        );
-        return $a;
+     $a = TemplateManager::getInstance()->getTemplate("base", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+    $actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => PLUGIN_OPEN_FOLDER_ACTION_ID));
+    $a['data']['actions'] = $actions;
+    return $a;
     }
 
 

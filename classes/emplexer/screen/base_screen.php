@@ -46,41 +46,41 @@ abstract class BaseScreen implements TemplateCallbackInterface
 		var_dump($data);
 	}
 	protected function template(){
-		$a = TemplateManager::getInstance()->getTemplate("base", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("base", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;
 	}
 	protected function templateSecondary(){
-		$a = TemplateManager::getInstance()->getTemplate("secondary", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("secondary", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;
 	}
 	protected function templateMovie(){
 
-		$a = TemplateManager::getInstance()->getTemplate("movie", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("movie", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));
 		$a['data']['actions'] = $actions;
 		return $a;
 	}
 
 	protected function templateShow(){
-		$a = TemplateManager::getInstance()->getTemplate("show", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("show", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;
 	}
 
 	protected function templateSeason(){
-		$a = TemplateManager::getInstance()->getTemplate("season", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("season", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;
 	}
 
 	protected function templateEpisode(){
-		$a = TemplateManager::getInstance()->getTemplate("episode", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("episode", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));
 		$a['data']['actions'] = $actions;
 		return $a;
@@ -88,7 +88,7 @@ abstract class BaseScreen implements TemplateCallbackInterface
 
 	protected function templateArtist(){
 
-		$a = TemplateManager::getInstance()->getTemplate("artist", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("artist", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;
@@ -97,7 +97,7 @@ abstract class BaseScreen implements TemplateCallbackInterface
 
 	protected function templateAlbum()
 	{
-		$a = TemplateManager::getInstance()->getTemplate("album", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("album", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;
@@ -105,7 +105,7 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	}
 	protected function templateTrack()
 	{
-		$a = TemplateManager::getInstance()->getTemplate("track", $this->path, array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$a = TemplateManager::getInstance()->getTemplate("track", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;

@@ -17,7 +17,7 @@
       "content_box_y": 0,
       "content_box_width": 1920,
       "content_box_height": 1080,
-      "background_path" : "plex_image_item_field:art"
+      "background_path": "plex_image_item_field:art"
     },
     "base_view_item_params": {
       "item_paint_icon": false,
@@ -85,13 +85,16 @@
       "num_rows": 5,
       "sandwich_width": 250,
       "sandwich_height": 150
-    }
-  },
-  "not_loaded_view_item_params": {
-      "item_caption_font_size" : 1
+    },
+    "not_loaded_view_item_params": {
+      "item_caption_font_size": 1
     },
     "base_view_item_params": {
-      "item_caption_font_size" : 1,
-      "icon_path" :  null
+      "item_caption_font_size": 1,
+      "icon_path": null
     }
+  },
+  "config" :{
+
+  }
 }

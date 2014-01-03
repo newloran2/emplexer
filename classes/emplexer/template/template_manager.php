@@ -57,7 +57,7 @@ class TemplateManager
 
     }
 
-    public function getTemplate($name, $currentPath , $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){
+    public function getTemplate($name, $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){
         $itens = array();
         $folderItems = array();
         $data = call_user_func($getDataCallback);
