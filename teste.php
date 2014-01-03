@@ -1,33 +1,22 @@
 <?php
-$a = "titulo = plex_item_field:title  plex_item_field:title  plex_item_field:title2||plex_field:identifier";
 
-$title = "erik";
-$title2= "clemente";
+require_once 'AutoLoad.php';
 
-$items =  explode("||", $a);
+define('ROOT_DIR', __DIR__);
 
-// print_r($items);
 
-foreach ($items as $value) {
-    // echo ("value = $value\n");
-    $ret = array();
-    preg_match_all("/plex_item_field:[a-zA-Z0-9]+/", $value, $ret);
-    $ret = array_unique($ret[0]);
-    if ($ret && count ($ret) >0 ){
-        print_r($ret);
-    }
+$nfs = new NFS('192.168.2.9');
+$shares = $nfs->getAllNfsPaths();
+print_r($shares);
 
-    $str = "";
-    $newArray = array();
-    foreach ($ret as $v) {
-        $s = explode(":", $v);
-        // print_r($s);
-        $newArray[] = $s[1];
-        // print_r($ret);
-        // $str =
+// echo  explode(":", "192.168.2.9:/volume1/Animes")[1];
+$share = current($shares);
+echo "share = $share\n";
+$nfs->mountNfs($share);
 
-    }
-    print_r($newArray);
-}
+echo !is_null($nfs->isMonted($share)) ? " montado\n" : "Não montado \n";
+$nfs->umountNfs($share);
+echo !is_null($nfs->isMonted($share)) ? " montado\n" : "Não montado \n";
+
 
 ?>

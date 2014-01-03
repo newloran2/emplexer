@@ -1,4 +1,4 @@
-<?php  
+<?php
 	header("Content-Type: application/json");
 	 // error_reporting(E_ALL);
  	// ini_set("display_errors", 1);
@@ -24,13 +24,14 @@
 
 
 	$optionType = isset($data->op_type_code) ?  $data->op_type_code : 'get_folder_view';
-
-	if (isset($data->input_data->selected_media_url)){		
-		$optionMediaUrl = $data->input_data->selected_media_url;	
+	 if (isset($data->input_data->media_url)){
+	 	$optionMediaUrl = $data->input_data->media_url;
+	 }else if (isset($data->input_data->selected_media_url)){
+		$optionMediaUrl = $data->input_data->selected_media_url;
 	}else {
-		$optionMediaUrl = isset($data->input_data->media_url) ? $data->input_data->media_url :  'main';	
+		$optionMediaUrl = 'main';
 	}
-	
+
 
 
 
@@ -55,14 +56,14 @@
 	// print (DefaultDunePluginFw::$plugin_class_name ) . "\n";
 	// DefaultDunePluginFw::$instace->call_plugin($output);
 	// print_r(DunePluginFw::$instance);
-	 // {"op_type_code":"get_folder_view","op_id":"1","input_data":{"media_url":"main_menu"},"plugin_cookies":{}}	
+	 // {"op_type_code":"get_folder_view","op_id":"1","input_data":{"media_url":"main_menu"},"plugin_cookies":{}}
 
 function convert($size)
  {
     $unit=array('b','kb','mb','gb','tb','pb');
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
- }	
+ }
 
-// //echo ("memoria = " .  convert(memory_get_peak_usage(true)) . "\n");
+// echo ("memoria = " .  convert(memory_get_peak_usage(true)) . "\n");
 
 ?>

@@ -35,7 +35,7 @@ class TemplateManager
     }
 
 
-    private function getTag($template, $tag, $currentPath, &$data){
+    private function getTag($template, $tag, $getFieldCallBack, $item = null){
         if (!isset($this->templateJson->{$template})){
             $template = "base";
         }
@@ -43,12 +43,12 @@ class TemplateManager
         $ret =  array();
         $unset = isset($temp->{$tag}->unset) && $temp->{$tag}->unset == true ;
         if (isset($temp->inherits) && !$unset){
-            $ret = $this->getTag($temp->inherits, $tag, $currentPath, $data);
+            $ret = $this->getTag($temp->inherits, $tag, $getFieldCallBack , $item);
         }
         if (isset($temp->{$tag})){
             foreach ($temp->{$tag} as $key => $value) {
                 if ($key  !== "unset"){
-                    $ret[$key]  = $value;
+                    $ret[$key]  = call_user_func_array($getFieldCallBack,array($value, $item));
                 }
             }
         }
@@ -57,20 +57,21 @@ class TemplateManager
 
     }
 
-    public function getTemplate($name, $currentPath, &$data){
+    public function getTemplate($name, $currentPath , $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){
         $itens = array();
         $folderItems = array();
-        foreach ($data as $item)
+        $data = call_user_func($getDataCallback);
+        foreach ( $data as $item)
         {
             $viewItemParams = array();
             if (isset($this->templateJson->base->items->view_item_params)){
                 foreach ($this->templateJson->base->items->view_item_params as $key => $value) {
-                    $viewItemParams[$key] = $this->getPlexField($value, $currentPath,   $item, $data);
+                    $viewItemParams[$key] =  call_user_func_array($getFieldCallBack,array($value, $item));
                 }
             }
             $folderItems[] = array(
-                PluginRegularFolderItem::media_url          => Client::getInstance()->getUrl($currentPath , (string)$item->attributes()->key),
-                PluginRegularFolderItem::caption            => $this->getPlexField($this->templateJson->base->items->caption, $currentPath,  $item, $data) ,
+                PluginRegularFolderItem::media_url          => call_user_func($getMediaUrlCallback, $item),
+                PluginRegularFolderItem::caption            => call_user_func_array($getFieldCallBack,array($this->templateJson->base->items->caption, $item)) ,
                 PluginRegularFolderItem::view_item_params  => $viewItemParams
             );
         }
@@ -85,9 +86,9 @@ class TemplateManager
                 PluginRegularFolderRange::more_items_available          =>  false,
                 PluginRegularFolderRange::from_ndx                      =>  0
                 ),
-            PluginRegularFolderView::view_params                    => $this->getTag($name, "view_params",  $currentPath, $data),
-            PluginRegularFolderView::base_view_item_params          => $this->getTag($name, "base_view_item_params",  $currentPath, $data),
-            PluginRegularFolderView::not_loaded_view_item_params    => $this->getTag($name, "not_loaded_view_item_params",  $currentPath, $data),
+            PluginRegularFolderView::view_params                    => $this->getTag($name, "view_params",  $getFieldCallBack),
+            PluginRegularFolderView::base_view_item_params          => $this->getTag($name, "base_view_item_params",  $getFieldCallBack),
+            PluginRegularFolderView::not_loaded_view_item_params    => $this->getTag($name, "not_loaded_view_item_params",  $getFieldCallBack),
         );
 
         $a = array(
@@ -96,53 +97,6 @@ class TemplateManager
         );
         return $a;
 
-    }
-
-
-
-    /**
-     * parse plex_fields from emplexer template
-     *
-     * @param  string $field
-     * @param  string $currentPath
-     * @param  array $item
-     * @param  array $data
-     * @return string
-     */
-    public function getPlexField($field, $currentPath, &$item, &$data){
-        $fields = explode("||", $field);
-        foreach ($fields as $value) {
-            $field =  explode(":", $value);
-            if (count($field) <=1){
-              return $field[0];
-          }
-
-          // var_dump($fields);
-            if ($field[0] === "plex_field"){
-                if (!isset($data->attributes()->{$field[1]})) continue;
-                $ret = $data->attributes()->{$field[1]};
-            } else if ($field[0] === "plex_thumb_field") {
-                // var_dump($data->attributes()->{$field[1]});
-                if (!isset($data->attributes()->{$field[1]})) continue;
-                $ret = Client::getInstance()->getThumbUrl($data->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
-            } else  if ($field[0] === "plex_image_field"){
-                if (!isset($data->attributes()->{$field[1]})) continue;
-                $ret = Client::getInstance()->getUrl($currentPath, $data->attributes()->{$field[1]});
-            } else if ($field[0] === "plex_thumb_item_field") {
-                // var_dump($data->attributes()->{$field[1]});
-                if (!isset($item->attributes()->{$field[1]})) continue;
-                $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
-            } else  if ($field[0] === "plex_image_item_field"){
-                if (!isset($item->attributes()->{$field[1]})) continue;
-                $ret = Client::getInstance()->getUrl($currentPath, $item->attributes()->{$field[1]});
-            } else if ($field[0] === "plex_item_field"){
-                if (!isset($item->attributes()->{$field[1]})) continue;
-                $ret = $item->attributes()->{$field[1]};
-            }
-            if (isset($ret)){
-                return (string)$ret;
-            }
-        }
     }
 
 }

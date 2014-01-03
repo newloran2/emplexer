@@ -2,3 +2,14 @@ templates:
 
 suporte para json encadeado.
 modo de adicionar um elemento condicionalmente: ex colocar um icone especifico caso o tipo do item seja movie.
+o templateManager precisa estar desatrelado dos campos do plex, pois outras telas precisarão utilizar-lo.
+
+
+subtitleManager:
+    Criar classe abstrata para download de legendas.
+    Essa classe deve prover uma lista de metodos abstratos que seriam a parte de comunicação com o servidor.
+    Essa classe deve prover uma lista de metodos que seriam usadas por todas (ou maioria) das classes que a implementarem (ex: criação do hash do arquivo.)
+
+
+PlayBackManager:
+    Criar classe que centralize o parse e qualquer modificação de url para playback.

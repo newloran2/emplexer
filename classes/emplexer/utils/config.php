@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 
 /**
 * Class to handle all dune plugin_cookies
 */
-class Config {	
-	
+class Config {
+
 	// private const $pluginCookiesFile = '/config/emplexer_plugin_cookies.properties'
 	private $pluginCookies;
 	public static $instance;
@@ -29,9 +29,9 @@ class Config {
 
 	private function read_conf_file($conf_file_path)
     {
-        
+
         $lines = file($conf_file_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        
+
         if ($lines === false)
         {
             // //hd_print("Configuration file '$conf_file_path' does not exist.");
@@ -84,10 +84,10 @@ class Config {
 	}
 
 	public function __destruct(){
-		$data = null;
-		foreach ($this->pluginCookies as $key => $value) {
-			$data .= "$key = $value\n";
-		}
+		// $data = null;
+		// foreach ($this->pluginCookies as $key => $value) {
+		// 	$data .= "$key = $value\n";
+		// }
 
 		// file_put_contents("/config/emplexer_plugin_cookies.properties", $data);
 	}

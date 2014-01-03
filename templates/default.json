@@ -9,21 +9,24 @@
     "view_params": {
       "num_cols": 1,
       "num_rows": 20,
-      "paint_path_box": false,
+      "paint_path_box": true,
       "paint_scrollbar": false,
       "paint_help_line": false,
       "paint_details": false,
       "content_box_x": 0,
       "content_box_y": 0,
       "content_box_width": 1920,
-      "content_box_height": 1080
+      "content_box_height": 1080,
+      "background_path" : "plex_image_item_field:art"
     },
     "base_view_item_params": {
       "item_paint_icon": false,
       "item_paint_caption": true,
       "item_layout": 0
     },
-    "not_loaded_view_item_params": {}
+    "not_loaded_view_item_params": {
+      "item_paint_caption_within_icon": true
+    }
   },
   "secondary": {
     "inherits": "base"
@@ -66,6 +69,10 @@
       "num_rows": 5,
       "sandwich_width": 800,
       "sandwich_height": 150
+    },
+    "not_loaded_view_item_params": {
+      "unset": true,
+      "item_paint_caption_within_icon": true
     }
   },
   "season": {
@@ -73,11 +80,18 @@
   },
   "episode": {
     "inherits": "movie",
-    "view_params" :{
+    "view_params": {
       "num_cols": 6,
       "num_rows": 5,
       "sandwich_width": 250,
       "sandwich_height": 150
     }
-  }
+  },
+  "not_loaded_view_item_params": {
+      "item_caption_font_size" : 1
+    },
+    "base_view_item_params": {
+      "item_caption_font_size" : 1,
+      "icon_path" :  null
+    }
 }

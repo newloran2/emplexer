@@ -97,8 +97,7 @@ class Client
         return $url;
     }
     public function getAndParse($url){
-        $data =  $this->get($url);
-        return simplexml_load_string($data);
+        return new SimpleXMLElement($url, 0, true);
     }
 }
 
