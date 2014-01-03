@@ -34,13 +34,41 @@ class TemplateManager
         return self::$instance;
     }
 
+    private function findTag($name, $json){
+        $a = explode(":",$name);
+        // echo "count = $name = " .  (string) count($a) . "\n";
+        if (count($a) == 1) return $json->{$a[0]};
+        for ($i=1 ; $i < count($a) ; $i++) {
+            return $this->findTag(implode(":", array_slice($a, $i)), $json->{$a[$i-1]});
+        }
+    }
 
-    private function getTag($template, $tag, $getFieldCallBack, $item = null){
-        if (!isset($this->templateJson->{$template})){
+    //item:view_item_params
+    private function getTag($template, $tag, $getFieldCallBack, $item = null, $json=null){
+        if (!$json)
+            $json = $this->templateJson;
+
+        // hd_print("template = $template , tag = $tag");
+        // var_dump($json);
+        if (!isset($json->{$template})){
             $template = "base";
         }
-        $temp = $this->templateJson->{$template};
+
+        // var_dump($template);
+        // var_dump(gettype($json));
+        $temp = $json->{$template};
+
+
+        // var_dump($temp);
+
+
+
         $ret =  array();
+
+
+
+
+
         $unset = isset($temp->{$tag}->unset) && $temp->{$tag}->unset == true ;
         if (isset($temp->inherits) && !$unset){
             $ret = $this->getTag($temp->inherits, $tag, $getFieldCallBack , $item);
@@ -48,7 +76,21 @@ class TemplateManager
         if (isset($temp->{$tag})){
             foreach ($temp->{$tag} as $key => $value) {
                 if ($key  !== "unset"){
-                    $ret[$key]  = call_user_func_array($getFieldCallBack,array($value, $item));
+                    if (gettype($value) === "object"){
+                        // var_dump($value);
+                        $a = new ArrayObject(array("base" => new ArrayObject(array($key=> $value),ArrayObject::ARRAY_AS_PROPS)), ArrayObject::ARRAY_AS_PROPS);
+                        // var_dump($a);
+
+                        // var_dump($a->base);
+                        $ret [$key] =  $this->getTag($template, $key, $getFieldCallBack, $item , $a);
+                        // var_dump($a);
+
+                        // var_dump($this->findTag("$template:$tag:$key", $value));
+                        // hd_print("template = $template key = $key, tag = $tag");
+                        // var_dump($ret[$key]);
+                    } else {
+                        $ret[$key]  = call_user_func_array($getFieldCallBack,array($value, $item));
+                    }
                 }
             }
         }
@@ -63,17 +105,18 @@ class TemplateManager
         $data = call_user_func($getDataCallback);
         foreach ( $data as $item)
         {
-            $viewItemParams = array();
-            if (isset($this->templateJson->base->items->view_item_params)){
-                foreach ($this->templateJson->base->items->view_item_params as $key => $value) {
-                    $viewItemParams[$key] =  call_user_func_array($getFieldCallBack,array($value, $item));
-                }
-            }
-            $folderItems[] = array(
-                PluginRegularFolderItem::media_url          => call_user_func($getMediaUrlCallback, $item),
-                PluginRegularFolderItem::caption            => call_user_func_array($getFieldCallBack,array($this->templateJson->base->items->caption, $item)) ,
-                PluginRegularFolderItem::view_item_params  => $viewItemParams
-            );
+            // $viewItemParams = array();
+            // if (isset($this->templateJson->base->items->view_item_params)){
+            //     foreach ($this->templateJson->base->items->view_item_params as $key => $value) {
+            //         $viewItemParams[$key] =  call_user_func_array($getFieldCallBack,array($value, $item));
+            //     }
+            // }
+            // $folderItems[] = array(
+            //     PluginRegularFolderItem::media_url          => call_user_func($getMediaUrlCallback, $item),
+            //     PluginRegularFolderItem::caption            => call_user_func_array($getFieldCallBack,array($this->templateJson->base->items->caption, $item)) ,
+            //     PluginRegularFolderItem::view_item_params  => $viewItemParams
+            // );
+            $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item);
         }
 
         $availableTemplates = array(

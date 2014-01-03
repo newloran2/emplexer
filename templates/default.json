@@ -2,6 +2,7 @@
   "base": {
     "items": {
       "caption": "plex_item_field:titleSort||plex_item_field:title",
+      "media_url": "plex_image_item_field:key",
       "view_item_params": {
         "icon_path": "plex_image_item_field:banner||plex_thumb_item_field:thumb:200:300"
       }
@@ -76,7 +77,12 @@
     }
   },
   "season": {
-    "inherits": "movie"
+    "inherits": "movie",
+    "items": {
+      "view_item_params": {
+        "icon_path": "plex_thumb_item_field:thumb:200:300||plex_thumb_field:thumb:200:300"
+      }
+    }
   },
   "episode": {
     "inherits": "movie",
@@ -94,7 +100,5 @@
       "icon_path": null
     }
   },
-  "config" :{
-
-  }
+  "config": {}
 }

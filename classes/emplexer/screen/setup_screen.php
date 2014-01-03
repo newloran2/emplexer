@@ -16,7 +16,11 @@ class SetupScreen implements ScreenInterface, TemplateCallbackInterface
             $this->screenName =  $name;
         }
 
-        $this->data= array("plexSetup"=>"Plex Setup");
+        $this->data= array(
+            "plexSetup"=>"Plex Setup",
+            "pathConversionSetup" => "Path Conversion",
+            "resumeSetup" => "Resume Setup"
+        );
     }
 
     public function generateScreen(){
@@ -68,6 +72,7 @@ class SetupScreen implements ScreenInterface, TemplateCallbackInterface
         //     $serverPairs[$name] = $ip ;
 
         // }
+        //
 
         $controls = array();
         $controls[] =array(

@@ -64,6 +64,6 @@ function convert($size)
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
  }
 
-// echo ("memoria = " .  convert(memory_get_peak_usage(true)) . "\n");
+// echo ("memoria = " .  memory_get_peak_usage(true) . "\n");
 
 ?>
