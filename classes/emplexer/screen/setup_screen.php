@@ -34,10 +34,23 @@ class SetupScreen implements ScreenInterface, TemplateCallbackInterface
     }
 
 
-    public function getField($name, $item){
-        if ($item){
-            return $item;
+    public function getField($key, $name){
+        // hd_print("$key = $name");
+
+        switch ($key) {
+            case '{{key}}':
+                return array_search($name, $this->data);
+                break;
+            case '{{value}}':
+                return $name;
+                break;
+            default:
+                return $key;
+                break;
         }
+        // if ($item){
+        //     return $item;
+        // }
         return isset($this->data[$name])?$this->data[$name] :  $name ;
     }
     public function getData(){
@@ -55,7 +68,7 @@ class SetupScreen implements ScreenInterface, TemplateCallbackInterface
 
 
     public function getRootSetup(){
-     $a = TemplateManager::getInstance()->getTemplate("base", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+     $a = TemplateManager::getInstance()->getTemplate("config", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
     $actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => PLUGIN_OPEN_FOLDER_ACTION_ID));
     $a['data']['actions'] = $actions;
     return $a;

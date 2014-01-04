@@ -2,57 +2,35 @@
 
 require_once 'AutoLoad.php';
 
-define('ROOT_DIR', __DIR__);
+
+$a = new SimpleXMLElement("http://127.0.0.1/teste.xml", 0, true);
+// $a = new SimpleXMLElement("http://192.168.2.8:32400/library/sections/2/all", 0, true);
 
 
-// $nfs = new NFS('192.168.2.9');
-// $shares = $nfs->getAllNfsPaths();
-// print_r($shares);
+$b = '<dwml>
+  <data>
+    <location>
+      <location-key>point1</location-key>
+        <point latitude="37.39" longitude="-122.07"></point>
+      </location>
+  </data>
+</dwml>';
 
-// // echo  explode(":", "192.168.2.9:/volume1/Animes")[1];
-// $share = current($shares);
-// echo "share = $share\n";
-// $nfs->mountNfs($share);
+$b = new SimpleXMLElement($b);
 
-// echo !is_null($nfs->isMonted($share)) ? " montado\n" : "Não montado \n";
-// $nfs->umountNfs($share);
-// echo !is_null($nfs->isMonted($share)) ? " montado\n" : "Não montado \n";
+// $lats =  $b->xpath('/dwml/data/location/point/@latitude');
+// echo $lats[0];
 
-$templateFile = ROOT_DIR . "/templates/default.json";
-$templateJson = json_decode(file_get_contents($templateFile));
-// function tag($name, $json){
-//     $a = explode(":",$name);
-//     // print_r($a);
-//     echo "count = $name = " .  (string) count($a) . "\n";
-//     if (count($a) == 1) return $json->{$a[0]};
-//     for ($i=1 ; $i < count($a) ; $i++) {
-//         // echo "name = " . $a[$i] . "\n";
-//         // print_r(array_slice($a, $i));
-//         return tag(implode(":", array_slice($a, $i)), $json->{$a[$i-1]});
-//     }
-// }
+// $dom = dom_import_simplexml($a);
+
+// $dom = $dom->ownerDocument;
+// $domXpath = new DOMXPath($dom);
 
 
 
-// // echo gettype($templateJson->base->items->view_item_params);
-// //
+// print_r($domXpath->query('/*/@key'));
 
 
-// print_r(tag("base:items:view_item_params:icon_path", $templateJson));
+echo $a->xpath('/*/@key')[0];
 
-
-
-$a = $templateJson->base->items->view_item_params;
-
-$c = new ArrayObject(array("base" => new ArrayObject(array("view_item_params"=> $a),ArrayObject::ARRAY_AS_PROPS)), ArrayObject::ARRAY_AS_PROPS);
-
-// echo implode(":", array("a" , "c"));
-
-print_r($c);
-
-print_r($c->base->view_item_params);
-
-
-
-
-?>
+// print_r(memory_get_peak_usage());

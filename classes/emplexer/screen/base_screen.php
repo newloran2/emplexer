@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 /**
 * Base Menu class for emplexer

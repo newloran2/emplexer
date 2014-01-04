@@ -3,6 +3,8 @@
 class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallbackInterface
 {
 	public function generateScreen(){
+        // print_r($this->data);
+
 		$viewGroup = (string)$this->data->attributes()->viewGroup;
 		if (!$viewGroup && strstr($this->path, 'metadata')){
 			$viewGroup = 'play';
@@ -35,15 +37,13 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         foreach ($fields as $value) {
             $field =  explode(":", $value);
             if (count($field) <=1){
-              return $field[0];
+              return $name;
           }
 
-          // var_dump($fields);
             if ($field[0] === "plex_field"){
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
                 $ret = $this->data->attributes()->{$field[1]};
             } else if ($field[0] === "plex_thumb_field") {
-                // var_dump($this->data->attributes()->{$field[1]});
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
                 $ret = Client::getInstance()->getThumbUrl($this->data->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
             } else  if ($field[0] === "plex_image_field"){
@@ -51,6 +51,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                 $ret = Client::getInstance()->getUrl($currentPath, $this->data->attributes()->{$field[1]});
             }
             if (isset($item)){
+
 				if ($field[0] === "plex_thumb_item_field") {
 	                if (!isset($item->attributes()->{$field[1]})) continue;
 	                $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
@@ -60,7 +61,11 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	            } else if ($field[0] === "plex_item_field"){
 	                if (!isset($item->attributes()->{$field[1]})) continue;
 	                $ret = $item->attributes()->{$field[1]};
-	            }
+	            } else if ($field[0] === "xpath"){
+                    // var_dump($item);
+                    // var_dump($item->xpath($field[1]));
+                    $ret = "teste";
+                }
 	        }
 	        if (isset($ret)){
 	        	return gettype($ret) == "object" ? (string)$ret : $ret;

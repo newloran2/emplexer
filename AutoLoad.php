@@ -47,13 +47,16 @@ class autoloader {
     public function generic($class){
         $fileName  = $this->putUndersCoreOnCamelCase($class);
         $files = preg_grep("/.*\/$fileName.php/", $this->includes);
+
         if (count($files) == 1){
             require_once current($files) ;
         } else {
             echo "arquivo $fileName não existe ou há mais de um com o mesmo nome\n";
-            print_r($this->includes);
+            // print_r($this->includes);
         }
+        return false;
     }
+
 
     public function duneCore($class)
     {
