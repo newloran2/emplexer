@@ -16,7 +16,7 @@
       "content_box_y": 0,
       "content_box_width": 1920,
       "content_box_height": 1080,
-      "paint_content_box_background": false
+      "paint_content_box_background": true
     },
     "base_view_item_params": {
       "item_paint_icon": false,
@@ -94,7 +94,8 @@
       "background_width": 1920,
       "background_height": 1080,
       "background_order": "before_all",
-      "optimize_full_screen_background": true
+      "optimize_full_screen_background": true,
+      "paint_content_box_background": false
     }
   },
   "episode": {
@@ -108,14 +109,40 @@
       "background_width": 1920,
       "background_height": 1080,
       "background_order": "before_all",
-      "optimize_full_screen_background": true
+      "optimize_full_screen_background": true,
+      "paint_content_box_background": false
     },
     "not_loaded_view_item_params": {
       "item_caption_font_size": 1
     },
     "base_view_item_params": {
       "item_caption_font_size": 1,
-      "icon_path": null
+      "icon_sel_scale_factor": 1.4
+    }
+  },
+  "photo": {
+    "inherits": "episode",
+    "view_params": {
+      "sandwich_width": 200,
+      "sandwich_height": 150
+    }
+  },
+  "plugins": {
+    "inherits": "episode",
+    "async_icon_loading": false,
+    "items": {
+      "view_item_params": {
+        "icon_path": "plex_image_item_field:thumb"
+      }
+    },
+    "base_view_item_params":{
+      "item_paint_caption" :  true
+    },
+    "view_params":{
+      "num_rows": 4,
+      "paint_sandwich": false,
+      "sandwich_width": 200,
+      "sandwich_height": 145
     }
   }
 }

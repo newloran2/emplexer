@@ -63,6 +63,17 @@ class Client
         return $content;
     }
 
+
+
+    public function getFinalThumbUrl($url){
+        return $this->get($url, array(
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_NOBODY => true,
+                CURLOPT_HEADER => true
+            )
+        );
+    }
+
     public function getThumbUrl($key, $with=250, $height=250){
         if (!$height) $height = 250;
         if (!$with) $with = 250;

@@ -1,3 +1,6 @@
+listagem:
+    Adicionar filtros acumulados como na versão da web
+
 templates:
 
 suporte para json encadeado.

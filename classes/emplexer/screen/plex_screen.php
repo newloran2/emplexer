@@ -6,6 +6,14 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         // print_r($this->data);
 
 		$viewGroup = (string)$this->data->attributes()->viewGroup;
+
+        if ((isset($this->data->attributes()->content)
+            &&$this->data->attributes()->content == "plugins")
+            ||(isset($this->data->attributes()->identifier)
+            && !strstr((string)$this->data->attributes()->identifier, "library"))){
+            $viewGroup = 'plugins';
+        }
+
 		if (!$viewGroup && strstr($this->path, 'metadata')){
 			$viewGroup = 'play';
 		}
@@ -17,13 +25,16 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	 * Exec the media with default dune player and refresh screen after the playback stops
 	 */
 	public function templatePlay(){
-		$url=Client::getInstance()->getUrl(null, (string)$this->data->Video[0]->Media->Part->attributes()->key );
-		$parentUrl =  Client::getInstance()->getUrl(null, (string)$this->data->Video[0]->attributes()->parentKey . "/children") ;
+        $item = isset($this->data->Video[0]) ? $this->data->Video[0] : null;
+        $item = isset($this->data->Track[0]) && is_null($item)? $this->data->Track[0] : $item;
+        $item = isset($this->data->Photo[0]) && is_null($item)? $this->data->Photo[0] : $item;
+
+		$url=Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
+		$parentUrl =  Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
 		$invalidate =  ActionFactory::invalidate_folders(array($parentUrl));
 		return ActionFactory::launch_media_url($url,$invalidate);
 
 	}
-
 
 	public function getField($name, $item){
 
@@ -62,9 +73,8 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	                if (!isset($item->attributes()->{$field[1]})) continue;
 	                $ret = $item->attributes()->{$field[1]};
 	            } else if ($field[0] === "xpath"){
-                    // var_dump($item);
-                    // var_dump($item->xpath($field[1]));
                     $ret = "teste";
+                    //TODO: implement xpath replacement
                 }
 	        }
 	        if (isset($ret)){

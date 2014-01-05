@@ -15,6 +15,24 @@
             Config::getInstance()->setPluginCookies($plugin_cookies);
             if (strstr(strtolower($media_url), 'setup')){
                 $menu = $menu = new SetupScreen($media_url);
+            } else if ($media_url == 'main'){
+                $menu = new PlexScreen($media_url);
+                $a = $menu->generateScreen();
+
+                // var_dump($a['data']['initial_range']['items']);
+
+                array_push($a['data']['initial_range']['items'], array(
+                    "caption"=> "Channels",
+                    "media_url"=> Client::getInstance()->getUrl(null, "/video"),
+                    "view_item_params"=> array()
+                ));
+                // $a[]
+                // print_r($a);
+                $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
+                $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);
+
+                return $a;
+
             } else {
                 $menu =  new PlexScreen($media_url);
             }

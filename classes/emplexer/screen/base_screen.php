@@ -106,10 +106,30 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	protected function templateTrack()
 	{
 		$a = TemplateManager::getInstance()->getTemplate("track", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
-		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));
 		$a['data']['actions'] = $actions;
 		return $a;
 	}
+
+	protected function templatePhoto()
+	{
+		$a = TemplateManager::getInstance()->getTemplate("photo", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => isset($this->data->Photo)? $this->handlerUserInput : $this->openFolder));
+		$a['data']['actions'] = $actions;
+		return $a;
+	}
+
+	protected function templatePlugins()
+	{
+		$a = TemplateManager::getInstance()->getTemplate("plugins", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
+		$a['data']['actions'] = $actions;
+		return $a;
+
+	}
+
+
+
 
 
 

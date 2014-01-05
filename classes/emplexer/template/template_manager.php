@@ -40,6 +40,9 @@ class TemplateManager
     private function getTag1($template, $tag){
         $arrays = array();
         $n = $template;
+        if (!isset($this->templateJson[$n])){
+            $n="base";
+        }
 
         do{
             array_unshift($arrays, $this->templateJson[$n]);
@@ -72,6 +75,7 @@ class TemplateManager
     }
 
     public function getTemplate($name, $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){
+
         $itens = array();
         $folderItems = array();
         $data = call_user_func($getDataCallback);
@@ -81,8 +85,10 @@ class TemplateManager
             $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item);
         }
 
+        // var_dump($this->templateJson[$name]['async_icon_loading']);
+        $async_icon_loading = isset($this->templateJson[$name]['async_icon_loading'])? $this->templateJson[$name]['async_icon_loading']  : true;
         $availableTemplates = array(
-            PluginRegularFolderView::async_icon_loading             => true,
+            PluginRegularFolderView::async_icon_loading             => $async_icon_loading,
             PluginRegularFolderView::initial_range                  =>
             array(
                 PluginRegularFolderRange::items                         =>  $folderItems,

@@ -11,10 +11,10 @@
 
 	// print_r($xml);
 
-
-
+	// file_put_contents("/tmp/out.json", "\n\n");
 	$data =json_decode($_POST['data']);
-
+	// $data =json_decode(base64_decode($_POST['data']));
+	// file_put_contents("/tmp/out.json", print_r($_POST, true) ,FILE_APPEND );
 
 	// $config =  new Conf('emplexer_plugin_cookies.properties');
 
@@ -52,7 +52,12 @@
 	// print_r(json_encode($output));
 
 
-	echo(DunePluginFw::$instance->call_plugin(json_encode($output)));
+	// file_put_contents("/tmp/out.json", json_encode($output), FILE_APPEND);
+
+	$out = DunePluginFw::$instance->call_plugin(json_encode($output));
+	echo ($out);
+	// file_put_contents("/tmp/out.json", "\n\n", FILE_APPEND);
+	// file_put_contents("/tmp/out.json", $out, FILE_APPEND);
 	// print (DefaultDunePluginFw::$plugin_class_name ) . "\n";
 	// DefaultDunePluginFw::$instace->call_plugin($output);
 	// print_r(DunePluginFw::$instance);
