@@ -1,7 +1,19 @@
-<?php
+    <?php
 
 class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallbackInterface
 {
+
+
+    function __construct($key=null, $func=null) {
+        parent::__construct($key);
+        if (isset($func)){
+            $a= explode("||", $func);
+            // var_dump($a);
+            $this->generatePlayList($a[1]);
+        }
+    }
+
+
 	public function generateScreen(){
         // print_r($this->data);
 
@@ -21,6 +33,21 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	}
 
 
+    public function generatePlayList($key)
+    {
+        $url = Client::getInstance()->getUrl(null, "/library/metadata/$key/children");
+        $url .= "?unwatched=1";
+
+        // var_dump($url);
+
+        $xml = Client::getInstance()->getAndParse($url);
+        // var_dump($xml);
+        foreach ($xml as $value) {
+            // hd_print($value->Video->attributes()->title);
+        }
+
+    }
+
 	/**
 	 * Exec the media with default dune player and refresh screen after the playback stops
 	 */
@@ -37,7 +64,6 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	}
 
 	public function getField($name, $item){
-
     	if (strstr($name, "gui_skin") || strstr($name, "cut_icon") ){
     		return $name;
     	} else {
@@ -78,7 +104,8 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                 }
 	        }
 	        if (isset($ret)){
-	        	return gettype($ret) == "object" ? (string)$ret : $ret;
+
+	        	return gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
 	        }
         }
 	}

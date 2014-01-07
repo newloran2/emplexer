@@ -24,12 +24,18 @@
 
 
 	$optionType = isset($data->op_type_code) ?  $data->op_type_code : 'get_folder_view';
-	 if (isset($data->input_data->media_url)){
-	 	$optionMediaUrl = $data->input_data->media_url;
-	 }else if (isset($data->input_data->selected_media_url)){
-		$optionMediaUrl = $data->input_data->selected_media_url;
-	}else {
-		$optionMediaUrl = 'main';
+	//  if (isset($data->input_data->media_url)){
+	//  	$optionMediaUrl = $data->input_data->media_url;
+	//  }else if (isset($data->input_data->selected_media_url)){
+	// 	$optionMediaUrl = $data->input_data->selected_media_url;
+	// }else {
+	// 	$optionMediaUrl = array('media_url'=>'main');
+	// }
+	//
+	if (!isset($data->input_data)){
+		$optionMediaUrl = array('media_url'=>'main');
+	} else {
+		$optionMediaUrl =  $data->input_data;
 	}
 
 
@@ -44,9 +50,10 @@
 	$output = array(
 			'op_type_code' => $optionType ,
 			'op_id' => "1",
-			'input_data' => array(
-				"media_url" => $optionMediaUrl == null ? (string)$entry->media_url :  $optionMediaUrl
-			),
+			// 'input_data' => array(
+			// 	"media_url" => $optionMediaUrl == null ? (string)$entry->media_url :  $optionMediaUrl
+			// ),
+			'input_data' => $optionMediaUrl,
 			"plugin_cookies" => Config::getInstance()->pluginCookies
 		 );
 	// print_r(json_encode($output));

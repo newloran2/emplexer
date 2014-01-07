@@ -82,10 +82,11 @@
         public function handle_user_input(&$user_input, &$plugin_cookies) {
             Config::getInstance()->setPluginCookies($plugin_cookies);
             // var_dump($user_input);
-            if (strstr(strtolower($user_input->media_url), "setup")){
-                $menu = new SetupScreen($user_input->media_url);
+            // hd_print(__METHOD__ . ': ' . print_r($user_input, true));
+            if (strstr(strtolower($user_input->selected_media_url), "setup")){
+                $menu = new SetupScreen($user_input->selected_media_url);
             } else {
-                $menu =  new PlexScreen($user_input->media_url);
+                $menu =  new PlexScreen($user_input->selected_media_url, isset($user_input->function)? $user_input->function : null  );
             }
 
             return $menu->generateScreen();

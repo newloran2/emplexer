@@ -1,5 +1,6 @@
 <?php
 
+require_once 'classes/emplexer/utils/translations.php';
 require_once 'AutoLoad.php';
 
 
@@ -41,3 +42,10 @@ $url = "http://192.168.2.8:32400/library/parts/37080/file.mkv";
 $a = Client::getInstance()->getFinalThumbUrl($url);
 
 print_r($a);
+
+
+echo _("isso é um teste \n");
+echo _("erik");
+
+
+

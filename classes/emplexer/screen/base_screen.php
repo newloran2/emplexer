@@ -80,8 +80,17 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	}
 
 	protected function templateEpisode(){
+		// var_dump($this->data);
 		$a = TemplateManager::getInstance()->getTemplate("episode", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
-		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));
+		$actions = array(
+			GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput),
+			GUI_EVENT_KEY_PLAY =>  array(
+				GuiAction::handler_string_id => $this->handlerUserInput,
+				GuiAction::params => array(
+					"function"=> "playAll||". $this->data->attributes()->key
+				)
+			)
+		);
 		$a['data']['actions'] = $actions;
 		return $a;
 	}
