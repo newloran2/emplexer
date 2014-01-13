@@ -1,6 +1,6 @@
 <?php
 
-require_once 'classes/emplexer/utils/translations.php';
+// require_once 'classes/emplexer/utils/translations.php';
 require_once 'AutoLoad.php';
 
 
@@ -37,15 +37,19 @@ require_once 'AutoLoad.php';
 // print_r(memory_get_peak_usage());
 
 
-$url = "http://192.168.2.8:32400/library/parts/37080/file.mkv";
+// $url = "http://192.168.2.8:32400/library/parts/37080/file.mkv";
 
-$a = Client::getInstance()->getFinalThumbUrl($url);
+// $a = Client::getInstance()->getFinalThumbUrl($url);
 
-print_r($a);
+// print_r($a);
 
 
-echo _("isso é um teste \n");
-echo _("erik");
+// echo _("isso é um teste \n");
+// echo _("erik");
+//
+$a = "192";
+
+echo filter_var($a, FILTER_VALIDATE_INT) ? "true\n" :  "false\n";
 
 
 

@@ -37,6 +37,7 @@ function Response:body_chunked()
 	local line, err
 	while true do
 		line, err = conn:read('*l')
+		print ("line " , line)
 		if not line then return nil, err end
 
 		local len = tonumber(line, 16)
@@ -97,8 +98,8 @@ function M.new()
 	}, Client)
 end
 
-local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\n\r\n"
---local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n"
+-- local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\n"
+local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\n"
 
 local function close(self)
 	local c = self.conn
@@ -116,8 +117,14 @@ local function fail(self, err)
 	return nil, err
 end
 
-function Client:get(url)
-	local proto, domain, uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+)(/.*)')
+function Client:get(url, headers)
+
+	local proto, domain, port , uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+):([0-9]+)(/.*)')
+	if not port then
+		proto, domain, uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+)(/.*)')
+	end
+
+	local h = headers or {}
 	if not proto then
 		error('Invalid URL', 2)
 	end
@@ -125,6 +132,13 @@ function Client:get(url)
 	local c, err
 	local req = req_get:format(uri, domain)
 	local res
+
+	if headers then
+		for key,value in pairs(headers) do
+			req = req .. key ..": " .. value .. "\r\n"
+		end
+	end
+	req = req .. "Connection: close\r\n\r\n"
 	if proto == self.proto and domain == self.domain then
 		c = self.conn
 		if c:write(req) then
@@ -139,13 +153,15 @@ function Client:get(url)
 		end
 
 		if proto == 'http' then
-			c, err = io.tcp.connect(domain, '80')
+			c, err = io.tcp.connect(domain, port or '80')
+			port  = port and port or '80'
 		elseif proto == 'https' then
 			local ssl = self.ssl
 			if not ssl then
 				error('No ssl context defined', 2)
 			end
-			c, err = ssl:connect(domain, '443')
+			c, err = ssl:connect(domain, port or '443')
+			port  = port and port or '443'
 		else
 			error('Unknown protocol', 2)
 		end
@@ -158,12 +174,12 @@ function Client:get(url)
 		res, err = c:read('HTTPResponse')
 		if not res then return fail(self, err) end
 	end
-
 	res.conn = c
 	setmetatable(res, Response)
 
 	self.proto = proto
 	self.domain = domain
+	self.port = port
 	self.conn = c
 	return res
 end

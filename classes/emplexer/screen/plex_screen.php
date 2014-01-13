@@ -36,7 +36,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     public function generatePlayList($key)
     {
         $url = Client::getInstance()->getUrl(null, "/library/metadata/$key/children");
-        $url .= "?unwatched=1";
+        // $url .= "?unwatched=1";
 
         // var_dump($url);
 
@@ -59,6 +59,12 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 		$url=Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
 		$parentUrl =  Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
 		$invalidate =  ActionFactory::invalidate_folders(array($parentUrl));
+        // hd_print(__METHOD__ . ":" . print_r($this->data->Video[0]->attributes()->ratingKey, true));
+
+        // $key = $this->data->Video[0]->attributes()->ratingKey;
+        // $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;
+
+        // Client::getInstance()->startMonitor($key, $viewOffset);
 		return ActionFactory::launch_media_url($url,$invalidate);
 
 	}

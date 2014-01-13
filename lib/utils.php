@@ -1,6 +1,14 @@
 <?php
 
 
+
+
+function _($key)
+{
+    return TranslationManager::getInstance()->getTranslation($key);
+}
+
+
 class HD
 {
     public static function is_map($a)

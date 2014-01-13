@@ -6,7 +6,8 @@ $HD_NEW_LINE = "\n";
 function hd_print($str)
 {
     global $HD_NEW_LINE;
-    echo $str . $HD_NEW_LINE;
+    file_put_contents("/tmp/emplexer.log", $str . $HD_NEW_LINE ,FILE_APPEND );
+    // echo $str . $HD_NEW_LINE;
 }
 
 ///////////////////////////////////////////////////////////////////////////

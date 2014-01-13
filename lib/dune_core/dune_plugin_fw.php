@@ -4,7 +4,7 @@
 abstract class DunePluginFw
 {
     // This variable should contain an instance of DunePluginFw.
-    // 
+    //
     // NOTE: Generally, this variable does not belong to this class, it should
     // have been defined as global variable. It's here just because writing
     // 'DunePluginFw::$instance' is less error-prone than using a global
@@ -31,7 +31,6 @@ abstract class DunePluginFw
             $call_ctx->op_type_code === PLUGIN_OP_GET_VOD_STREAM_URL)
         {
             $php_func_name = $call_ctx->op_type_code;
-
             return
                 $plugin->$php_func_name(
                     $call_ctx->input_data->media_url,
@@ -76,7 +75,7 @@ abstract class DunePluginFw
 
         // PluginOperationType::PLUGIN_OP_HANDLE_USER_INPUT
 
-        
+
         return
             $plugin->handle_user_input(
                 $call_ctx->input_data,

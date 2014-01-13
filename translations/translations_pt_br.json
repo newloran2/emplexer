@@ -33,6 +33,11 @@
   "Search Artists...": "Procurar artistas...",
   "Search Albums...": "Procurar albums...",
   "Search Tracks...": "Procurar música...",
-  "Search...": "Procurar..."
+  "Search...": "Procurar...",
+  "Error: The emplexer is not configured, please, go to settings and add the ip and port.": "Erro: O emplexer não está configurado, por favor vá até as configurações e inclua o ip e a porta.",
+  "Enter the ip and port for the plex media server": "Insira o ip e a porta do plex Media server",
+  "Plex Port":"porta do Plex",
+  "Plex Ip": "Ip do Plex",
+  "Save": "Salvar"
 }
 

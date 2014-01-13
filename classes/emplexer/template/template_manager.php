@@ -60,11 +60,8 @@ class TemplateManager
 
     private function walk(&$item, $key, $data){
         $getFieldCallBack = $data[0];
-        // var_dump($key);
-        // var_dump($getFieldCallBack);
         $upItem = $data[1];
         $json =  $data[2];
-        // $item = $getFieldCallBack($item, $upItem);
         $item = call_user_func_array($getFieldCallBack, array($item,$upItem));
     }
 

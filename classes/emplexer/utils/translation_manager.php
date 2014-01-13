@@ -7,7 +7,13 @@
 class TranslationManager
 {
     private $translationTable;
+    private $supportedLanguages = array(
+        "english" =>  "en",
+        "french"  =>  "fr",
+        "german"  =>  "de"
+    );
     private static $instance;
+
 
     private function __construct()
     {

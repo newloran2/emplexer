@@ -1,11 +1,11 @@
 <dune_plugin>
   <name>emplexer2</name>
-  <caption>emplexer2</caption>
+  <caption>emplexer 2.0-B01</caption>
   <entry_points>
     <entry_point>
       <parent_media_url>root://applications</parent_media_url>
       <media_url>main</media_url>
-      <caption>emplexer2</caption>
+      <caption>emplexer 2.0-B01</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
@@ -18,7 +18,7 @@
     <entry_point>
       <parent_media_url>root://sources</parent_media_url>
       <media_url>emplexer_section_secreen</media_url>
-      <caption>emplexer2</caption>
+      <caption>emplexer 2.0-B01</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
@@ -32,7 +32,7 @@
     <entry_point>
       <parent_media_url>setup://applications</parent_media_url>
       <media_url>rootSetup</media_url>
-      <caption>emplexer2</caption>
+      <caption>emplexer 2.0-B01</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
@@ -49,4 +49,13 @@
   <params>
     <program>main.php</program>
   </params>
+  <check_update>
+    <schema>2</schema>
+    <have_better_version>no</have_better_version>
+    <url>http://dl.dropboxusercontent.com/u/5493320/emplexer/update.xml</url>
+    <timeout>86400</timeout>
+    <required>no</required>
+  </check_update>
+  <version_index>1</version_index>
+  <version>2.0-B01</version>
 </dune_plugin>

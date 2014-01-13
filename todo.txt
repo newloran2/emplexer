@@ -3,9 +3,9 @@ listagem:
 
 templates:
 
-suporte para json encadeado.
+suporte para json encadeado. OK
 modo de adicionar um elemento condicionalmente: ex colocar um icone especifico caso o tipo do item seja movie.
-o templateManager precisa estar desatrelado dos campos do plex, pois outras telas precisarão utilizar-lo.
+o templateManager precisa estar desatrelado dos campos do plex, pois outras telas precisarão utilizar-lo. OK
 
 
 subtitleManager:

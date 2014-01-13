@@ -266,8 +266,10 @@ class ActionFactory
         //hd_print("notify=$value");
     }
 
-    public static function show_configuration_modal($title, &$plugin_cookies, $post_action= null){
+    public static function show_configuration_modal($modalTitle, $post_action= null){
 
+        $plexIp = Config::getInstance()->plexIp;
+        $plexPort = Config::getInstance()->plexPort ? Config::getInstance()->plexPort : 32400;
         $defs = array();
 
         ControlFactory::add_text_field(
@@ -275,8 +277,8 @@ class ActionFactory
             null,
             null,
             $name            = 'plexIp',
-            $title           = 'Plex IP',
-            $initial_value   = $plugin_cookies->plexIp,
+            $title           = _('Plex Ip'),
+            $initial_value   = $plexIp,
             $numeric         = false,
             $password        = false,
             $has_osk         = false,
@@ -289,8 +291,8 @@ class ActionFactory
             null,
             null,
             $name            = 'plexPort',
-            $title           = 'Plex Port',
-            $initial_value   = $plugin_cookies->plexIp ? $plugin_cookies->plexIp : 32400,
+            $title           = _('Plex Port'),
+            $initial_value   = $plexPort,
             $numeric         = false,
             $password        = false,
             $has_osk         = false,
@@ -299,10 +301,10 @@ class ActionFactory
         );
 
             ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
-            'btnSalvar', 'save', 200, $post_action);
+            'quickSavePlexPrefs', _('Save'), 200, $post_action);
 
 
-            return ActionFactory::show_dialog($title, $defs);
+            return ActionFactory::show_dialog($modalTitle, $defs);
     }
 
      public static function show_nfs_advanced_configuration_modal($modalTitle, &$plugin_cookies,$post_action= null){

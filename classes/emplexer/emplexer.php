@@ -12,6 +12,7 @@
         public $stream_name;
 
         public function get_folder_view($media_url, &$plugin_cookies) {
+
             Config::getInstance()->setPluginCookies($plugin_cookies);
             if (strstr(strtolower($media_url), 'setup')){
                 $menu = $menu = new SetupScreen($media_url);
@@ -33,7 +34,7 @@
 
                 return $a;
 
-            } else {
+            }  else {
                 $menu =  new PlexScreen($media_url);
             }
 
@@ -80,9 +81,19 @@
         }
 
         public function handle_user_input(&$user_input, &$plugin_cookies) {
+            hd_print(__METHOD__ . ':' . print_r($user_input, true));
+            if ($user_input->selected_control_id === "quickSavePlexPrefs"){
+                // hd_print("entrou");
+                $plugin_cookies->plexIp = $user_input->plexIp;
+                $plugin_cookies->plexPort = $user_input->plexPort;
+                Config::getInstance()->setPluginCookies($plugin_cookies);
+                return ActionFactory::open_folder($user_input->selected_media_url);
+            }
+
             Config::getInstance()->setPluginCookies($plugin_cookies);
-            // var_dump($user_input);
-            // hd_print(__METHOD__ . ': ' . print_r($user_input, true));
+
+
+
             if (strstr(strtolower($user_input->selected_media_url), "setup")){
                 $menu = new SetupScreen($user_input->selected_media_url);
             } else {
