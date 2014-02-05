@@ -3,9 +3,12 @@
 class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallbackInterface
 {
 
+    private $cachemanager;
 
     function __construct($key=null, $func=null) {
         parent::__construct($key);
+        // echo "teste\n";
+        $this->cachemanager =  new CacheManager('/tmp/cache');
         if (isset($func)){
             $a= explode("||", $func);
             // var_dump($a);
@@ -29,7 +32,11 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 		if (!$viewGroup && strstr($this->path, 'metadata')){
 			$viewGroup = 'play';
 		}
-		return  $this->getTemplateByType($viewGroup);
+		$data = $this->getTemplateByType($viewGroup);
+        //download images
+        $this->cachemanager->exec();
+        $this->cachemanager->clear();
+        return $data;
 	}
 
 
@@ -71,6 +78,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
 	public function getField($name, $item){
     	if (strstr($name, "gui_skin") || strstr($name, "cut_icon") ){
+            // hd_print("gui_skin or cut_icon detected returning the nam $name");
     		return $name;
     	} else {
     		$fields = explode("||", $name);
@@ -80,7 +88,8 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         foreach ($fields as $value) {
             $field =  explode(":", $value);
             if (count($field) <=1){
-              return $name;
+                // hd_print("single value that's not plex_field returning name $name");
+                return $name;
           }
 
             if ($field[0] === "plex_field"){
@@ -109,9 +118,14 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                     //TODO: implement xpath replacement
                 }
 	        }
-	        if (isset($ret)){
 
-	        	return gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
+            if (strstr($field[0], "thumb")){
+                $ret = $this->cachemanager->addSession($ret);
+            }
+	        if (isset($ret)){
+                $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
+                hd_print("returning plex_fiel value $a");
+	        	return $a;
 	        }
         }
 	}

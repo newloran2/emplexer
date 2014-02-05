@@ -62,17 +62,67 @@ function Response:body_chunked()
 	return rope
 end
 
-function Response:body()
+function Response:body(chunkSize, callback)
+	if not self.totalDownloaded then
+		self.totalDownloaded=0
+	end
+
 	if self._body then return self._body end
 	if self.headers['transfer-encoding'] == 'chunked' then
 		return self:body_chunked()
 	end
 
-	local len, body, err = self.headers['content-length']
+
+	local contentLength, body, err = self.headers['content-length']
+	if (contentLength) then
+
+		contentLength = tonumber(contentLength)
+	end
+
+	if (chunkSize) then
+		chunkSize = tonumber(chunkSize)
+	else
+		chunkSize =  1024*20
+	end
+
+	callback =  callback or nil
+
+	if (chunkSize > contentLength) then
+		chunkSize = contentLength
+	end
+
+
+	len = chunkSize or contentLength or nil
 	if len then
-		len = tonumber(len)
 		if not len then return nil, 'invalid content length' end
 		body, err = self.conn:read(len)
+		while not err and self.totalDownloaded < contentLength do
+			if (callback ~=nil) then
+				-- print ("callback = ", callback)
+				info = {}
+				info['totalDownloaded']= self.totalDownloaded
+				info['contentLength'] = contentLength
+				info['url']  = self.url
+				callback(body, info)
+				self.totalDownloaded = self.totalDownloaded + #body
+				if self.totalDownloaded + len >  contentLength then
+					len = contentLength - self.totalDownloaded
+				end
+				info = nil
+			end
+			body1, err = self.conn:read(len)
+			-- print ("err", err)
+			if (not err) then
+				body = nil
+				if (len <=0) then
+					err =1
+				else
+					body = body1
+					body1=nil
+				end
+			end
+		end
+
 	else
 		if self.headers['connection'] == 'close' then
 			body, err = self.client:read('*a')
@@ -82,8 +132,13 @@ function Response:body()
 	end
 	if not body then return nil, err end
 
-	self._body = body
-	return body
+
+	if (not callback) then
+		self._body = body
+		return body
+	else
+		return nil
+	end
 end
 
 local Client = {}
@@ -118,7 +173,6 @@ local function fail(self, err)
 end
 
 function Client:get(url, headers)
-
 	local proto, domain, port , uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+):([0-9]+)(/.*)')
 	if not port then
 		proto, domain, uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+)(/.*)')
@@ -175,6 +229,7 @@ function Client:get(url, headers)
 		if not res then return fail(self, err) end
 	end
 	res.conn = c
+	res.url = url
 	setmetatable(res, Response)
 
 	self.proto = proto

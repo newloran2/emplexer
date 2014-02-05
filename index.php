@@ -1,7 +1,7 @@
 <?php
 	header("Content-Type: application/json");
-	 // error_reporting(E_ALL);
- 	// ini_set("display_errors", 1);
+	 error_reporting(E_ALL);
+ 	ini_set("display_errors", 1);
 	require_once 'lib/dune_core/bootstrap.php';
 	require_once 'lib/dune_core/dune_api_nova.php';
 	require_once 'lib/dune_core/dune_plugin.php';

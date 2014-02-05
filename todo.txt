@@ -16,3 +16,6 @@ subtitleManager:
 
 PlayBackManager:
     Criar classe que centralize o parse e qualquer modificação de url para playback.
+
+FileSystemManager:
+    Criar estruturas de classes para gerenciar montagem e navegação no dune por file system tanto remoto quanto local

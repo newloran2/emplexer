@@ -47,7 +47,6 @@ class autoloader {
     public function generic($class){
         $fileName  = $this->putUndersCoreOnCamelCase($class);
         $files = preg_grep("/.*\/$fileName.php/", $this->includes);
-
         if (count($files) == 1){
             require_once current($files) ;
         } else {

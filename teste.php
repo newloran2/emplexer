@@ -2,54 +2,44 @@
 
 // require_once 'classes/emplexer/utils/translations.php';
 require_once 'AutoLoad.php';
+error_reporting(E_ALL);
 
 
-// $a = new SimpleXMLElement("http://127.0.0.1/teste.xml", 0, true);
-// // $a = new SimpleXMLElement("http://192.168.2.8:32400/library/sections/2/all", 0, true);
+$n = new NFS('192.168.2.9');
+
+print_r($n);
 
 
-// $b = '<dwml>
-//   <data>
-//     <location>
-//       <location-key>point1</location-key>
-//         <point latitude="37.39" longitude="-122.07"></point>
-//       </location>
-//   </data>
-// </dwml>';
+// $b = new RemoteFileSystemIterator();
 
-// $b = new SimpleXMLElement($b);
+$a = new NfsFileSystemIterator('192.168.2.9','/volume1/Filmes', '/tmp/emplexer3/volume1/Filmes');
 
-// // $lats =  $b->xpath('/dwml/data/location/point/@latitude');
-// // echo $lats[0];
+print_r($a);
 
-// // $dom = dom_import_simplexml($a);
+$a->mount();
 
-// // $dom = $dom->ownerDocument;
-// // $domXpath = new DOMXPath($dom);
+// sleep(1);
+echo $a->isMounted() ? "está montado \n":  "não está montado\n";
+echo "total de itens: ", count(iterator_to_array($a)) , "\n" ;
+// // echo $a->current() , "\n";
 
+$a->rewind();
+$files = new CallbackFilterIterator($a, function ($current, $key, $iterator) {
+    return $current->isDir() && ! $iterator->isDot();
+});
 
+echo "total de pastas: ", count(iterator_to_array($files)) , "\n";
+// foreach ($files as  $value) {
+//     echo $value , "\n";
+// }
+// $b = new FilesystemIterator('/tmp/emplexer3');
+// print_r($b);
 
-// // print_r($domXpath->query('/*/@key'));
-
-
-// echo $a->xpath('/*/@key')[0];
-
-// print_r(memory_get_peak_usage());
-
-
-// $url = "http://192.168.2.8:32400/library/parts/37080/file.mkv";
-
-// $a = Client::getInstance()->getFinalThumbUrl($url);
-
-// print_r($a);
+// print_r(iterator_to_array($b));
+// $a->unMount();
 
 
-// echo _("isso é um teste \n");
-// echo _("erik");
-//
-$a = "192";
 
-echo filter_var($a, FILTER_VALIDATE_INT) ? "true\n" :  "false\n";
-
+ echo "memoria maxima : " , memory_get_peak_usage(true),    "\n";
 
 

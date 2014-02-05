@@ -1,7 +1,7 @@
 
 <?php
 
-define('LD_LIBRARY_PATH_FIX', 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/firmware/lib');
+define('LD_LIBRARY_PATH_FIX', ' -');
 define('SMBTREE', '/firmware/bin/smbtree -A /tmp/emplexer_auth.conf|awk  \'{print $1}\'');
 // define('SMBTREE', '/firmware/bin/smbtree -A /tmp/auth.txt|awk  \'{print $1}\'');
 

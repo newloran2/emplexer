@@ -12,7 +12,6 @@ class TemplateManager
     private $reload =false; //if true reload the template on every call
     private $templateFile ;
     private $templateJson;
-
     private static $instance;
 
     private function __construct()

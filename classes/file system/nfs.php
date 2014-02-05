@@ -10,13 +10,14 @@
 
 class NFS {
     // private $command = '/firmware/bin/showmount -d --no-headers';
-    private $command = '/usr/bin/showmount -d ';
+    private $showMountCommand = '/usr/bin/showmount -d ';
     private $mountCommand = '/sbin/mount -o nolock ';
     private $umountCommand = '/sbin/umount ';
     private $mountCheck = "/sbin/mount | grep -i ";
     private $mountPoint =  '/tmp/emplexer3';
     private $exports = array();
     private $ip;
+    private $iterators =  array();
 
     function __construct($ip)
     {
@@ -25,12 +26,24 @@ class NFS {
         if (!file_exists($this->mountPoint)){
             mkdir($this->mountPoint);
         }
-        $data = ExecUtils::execute($this->command . " $ip");
+
+        $data = ExecUtils::execute($this->showMountCommand . " $ip");
         $data =preg_filter("/^(?!\/).*/", "", $data);
         $paths = array_filter(explode("\n", $data));
         // print_r($paths);
         $this->exports = $paths;
+        $mkdirPaths = array();
+        foreach ($paths as $export) {
+            $mkdirPath = sprintf("%s%s ", $this->mountPoint, $export);
+            $mkdirPaths[] = $mkdirPath;
+            $this->iterators["nfs://".$this->ip . ':'. $export] = new NfsFileSystemIterator($this->ip, $export, $mkdirPath);
+
+        }
+        // echo "mkdirPaths = . " . implode(" ", $mkdirPaths) . "\n";
+
+        // $a = new NfsFileSystemIterator('192.168.2.9','/volume1/Filmes', '/tmp/emplexer3');
     }
+
 
 
     public function getNfsPath($directory){

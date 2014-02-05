@@ -3,11 +3,11 @@ print (basedir)
 if basedir == "emplexer.lua" then
   basedir = ""
 end
--- package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
--- package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
+package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
-package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
-package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
+-- package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+-- package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
 print(package.path)
 print(package.cpath)
@@ -20,26 +20,30 @@ local register = require "register"
 local lfs   = require 'lem.lfs'
 local json = require ("dkjson")
 local dune = require ('dune')
+local dump = require ('dump')
+local urlParser =  require ('urlParser')
 local client   = require 'lem.http.client'
-
-
+local lfs   = require 'lem.lfs'
 
 hathaway.debug = print -- must be set before import()
 hathaway.import()      -- when using single instance API
+
+
+local currentPlaylist = nil
+
+
 
 
 GET('/', function(req, res)
 	print(req.client:getpeer())
 	res:add("erik")
 
-end)
+  end)
 
 GETM('^/startServer/([^/]+)$', function(req, res, name)
-  print(req.client:getpeer())
   res:add('startServer')
-  table_print(req)
   register:startRegister(name)
-end)
+  end)
 
 GETM('^/startNotifier/(.+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$', function (req, res, ip, port, key, percentToDone,viewOffset)
   res:add(key .. ": " .. percentToDone)
@@ -49,8 +53,8 @@ GETM('^/startNotifier/(.+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$', function (req, res
   baseUrl =  "http://"..ip..":".. port .. "/:/progress?key="..key .. "&identifier=com.plexapp.plugins.library"
   moved = false
   dune:startPlayBackMonitor(1,
-    {
-      playing=function(data)
+  {
+  playing=function(data)
         --reduce the monitor frequence to 5 seconds
         dune:setPlayBackMonitorFrequence(5)
         -- print("playing callback", data.playback_url)
@@ -67,38 +71,38 @@ GETM('^/startNotifier/(.+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$', function (req, res
         end
         print("chamando url " .. url)
         c:get(url)
-      end,
-      buffering=function(data)
+        end,
+        buffering=function(data)
         print("buffering callback ")
         if (viewOffset > 0 and moved) then
           dune:goToPosition(viewOffset/1000)
           moved=true
         end
-      end,
-      standby = function ( data )
+        end,
+        standby = function ( data )
         print("buffering callback ")
-      end,
-      stop=function( data )
+        end,
+        stop=function( data )
         print("stop callback ")
         dune:stopPLaybackMonitor()
-      end,
-      navigator=function( data )
+        end,
+        navigator=function( data )
         dune:stopPLaybackMonitor()
       end
     }
-  )
+    )
 end)
 
 GET('/stopServer', function ( req, res )
 	print(req.client:getpeer())
 	res:add('stopServer')
 	register:stopRegister()
-end)
+  end)
 
 GET('/findServers' , function ( req, res )
 	print('findServers');
 	res:add (json.encode(register:getPlexServers()))
-end)
+  end)
 
 POST('/jsonrpc', function(req, res)
   table_print(req:body())

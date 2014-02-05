@@ -98,9 +98,17 @@ class Client
         if (trim($this->plexIp) === "" && !filter_var($this->plexIp, FILTER_VALIDATE_IP)){
             $this->refreshPlexIpAndPort();
         }
+
         if (!$height) $height = 250;
         if (!$with) $with = 250;
         $url = $this->getUrl(null, $key);
+        if (strstr($key, "?") || strstr($key, "&")){
+            $key = urlencode($key);
+        }
+        if (strstr($url, "?") || strstr($url, "&")){
+            $url = urlencode($url);
+        }
+
         return sprintf("http://%s:%d/photo/:/transcode?width=%d&height=%d&url=%s", $this->plexIp, $this->plexPort,$with, $height, $url );
         // http://192.168.2.8:32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2F%3A%2Fresources%2Fmovie.png&width=150&height=150&X-Plex-Token=Fdxv1u7Rk97GspiQwqPy
     }
