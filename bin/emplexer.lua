@@ -104,6 +104,13 @@ GET('/findServers' , function ( req, res )
 	res:add (json.encode(register:getPlexServers()))
   end)
 
+GET('/player/application/playMedia', function(req,res)
+    a=  urlParser.parse(req.uri)
+    print (dump.tostring(a))
+    b= urlParser.parse(a.query.path)
+    print (dump.tostring(b))
+end)
+
 POST('/jsonrpc', function(req, res)
   table_print(req:body())
 end)

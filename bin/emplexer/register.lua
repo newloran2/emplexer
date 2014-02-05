@@ -60,7 +60,7 @@ function plex:startRegister(serverName)
 	utils.spawn(function()
 
 		local hello_broadcast_string =
-"HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 32400\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1"
+"HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3000\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1\r\nProtocol-Version: 1\r\nProtocol-Capabilities: navigation,playback,timeline"
 		local bye_broadcast_string ="BYE * HTTP/1.0\r\n"
 		local port =32413
 		local ip="255.255.255.255"
