@@ -20,9 +20,10 @@ abstract class RemoteFileSystemIterator implements Iterator
     private $filesystemIterator;
 
     function __construct($ip, $port, $path, $mountPoint, $type, int $flags = null){
-        echo "mountPoint = $mountPoint\n";
+        // echo "mountPoint = $mountPoint\n";
+        $mountPoint = trim($mountPoint);
         if (!file_exists($mountPoint)){
-            echo "vou criar o path $mountPoint\n";
+            echo "vou criar o path $mountPoint teste\n";
             mkdir($mountPoint, 0777, true);
         }
         $this->ip=$ip;
@@ -42,13 +43,20 @@ abstract class RemoteFileSystemIterator implements Iterator
     }
 
     public function mount(){
-        ExecUtils::execute($this->mountComand);
-        if ($this->isMounted()){
-            $this->filesystemIterator =  new FilesystemIterator($this->mountPoint);
+        try {
+            ExecUtils::execute($this->mountComand);
+            if ($this->isMounted()){
+                $this->filesystemIterator =  new FilesystemIterator($this->mountPoint);
+            }
+        } catch (Exception $e) {
+            //if A Exception throws i try to mount a directory inside another mounted directory
+            echo "diretorio existente ", $this->mountPoint , "\n";
+            echo $e->getMessage(),  "\n";
         }
+
     }
 
-    public function unMount(){
+    public function uMount(){
         unset($this->filesystemIterator);
         ExecUtils::execute($this->unMountCommand);
 

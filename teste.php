@@ -10,32 +10,37 @@ $n = new NFS('192.168.2.9');
 print_r($n);
 
 
+// mkdir("/tmp/emplexer3/volume2/photo", 0777, true);
+// $n->mountAll();
+$n->umountAll();
+
+
 // $b = new RemoteFileSystemIterator();
 
-$a = new NfsFileSystemIterator('192.168.2.9','/volume1/Filmes', '/tmp/emplexer3/volume1/Filmes');
+// $a = new NfsFileSystemIterator('192.168.2.9','/volume1/Filmes', '/tmp/emplexer3/volume1/Filmes');
 
-print_r($a);
+// print_r($a);
 
-$a->mount();
+// $a->mount();
 
-// sleep(1);
-echo $a->isMounted() ? "está montado \n":  "não está montado\n";
-echo "total de itens: ", count(iterator_to_array($a)) , "\n" ;
-// // echo $a->current() , "\n";
+// // sleep(1);
+// echo $a->isMounted() ? "está montado \n":  "não está montado\n";
+// echo "total de itens: ", count(iterator_to_array($a)) , "\n" ;
+// // // echo $a->current() , "\n";
 
-$a->rewind();
-$files = new CallbackFilterIterator($a, function ($current, $key, $iterator) {
-    return $current->isDir() && ! $iterator->isDot();
-});
+// $a->rewind();
+// $files = new CallbackFilterIterator($a, function ($current, $key, $iterator) {
+//     return $current->isDir() && ! $iterator->isDot();
+// });
 
-echo "total de pastas: ", count(iterator_to_array($files)) , "\n";
-// foreach ($files as  $value) {
-//     echo $value , "\n";
-// }
-// $b = new FilesystemIterator('/tmp/emplexer3');
-// print_r($b);
+// echo "total de pastas: ", count(iterator_to_array($files)) , "\n";
+// // foreach ($files as  $value) {
+// //     echo $value , "\n";
+// // }
+// // $b = new FilesystemIterator('/tmp/emplexer3');
+// // print_r($b);
 
-// print_r(iterator_to_array($b));
+// // print_r(iterator_to_array($b));
 // $a->unMount();
 
 

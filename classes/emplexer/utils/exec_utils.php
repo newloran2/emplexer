@@ -20,6 +20,7 @@ class ExecUtils {
     public static function execute($command, $extraEnv=array()) {
 
         echo "command =$command\n";
+        $command = trim($command);
         $output = "";
 
         $descriptorspec = array

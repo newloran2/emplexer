@@ -1,12 +1,4 @@
 <?php
-// require_once 'lib/ExecUtils.php';
-/**
- * Created by JetBrains PhpStorm.
- * User: newloran2
- * Date: 8/25/13
- * Time: 7:42 PM
- * To change this template use File | Settings | File Templates.
- */
 
 class NFS {
     // private $command = '/firmware/bin/showmount -d --no-headers';
@@ -22,120 +14,107 @@ class NFS {
     function __construct($ip)
     {
         $this->ip = $ip;
+        $this->updateWithIp($ip);
+    }
 
+    public function updateWithIp($ip){
+
+        $this->umountAll();
         if (!file_exists($this->mountPoint)){
             mkdir($this->mountPoint);
         }
 
+
         $data = ExecUtils::execute($this->showMountCommand . " $ip");
         $data =preg_filter("/^(?!\/).*/", "", $data);
         $paths = array_filter(explode("\n", $data));
-        // print_r($paths);
         $this->exports = $paths;
+        print_r($paths);
         $mkdirPaths = array();
         foreach ($paths as $export) {
             $mkdirPath = sprintf("%s%s ", $this->mountPoint, $export);
             $mkdirPaths[] = $mkdirPath;
             $this->iterators["nfs://".$this->ip . ':'. $export] = new NfsFileSystemIterator($this->ip, $export, $mkdirPath);
-
         }
-        // echo "mkdirPaths = . " . implode(" ", $mkdirPaths) . "\n";
 
-        // $a = new NfsFileSystemIterator('192.168.2.9','/volume1/Filmes', '/tmp/emplexer3');
     }
 
-
-
-    public function getNfsPath($directory){
-        if (array_search($directory, $this->exports)){
-            return  "nfs://$this->ip:$directory";
-        } else {
-            return null;
+    public function mountAll(array $mountPoints = null){
+        $mountedCount =  0;
+        if ($mountPoints != null){ // mount only mountPoints passed
+            foreach ($mountPoints as $mountPoint) {
+                if (isset($this->iterators[$mountPoint])){
+                    $this->iterators[$mountPoint]->mount();
+                    $mountedCount++;
+                }
+            }
+        } else { //mount all
+            foreach ($this->iterators as $it) {
+                $it->mount();
+                $mountedCount++;
+            }
         }
+        return $mountedCount;
+    }
+
+    public function umountAll(array $mountPoints = null){
+        $uMountedCount =  0;
+        if ($mountPoints != null){ // mount only mountPoints passed
+            foreach ($mountPoints as $mountPoint) {
+                if (isset($this->iterators[$mountPoint])){
+                    $this->iterators[$mountPoint]->uMount();
+                    unset($this->iteratorsp[$mountPoint]);
+                    $uMountedCount++;
+                }
+            }
+        } else { //mount all
+            foreach ($this->iterators as $it) {
+                $it->uMount();
+
+                $uMountedCount++;
+            }
+            unset($this->iterators);
+
+        }
+        return $uMountedCount;
     }
 
     public function getAllNfsPaths(){
-        $exports = array();
+        $data = array();
         foreach ($this->exports as $value) {
-            $exports[$value] = $this->getNfsPath($value);
+            $data = sprintf('nfs://%s:%s',$this->ip,$this->export);
         }
-        return $exports;
+        return $data;
     }
 
-    public function getLocalDirForShare($share){
-        $share = str_replace("nfs://", "", $share);
-        $a = explode(":", $share);
-        $dir = $this->mountPoint . $a[1];
-        return $dir;
+    public function getIteratorForNfsPath($share){
+        if (isset($this->iterators[$share])){
+            return $this->iterators[$share];
+        }
+        return null;
     }
 
     public function mountNfs($share){
-        $share = str_replace("nfs://", "", $share);
-        echo "tentando montar o share $share \n";
-        $dir = $this->getLocalDirForShare($share);
-        echo $dir . "\n";
-        if (!file_exists($dir)){
-            if (!mkdir($dir, 0777, true)){
-                echo "não foi possivel criar os diretorios " . $a[1];
-            }
+      if (isset($this->iterators[$share])){
+            $this->iterators[$share]->mount();
+            return $this->iterators[$share];
         }
-        if (!$this->isMonted($share)){
-            echo "mountando $share\n";
-            ExecUtils::execute($this->mountCommand . " $share $dir");
-        }
-
+        return null;
 
     }
 
-    public function isMonted($share){
-        $share = str_replace("nfs://", "", $share);
-        $mount = ExecUtils::execute($this->mountCheck .  $share);
+    public function isMounted($share){
+        $mount = $this->iterators[$share]->isMounted;
         echo "mount = $mount\n";
-        return is_null($mount);
+        return $mount;
     }
 
     public function umountNfs($share){
-        $share = str_replace("nfs://", "", $share);
-        $dir =  $this->getLocalDirForShare($share);
-        ExecUtils::execute($this->umountCommand . " $dir");
+        if (isset($this->iterators[$share])){
+            $this->iterators[$share]->unMount();
+        }
+
     }
-
-    // public function getPathExportForPath($nfsPath){
-    //     $nfs = $this->decomposeNfsPath($nfsPath);
-    //     $export = null;
-    //     foreach ($this->exports[$nfs['ip']] as $path) {
-    //         if (strstr($nfsPath, $path)){
-    //             $export = $nfs['path'];
-    //             break;
-    //         }
-    //     }
-    //     return $export;
-    // }
-
-    /**
-     * decompose an nfs path and return an array with ip and path;
-     * nfsPath example nfs://192.168.2.8:/volume2/Filmes2/The.Wicked.2013.720p.BluRay.x264-SONiDO%20[PublicHD]/thew_720_son.mkv
-     * @param $nfsPath
-     * @return array
-     */
-    // public function decomposeNfsPath($nfsPath){
-    //     $n = explode(':', $nfsPath);
-    //     $a = array();
-    //     $a['ip'] = str_replace('//', '', $n[1]);
-    //     $a['path'] = $n[2];
-
-    //     return $a;
-    // }
-
-
-    // public function fileExists($nfsPath){
-    //     $n = explode(':', $nfsPath);
-    //     $type = $n[0];
-    //     $ip = str_replace('//', '', $n[1]);
-    //     $path = $n[2];
-    //     $this->refreshExportsForIp($ip);
-
-    // }
 }
 
 
