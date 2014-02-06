@@ -34,7 +34,10 @@
 
                 return $a;
 
-            }  else {
+            } else if (strstr(strtolower($media_url), 'nfs')) {
+                $menu = new NfsScreen('192.168.2.9');
+            }
+            else {
                 $menu =  new PlexScreen($media_url);
             }
 

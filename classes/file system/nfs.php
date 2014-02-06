@@ -29,7 +29,6 @@ class NFS {
         $data =preg_filter("/^(?!\/).*/", "", $data);
         $paths = array_filter(explode("\n", $data));
         $this->exports = $paths;
-        print_r($paths);
         $mkdirPaths = array();
         foreach ($paths as $export) {
             $mkdirPath = sprintf("%s%s ", $this->mountPoint, $export);
@@ -82,15 +81,18 @@ class NFS {
     public function getAllNfsPaths(){
         $data = array();
         foreach ($this->exports as $value) {
-            $data = sprintf('nfs://%s:%s',$this->ip,$this->export);
+            $data[] = sprintf('nfs://%s:%s',$this->ip,$value);
         }
         return $data;
     }
 
     public function getIteratorForNfsPath($share){
         if (isset($this->iterators[$share])){
+            // var_dump("tem o caminho $share");
+            // var_dump($this->iterators[$share]);
             return $this->iterators[$share];
         }
+        var_dump("não tem o caminho $share");
         return null;
     }
 

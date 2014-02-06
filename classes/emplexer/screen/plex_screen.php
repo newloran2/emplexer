@@ -34,8 +34,8 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 		}
 		$data = $this->getTemplateByType($viewGroup);
         //download images
-        $this->cachemanager->exec();
-        $this->cachemanager->clear();
+        // $this->cachemanager->exec();
+        // $this->cachemanager->clear();
         return $data;
 	}
 

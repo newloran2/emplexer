@@ -28,7 +28,7 @@ class autoloader {
         $dune     =  $this->rglob(dirname(__FILE__)."/lib/*.php");
 
         $this->includes = array_merge($classes, $dune);
-        // print_r($this->includes);
+        // var_dump($this->includes);
     	$this->isDune =  file_exists("/tmp/run");
 		if (!$this->isDune){
 			// spl_autoload_register(array($this,'duneCore'));
@@ -51,7 +51,7 @@ class autoloader {
             require_once current($files) ;
         } else {
             echo "arquivo $fileName não existe ou há mais de um com o mesmo nome\n";
-            // print_r($this->includes);
+            // var_dump($files);
         }
         return false;
     }

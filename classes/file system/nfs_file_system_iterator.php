@@ -13,6 +13,10 @@ class NfsFileSystemIterator extends RemoteFileSystemIterator
         $this->mountComand = sprintf('/sbin/mount -o nolock %s:%s %s', $this->ip,$this->remotePath, $this->mountPoint);
     }
 
+    public function getUrl(){
+        return sprintf('nfs://%s:%s', $this->ip, $this->remotePath);
+    }
+
 }
 
 ?>

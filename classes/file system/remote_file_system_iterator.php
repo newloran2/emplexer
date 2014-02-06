@@ -37,12 +37,15 @@ abstract class RemoteFileSystemIterator implements Iterator
         $this->flags = $flags;
     }
 
+    public abstract function getUrl();
+
     public function isMounted(){
         $ret = ExecUtils::execute($this->isMountedCommand);
         return !is_null($ret);
     }
 
     public function mount(){
+        echo "mount";
         try {
             ExecUtils::execute($this->mountComand);
             if ($this->isMounted()){
