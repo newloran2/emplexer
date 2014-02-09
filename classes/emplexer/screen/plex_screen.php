@@ -7,6 +7,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
     function __construct($key=null, $func=null) {
         parent::__construct($key);
+        // hd_print("teste ==== $key");
         // echo "teste\n";
         $this->cachemanager =  new CacheManager('/tmp/cache');
         if (isset($func)){
@@ -18,7 +19,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
 
 	public function generateScreen(){
-        // print_r($this->data);
+
 
 		$viewGroup = (string)$this->data->attributes()->viewGroup;
 
@@ -63,20 +64,23 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         $item = isset($this->data->Track[0]) && is_null($item)? $this->data->Track[0] : $item;
         $item = isset($this->data->Photo[0]) && is_null($item)? $this->data->Photo[0] : $item;
 
-		$url=Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
+		$url=Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key);
 		$parentUrl =  Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
 		$invalidate =  ActionFactory::invalidate_folders(array($parentUrl));
         // hd_print(__METHOD__ . ":" . print_r($this->data->Video[0]->attributes()->ratingKey, true));
 
-        // $key = $this->data->Video[0]->attributes()->ratingKey;
-        // $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;
+        if (!$this->isPlexSync){
+            $key = $this->data->Video[0]->attributes()->ratingKey;
+            $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;
+            Client::getInstance()->startMonitor($key, $viewOffset);
+        }
 
-        // Client::getInstance()->startMonitor($key, $viewOffset);
 		return ActionFactory::launch_media_url($url,$invalidate);
 
 	}
 
 	public function getField($name, $item){
+
     	if (strstr($name, "gui_skin") || strstr($name, "cut_icon") ){
             // hd_print("gui_skin or cut_icon detected returning the nam $name");
     		return $name;
@@ -100,7 +104,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                 $ret = Client::getInstance()->getThumbUrl($this->data->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
             } else  if ($field[0] === "plex_image_field"){
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
-                $ret = Client::getInstance()->getUrl($currentPath, $this->data->attributes()->{$field[1]});
+                $ret = Client::getInstance()->getUrl($currentPath, $this->data->attributes()->{$field[1]},$this->isPlexSync);
             }
             if (isset($item)){
 
@@ -108,8 +112,9 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	                if (!isset($item->attributes()->{$field[1]})) continue;
 	                $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
 	            } else  if ($field[0] === "plex_image_item_field"){
-	                if (!isset($item->attributes()->{$field[1]})) continue;
-	                $ret = Client::getInstance()->getUrl($currentPath, $item->attributes()->{$field[1]});
+                    if (!isset($item->attributes()->{$field[1]})) continue;
+	                $ret = Client::getInstance()->getUrl($currentPath, $item->attributes()->{$field[1]}, $this->isPlexSync);
+                    // hd_print("name $name, item $ret currentPath $currentPath" );
 	            } else if ($field[0] === "plex_item_field"){
 	                if (!isset($item->attributes()->{$field[1]})) continue;
 	                $ret = $item->attributes()->{$field[1]};
@@ -121,10 +126,11 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
             if (strstr($field[0], "thumb")){
                 $ret = $this->cachemanager->addSession($ret);
+                $ret = $ret;
             }
 	        if (isset($ret)){
                 $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
-                hd_print("returning plex_fiel value $a");
+                // hd_print("returning plex_fiel value $a");
 	        	return $a;
 	        }
         }
@@ -135,7 +141,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     }
 
     public function getMediaUrl($data){
-    	return Client::getInstance()->getUrl($this->path , (string)$this->data->attributes()->key);
+    	return Client::getInstance()->getUrl($this->path , (string)$this->data->attributes()->key, $this->isPlexSync);
     }
 
 }

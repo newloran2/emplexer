@@ -5,14 +5,14 @@ require_once 'AutoLoad.php';
 error_reporting(E_ALL);
 
 
-$n = new NFS('192.168.2.9');
+// $n = new NFS('192.168.2.9');
 
-print_r($n);
+// print_r($n);
 
 
 // mkdir("/tmp/emplexer3/volume2/photo", 0777, true);
 // $n->mountAll();
-$n->umountAll();
+// $n->umountAll();
 
 
 // $b = new RemoteFileSystemIterator();
@@ -42,6 +42,73 @@ $n->umountAll();
 
 // // print_r(iterator_to_array($b));
 // $a->unMount();
+
+
+$url = 'https://plex.tv/users/sign_in.xml';
+
+        $opts = array( CURLOPT_HTTPHEADER =>
+                        array(
+                            'X-Plex-Client-Identifier:sdsdsdsds',
+                            'X-Plex-Client-Platform:DuneOS',
+                            'X-Plex-Device-Name:Dune',
+                            'X-Plex-Model:1',
+                            'X-Plex-Platform:DuneOS',
+                            'X-Plex-Platform-Version:1',
+                            'X-Plex-Product:emplexer',
+                            'X-Plex-Version:1'
+                            ),
+                        CURLOPT_USERPWD => "newloran2@gmail.com:bastard123",
+                        CURLOPT_HEADER => true,
+                        CURLINFO_HEADER_OUT => true,
+                        CURLOPT_POST => true
+                     );
+
+        // $data = $this->get($url, $opts);
+
+ $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,    false);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    10);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,    true);
+        curl_setopt($ch, CURLOPT_TIMEOUT,           10);
+        // curl_setopt($ch, CURLOPT_USERAGENT,         'DuneHD/1.0');
+        curl_setopt($ch,CURLOPT_ENCODING ,           "gzip");
+        curl_setopt($ch, CURLOPT_URL,               $url);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'curl/7.30.0');
+        curl_setopt($ch,CURLOPT_FAILONERROR,true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER , array(
+                            'X-Plex-Client-Identifier:sdsdsdsds',
+                            'X-Plex-Client-Platform:DuneOS',
+                            'X-Plex-Device-Name:Dune',
+                            'X-Plex-Model:1',
+                            'X-Plex-Platform:DuneOS',
+                            'X-Plex-Platform-Version:1',
+                            'X-Plex-Product:emplexer',
+                            'X-Plex-Version:1',
+                            'Content-Type: application/xml',
+                            ));
+        curl_setopt($ch, CURLOPT_USERPWD , "newloran2@gmail.com:bastard123");
+        curl_setopt($ch, CURLOPT_HEADER , true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT , true);
+        curl_setopt($ch, CURLOPT_VERBOSE , true);
+        curl_setopt($ch, CURLOPT_POST , true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "");
+        // $f = fopen('/tmp/request.txt', 'w');
+        // curl_setopt($ch,CURLOPT_STDERR ,$f);
+        // fclose($f);
+
+
+
+
+$content = curl_exec($ch);
+$a = curl_getinfo($ch);
+print_r($a);
+$errmsg  = curl_error( $ch );
+echo "errormsg = $errmsg\n";
+print_r($content);
+
+curl_close($ch);
+        // print_r($a);
+
 
 
 

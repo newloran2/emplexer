@@ -16,10 +16,13 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	protected $templates =array();
 
 	function __construct($key=null, $nextTemplate=false) {
-		if (!$key || $key === 'main')
-			$key = '/library/sections';
+		if (!$key || $key === 'main'){
+			$key = sprintf('http://%s:%s%s' ,Config::getInstance()->plexIp,Config::getInstance()->plexPort, '/library/sections');
+		}
+
 
 		$this->path = Client::getInstance()->getUrl(null, $key);
+		hd_print("path = " . $this->path);
 		$this->data = Client::getInstance()->getAndParse($this->path);
 		$this->nextTemplate = $nextTemplate != null ? $nextTemplate :  array();
 

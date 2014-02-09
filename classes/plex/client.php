@@ -4,7 +4,7 @@ class Client
 {
     private $plexIp   = '127.0.0.1';
     private $plexPort = '32400';
-
+    private $myPlexBaseUr = 'https://plex.tv';
     private static $instance;
 
     private function __construct() {
@@ -28,6 +28,8 @@ class Client
     }
 
     public function get($url, $opts = null){
+
+        // echo "url = $url";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,    false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    10);
@@ -37,9 +39,13 @@ class Client
         curl_setopt($ch,CURLOPT_ENCODING ,           "gzip");
         curl_setopt($ch, CURLOPT_URL,               $url);
 
+        // $authToken = Client::getInstance()->myPLexAuth();
+
         if (isset($opts))
         {
+
             foreach ($opts as $k => $v)
+
                 curl_setopt($ch, $k, $v);
         }
 
@@ -58,7 +64,7 @@ class Client
             throw new Exception($err_msg);
         }
 
-        if ($http_code != 200)
+        if ($http_code != 200 && $http_code != 201)
         {
             $err_msg = "HTTP request failed ($http_code)";
             //hd_print($err_msg);
@@ -73,15 +79,21 @@ class Client
     }
 
 
-    private function startEmplexerServer(){
-        $pid = shell_exec('pidof emplexer.lua');
+    public function startEmplexerServer(){
+        $pid = shell_exec('pgrep emplexer.lua');
         // $pid = null;
         if (!$pid){
-            $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
+            // $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
+            $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
             hd_print("executando commando $command");
 
             shell_exec($command);
         }
+    }
+
+    public function registerAsPlayer($name='emplexer') {
+        $url = sprintf("http://127.0.0.1:3000/startServer/%s", $name);
+        $this->get($url);
     }
 
     public function getFinalThumbUrl($url){
@@ -116,12 +128,16 @@ class Client
 
     public function getUrl($lastKey, $newKey)
     {
+        // hd_print("parametros = $lastKey, $newKey");
         // hd_print(__METHOD__ . ":" . $this->plexIp  );
+        //
+        $a = parse_url($newKey);
+        hd_print(print_r($a, true));
         if (trim($this->plexIp) === "" && !filter_var($this->plexIp, FILTER_VALIDATE_IP)){
             $this->refreshPlexIpAndPort();
         }
 
-        // hd_print("parametros = $lastKey, $newKey");
+
         if (strpos($newKey, "http") === 0){
             return $newKey;
         }
@@ -131,7 +147,7 @@ class Client
             return $url;
         }
 
-        if (strpos($lastKey, "http") === 0 && strpos($newKey, "/") !== 0){
+        if (strpos($lastKey, "http") === 0 || strpos($lastKey, "https") === 0  && strpos($newKey, "/") !== 0){
             return sprintf("%s/%s", $lastKey, $newKey);
         }
         if (strpos($newKey, "/") !== 0){
@@ -139,8 +155,8 @@ class Client
         } else {
             $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
         }
-
-        // echo ("url = $url\n");
+        // HD::print_backtrace();
+        // hd_print ("url = $url\n");
         return $url;
     }
 
@@ -153,7 +169,56 @@ class Client
 
 
     public function getAndParse($url){
-        return new SimpleXMLElement($url, 0, true);
+        $data = $this->get($url);
+        // hd_print("url = $url");
+        return simplexml_load_string($data);
+        // return new SimpleXMLElement($url, 0, true);
+    }
+
+    //myPlex
+    public function myPLexAuth($force=false){
+
+        $userName =  Config::getInstance()->myPlexUserName;
+        $password =  Config::getInstance()->myPlexPassword;
+        $myPlexToken = Config::getInstance()->myPlexToken;
+        hd_print("myPlexToken = $myPlexToken");
+        if (!is_null($myPlexToken)){
+            hd_print("já tem vou retornar $myPlexToken");
+            return $myPlexToken;
+        }
+
+        hd_print("Não tem vou buscar");
+
+
+        $url = sprintf('%s/%s', $this->myPlexBaseUr, '/users/sign_in.xml');
+
+        $opts = array( CURLOPT_HTTPHEADER =>
+                        array(
+                            'X-Plex-Client-Identifier:sdsdsdsds',
+                            'X-Plex-Client-Platform:DuneOS',
+                            'X-Plex-Device-Name:Dune',
+                            'X-Plex-Model:1',
+                            'X-Plex-Platform:DuneOS',
+                            'X-Plex-Platform-Version:1',
+                            'X-Plex-Product:emplexer',
+                            'X-Plex-Version:1'
+                            ),
+                        CURLOPT_USERPWD => "newloran2@gmail.com:bastard123",
+                        CURLOPT_POSTFIELDS =>  "",
+                        CURLOPT_POST => true,
+                     );
+
+        $data = $this->get($url, $opts);
+        if ($data){
+            $xml = simplexml_load_string($data);
+            hd_print(print_r($xml, true));
+            Config::getInstance()->myPlexToken = $xml["authentication-token"];
+            return $xml["authentication-token"];
+        }
+
+        return null;
+
+
     }
 }
 

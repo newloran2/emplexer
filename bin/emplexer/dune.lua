@@ -4,6 +4,7 @@ local client   = require 'lem.http.client'
 local lfs   = require 'lem.lfs'
 local dump = require 'dump'
 local stringUtils = require 'utils'
+local dump = require ('dump')
 
 
 local function sleep(n)
@@ -38,6 +39,7 @@ end
 function dune:goToPosition(pos)
     url = "http://localhost/cgi-bin/do?cmd=set_playback_state&position="..pos
     -- url = 'http://127.0.0.1:3000/10'
+    print ("chamando url", url)
     utils.spawn(function()
         local c = client.new()
         c:get(url)
@@ -54,13 +56,14 @@ function dune:startPlayBackMonitor( frequence, callbacks )
             lastAttrs =  attrs
             -- count=1
             while playBackMonitorIsRunning do
-                print("dentro do loop")
-                -- print ("data attrs     = " .. attrs['modification'])
-                -- print ("data lastAttrs = " .. lastAttrs['modification'])
+                print ("data attrs     = " .. attrs['modification'])
+                print ("data lastAttrs     = " .. lastAttrs['modification'])
+                print ("data lastAttrs = " .. lastAttrs['modification'])
                 -- print("count ", count)
                 -- count = count +1
-                if (attrs['modification'] > lastAttrs['modification']) then
+                if (tonumber(attrs['modification']) > tonumber(lastAttrs['modification'])) then
                     data = readExtCommandState()
+                    print ("entrou")
                     if (callbacks[data['playback_state']]) then
                         callbacks[data['playback_state']](data)
                     end

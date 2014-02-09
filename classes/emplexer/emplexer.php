@@ -1,19 +1,21 @@
 
 <?php
 
-    // namespace classes\emplexer;
-    // require_once 'lib/default_dune_plugin_fw.php';
-    // require_once 'Plex/Client.php';
-
     require_once 'AutoLoad.php';
 
     class Emplexer implements DunePlugin {
 
         public $stream_name;
 
+        function __construct($foo = null) {
+            // Client::getInstance()->startEmplexerServer();
+            // sleep(1);
+            // Client::getInstance()->registerAsPlayer();
+        }
+
         public function get_folder_view($media_url, &$plugin_cookies) {
 
-            Config::getInstance()->setPluginCookies($plugin_cookies);
+            // Config::getInstance()->setPluginCookies($plugin_cookies);
             if (strstr(strtolower($media_url), 'setup')){
                 $menu = $menu = new SetupScreen($media_url);
             } else if ($media_url == 'main'){
