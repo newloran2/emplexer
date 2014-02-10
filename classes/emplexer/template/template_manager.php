@@ -61,11 +61,12 @@ class TemplateManager
         $getFieldCallBack = $data[0];
         $upItem = $data[1];
         $json =  $data[2];
-        $item = call_user_func_array($getFieldCallBack, array($item,$upItem));
+        $item = call_user_func_array($getFieldCallBack, array($item,$upItem , $json));
     }
 
-    private function getTag($template, $tag, $getFieldCallBack, $item = null, $json=null){
+    private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){
         $t = $this->getTag1($template, $tag);
+
         array_walk_recursive($t,array($this, 'walk'), array($getFieldCallBack, $item, $json));
         return isset($t[$tag]) ?  $t[$tag] : null;
     }
@@ -76,9 +77,19 @@ class TemplateManager
         $folderItems = array();
         $data = call_user_func($getDataCallback);
 
-        foreach ( $data as $item)
+        // foreach ( $data as $item)
+        // {
+        //     $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item, $data);
+        // }
+
+
+        foreach ( $data as $key => $xml)
         {
-            $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item);
+            hd_print("key = $key");
+            foreach ($xml as $item) {
+                $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item, array($key=>$xml));
+            }
+
         }
 
         // var_dump($this->templateJson[$name]['async_icon_loading']);

@@ -31,6 +31,7 @@ class Config {
 	public function setPluginCookies(&$pluginCookies){
         $this->pluginCookies = $pluginCookies;
 
+
         if (!filter_var($pluginCookies->plexIp, FILTER_VALIDATE_IP)|| !filter_var($pluginCookies->plexPort, FILTER_VALIDATE_INT)){
             throw new DuneException(
                  _("Error: The emplexer is not configured, please, go to settings and add the ip and port."),
