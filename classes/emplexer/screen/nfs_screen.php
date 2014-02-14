@@ -11,20 +11,20 @@ class NfsScreen  implements ScreenInterface
     function __construct($ip) {
         $this->nfs = new NFS($ip);
         $this->nfs->mountAll();
-        // var_dump($this->nfs);
     }
 
     public function generateScreen(){
         $itens = array();
         $folderItems = array();
         $a =  $this->nfs->getIteratorForNfsPath('nfs://192.168.2.9:/volume1/Series');
-        // $a->mount();
-        var_dump($a);
-        foreach ( $a as $value) {
-            var_dump($value);
+        $a->mount();
+        // var_dump($a);
+        foreach ( $a as $key=>$value) {
+            // var_dump($key);
+            // var_dump($value);
              $folderItems[] = array(
-                PluginRegularFolderItem::media_url          => "$value",
-                PluginRegularFolderItem::caption            => $b->getUrl() ,
+                PluginRegularFolderItem::media_url          => "$key",
+                PluginRegularFolderItem::caption            => basename($key) ,
                 PluginRegularFolderItem::view_item_params   => array()
             );
         }

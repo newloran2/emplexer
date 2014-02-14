@@ -1,24 +1,33 @@
 
 <?php
 
-    // namespace classes\emplexer;
-    // require_once 'lib/default_dune_plugin_fw.php';
-    // require_once 'Plex/Client.php';
-
     require_once 'AutoLoad.php';
 
     class Emplexer implements DunePlugin {
 
         public $stream_name;
 
+        function __construct($foo = null) {
+            // Client::getInstance()->startEmplexerServer();
+            // sleep(1);
+            // Client::getInstance()->registerAsPlayer();
+        }
+
         public function get_folder_view($media_url, &$plugin_cookies) {
 
             Config::getInstance()->setPluginCookies($plugin_cookies);
+            // Client::getInstance()->getMyPlexServers();
             if (strstr(strtolower($media_url), 'setup')){
                 $menu = $menu = new SetupScreen($media_url);
             } else if ($media_url == 'main'){
-                $menu = new PlexScreen($media_url);
+                $menu = new PlexScreen($media_url, array("http://5.147.181.234:32400/library/sections"));
                 $a = $menu->generateScreen();
+
+                // $myPlex = new PlexScreen("https://plex.tv/library/sections");
+
+                // $b = $myPlex->generateScreen();
+
+                // hd_print(print_r($b, true));
 
                 // var_dump($a['data']['initial_range']['items']);
 
@@ -27,6 +36,12 @@
                     "media_url"=> Client::getInstance()->getUrl(null, "/video"),
                     "view_item_params"=> array()
                 ));
+
+                // array_push($a['data']['initial_range']['items'], array(
+                //     "caption"=> "MyPlex",
+                //     "media_url"=> Client::getInstance()->getUrl(null, "https://plex.tv/library/sections"),
+                //     "view_item_params"=> array()
+                // ));
                 // $a[]
                 // print_r($a);
                 $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);

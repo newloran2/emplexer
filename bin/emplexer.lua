@@ -35,74 +35,74 @@ local currentPlaylist = nil
 
 
 GET('/', function(req, res)
-	print(req.client:getpeer())
-	res:add("erik")
-
-  end)
+    print(req.client:getpeer())
+    res:add("erik")
+end)
 
 GETM('^/startServer/([^/]+)$', function(req, res, name)
-  res:add('startServer')
-  register:startRegister(name)
-  end)
+    res:add('startServer')
+    register:startRegister(name)
+end)
 
 GETM('^/startNotifier/(.+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$', function (req, res, ip, port, key, percentToDone,viewOffset)
-  res:add(key .. ": " .. percentToDone)
-  -- viewOffset =1
-  print("viewOffset", viewOffset)
-  dune:goToPosition(10)
-  baseUrl =  "http://"..ip..":".. port .. "/:/progress?key="..key .. "&identifier=com.plexapp.plugins.library"
-  moved = false
-  dune:startPlayBackMonitor(1,
-  {
-  playing=function(data)
-        --reduce the monitor frequence to 5 seconds
-        dune:setPlayBackMonitorFrequence(5)
-        -- print("playing callback", data.playback_url)
-        duration = tonumber(data.playback_duration)
-        position = tonumber(data.playback_position)
-        toDone = tonumber(percentToDone)
-        local c = client.new()
-        url = nil
-        if (100 - (position/duration *100) <= toDone) then
-          url = baseUrl .. "&state=stopped&time=" .. (duration*1000)
-          dune:stopPLaybackMonitor()
-        else
-          url =  baseUrl .. "&state=playing&time=".. (position*1000)
-        end
-        print("chamando url " .. url)
-        c:get(url)
-        end,
-        buffering=function(data)
-        print("buffering callback ")
-        if (viewOffset > 0 and moved) then
-          dune:goToPosition(viewOffset/1000)
-          moved=true
-        end
-        end,
-        standby = function ( data )
-        print("buffering callback ")
-        end,
-        stop=function( data )
-        print("stop callback ")
-        dune:stopPLaybackMonitor()
-        end,
-        navigator=function( data )
-        dune:stopPLaybackMonitor()
-      end
-    }
+    res:add(key .. ": " .. percentToDone)
+    -- viewOffset =1
+    viewOffset = tonumber(viewOffset)
+    dune:goToPosition(10)
+    baseUrl =  "http://"..ip..":".. port .. "/:/progress?key="..key .. "&identifier=com.plexapp.plugins.library"
+    moved = false
+    dune:startPlayBackMonitor(2,
+        {
+            playing=function(data)
+                print ("playing callback")
+                dune:setPlayBackMonitorFrequence(5)
+                duration = tonumber(data.playback_duration)
+                position = tonumber(data.playback_position)
+                toDone = tonumber(percentToDone)
+                local c = client.new()
+                url = nil
+                if (100 - (position/duration *100) <= toDone) then
+                    url = baseUrl .. "&state=stopped&time=" .. (duration*1000)
+                    dune:stopPLaybackMonitor()
+                else
+                    url =  baseUrl .. "&state=playing&time=".. (position*1000)
+                end
+                print("chamando url " .. url)
+                c:get(url)
+            end,
+            buffering=function(data)
+              print("buffering callback ")
+              print (viewOffset)
+              if (viewOffset > 0 and not moved) then
+                dune:goToPosition(viewOffset/1000)
+                moved=true
+              end
+            end,
+            standby = function ( data )
+                print("buffering callback ")
+            end,
+            stop=function( data )
+                print("stop callback ")
+                dune:stopPLaybackMonitor()
+            end,
+            navigator=function( data )
+                print("navigator callback ")
+                dune:stopPLaybackMonitor()
+            end
+        }
     )
 end)
 
 GET('/stopServer', function ( req, res )
-	print(req.client:getpeer())
-	res:add('stopServer')
-	register:stopRegister()
-  end)
+    print(req.client:getpeer())
+    res:add('stopServer')
+    register:stopRegister()
+end)
 
 GET('/findServers' , function ( req, res )
-	print('findServers');
-	res:add (json.encode(register:getPlexServers()))
-  end)
+    print('findServers');
+    res:add (json.encode(register:getPlexServers()))
+end)
 
 GET('/player/application/playMedia', function(req,res)
     a=  urlParser.parse(req.uri)
@@ -112,14 +112,14 @@ GET('/player/application/playMedia', function(req,res)
 end)
 
 POST('/jsonrpc', function(req, res)
-  table_print(req:body())
+    table_print(req:body())
 end)
 
 
 if arg[1] == 'socket' then
-	local sock = assert(io.unix.listen('socket', 666))
-	Hathaway(sock)
+  local sock = assert(io.unix.listen('socket', 666))
+  Hathaway(sock)
 else
-	Hathaway('*', arg[1] or '3000')
+  Hathaway('*', arg[1] or '3000')
 end
 utils.exit(0)

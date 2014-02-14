@@ -5,14 +5,14 @@ require_once 'AutoLoad.php';
 error_reporting(E_ALL);
 
 
-$n = new NFS('192.168.2.9');
+// $n = new NFS('192.168.2.9');
 
-print_r($n);
+// print_r($n);
 
 
 // mkdir("/tmp/emplexer3/volume2/photo", 0777, true);
 // $n->mountAll();
-$n->umountAll();
+// $n->umountAll();
 
 
 // $b = new RemoteFileSystemIterator();
@@ -42,6 +42,11 @@ $n->umountAll();
 
 // // print_r(iterator_to_array($b));
 // $a->unMount();
+
+$xml = Client::getInstance()->getAndParse("http://192.168.2.8:32400/library/sections");
+
+print_r($xml);
+
 
 
 

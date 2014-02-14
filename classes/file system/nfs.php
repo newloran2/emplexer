@@ -6,7 +6,7 @@ class NFS {
     private $mountCommand = '/sbin/mount -o nolock ';
     private $umountCommand = '/sbin/umount ';
     private $mountCheck = "/sbin/mount | grep -i ";
-    private $mountPoint =  '/tmp/emplexer3';
+    private $mountPoint =  '/Library/WebServer/Documents/emplexer/teste';
     private $exports = array();
     private $ip;
     private $iterators =  array();
@@ -107,7 +107,7 @@ class NFS {
 
     public function isMounted($share){
         $mount = $this->iterators[$share]->isMounted;
-        echo "mount = $mount\n";
+        // echo "mount = $mount\n";
         return $mount;
     }
 
