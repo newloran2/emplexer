@@ -112,7 +112,7 @@ class Client
     }
 
     public function getThumbUrl($key, $with=250, $height=250){
-        hd_print(__METHOD__ . ":" .  $key . ": " . $this->plexIp . ": "  . $this->plexPort);
+        // hd_print(__METHOD__ . ":" .  $key . ": " . $this->plexIp . ": "  . $this->plexPort);
         if (trim($this->plexIp) === "" && !filter_var($this->plexIp, FILTER_VALIDATE_IP)){
             $this->refreshPlexIpAndPort();
         }

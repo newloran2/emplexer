@@ -11,42 +11,17 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	protected $openFolder = PLUGIN_OPEN_FOLDER_ACTION_ID;
 	protected $handlerUserInput = PLUGIN_HANDLE_USER_INPUT_ACTION_ID;
 	protected $path;
-	protected $extraPaths = array();
-	protected $parsedPath;
-	protected $extraParsedPaths = array();
-
 	protected $data;
-	protected $extraData =  array();
 	protected $nextTemplate = false;
 	protected $templates =array();
 
-	/**
-	 * Constructor for emplexer screens
-	 * @param String  $key           path for the PLex xml, this path is used to chose which templete will be chosen
-	 * @param array   $extraPaths    a plex xml path array, any data collected from this paths will be appended on screen as new item.
-	 * @param boolean $nextTemplate [description] TODO//To chose the next Template
-	 */
-	function __construct($key=null, array $extraPaths = null, $nextTemplate=false) {
-		if (!$key || $key === 'main'){
-			$key = sprintf('http://%s:%s%s' ,Config::getInstance()->plexIp,Config::getInstance()->plexPort, '/library/sections');
-		}
-
-		$this->extraPaths = $extraPaths;
+	function __construct($key=null, $nextTemplate=false) {
+		if (!$key || $key === 'main')
+			$key = '/library/sections';
 
 		$this->path = Client::getInstance()->getUrl(null, $key);
-		$this->parsedPath =  parse_url($this->path);
-
-		hd_print("path = " . $this->path);
 		$this->data = Client::getInstance()->getAndParse($this->path);
 		$this->nextTemplate = $nextTemplate != null ? $nextTemplate :  array();
-
-
-		//get the extras
-		foreach ($this->extraPaths as $path) {
-			hd_print("extrapaths detected: parsing");
-			$this->extraParsedPaths[$path] =  parse_url($path);
-			$this->extraData[$path] = Client::getInstance()->getAndParse($path);
-		}
 
 		$this->templates = json_decode(Config::getInstance()->templateViewNumber);
 

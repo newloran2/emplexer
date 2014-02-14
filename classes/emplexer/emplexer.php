@@ -20,7 +20,7 @@
             if (strstr(strtolower($media_url), 'setup')){
                 $menu = $menu = new SetupScreen($media_url);
             } else if ($media_url == 'main'){
-                $menu = new PlexScreen($media_url, array("http://5.147.181.234:32400/library/sections"));
+                $menu = new PlexScreen($media_url);
                 $a = $menu->generateScreen();
 
                 // $myPlex = new PlexScreen("https://plex.tv/library/sections");
@@ -99,7 +99,7 @@
         }
 
         public function handle_user_input(&$user_input, &$plugin_cookies) {
-            hd_print(__METHOD__ . ':' . print_r($user_input, true));
+            // hd_print(__METHOD__ . ':' . print_r($user_input, true));
             if ($user_input->selected_control_id === "quickSavePlexPrefs"){
                 // hd_print("entrou");
                 $plugin_cookies->plexIp = $user_input->plexIp;

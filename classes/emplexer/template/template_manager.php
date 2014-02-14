@@ -77,20 +77,20 @@ class TemplateManager
         $folderItems = array();
         $data = call_user_func($getDataCallback);
 
-        // foreach ( $data as $item)
-        // {
-        //     $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item, $data);
-        // }
-
-
-        foreach ( $data as $key => $xml)
+        foreach ( $data as $item)
         {
-            hd_print("key = $key");
-            foreach ($xml as $item) {
-                $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item, array($key=>$xml));
-            }
-
+            $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item, $data);
         }
+
+
+        // foreach ( $data as $key => $xml)
+        // {
+        //     hd_print("key = $key");
+        //     foreach ($xml as $item) {
+        //         $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item, array($key=>$xml));
+        //     }
+
+        // }
 
         // var_dump($this->templateJson[$name]['async_icon_loading']);
         $async_icon_loading = isset($this->templateJson[$name]['async_icon_loading'])? $this->templateJson[$name]['async_icon_loading']  : true;
