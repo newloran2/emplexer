@@ -8,7 +8,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     function __construct($key=null, $func=null) {
         parent::__construct($key);
         // echo "teste\n";
-        $this->cachemanager =  new CacheManager('/tmp/cache');
+        // $this->cachemanager =  new CacheManager('/tmp/cache');
         if (isset($func)){
             $a= explode("||", $func);
             // var_dump($a);
@@ -119,12 +119,12 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                 }
 	        }
 
-            if (strstr($field[0], "thumb")){
-                $ret = $this->cachemanager->addSession($ret);
-            }
+            // if (strstr($field[0], "thumb")){
+            //     $ret = $this->cachemanager->addSession($ret);
+            // }
 	        if (isset($ret)){
                 $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
-                hd_print("returning plex_fiel value $a");
+                // hd_print("returning plex_fiel value $a");
 	        	return $a;
 	        }
         }
