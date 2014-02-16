@@ -29,7 +29,7 @@ local Response = {}
 Response.__index = Response
 M.Response = Response
 
-function Response:body_chunked()	
+function Response:body_chunked()
 	if self._body then return self._body end
 
 	local conn = self.conn
@@ -62,7 +62,7 @@ function Response:body_chunked()
 	return rope
 end
 
-function Response:body()	
+function Response:body()
 	if self._body then return self._body end
 	if self.headers['transfer-encoding'] == 'chunked' then
 		return self:body_chunked()
@@ -100,6 +100,7 @@ end
 
 -- local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\n"
 local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\n"
+local req_post = "POST %s HTTP/1.1\r\nHost: %s\r\n"
 
 local function close(self)
 	local c = self.conn
@@ -117,28 +118,40 @@ local function fail(self, err)
 	return nil, err
 end
 
-function Client:get(url, headers)
-	
+
+local function doTheRequest(self,url, type, data, headers)
+	-- print ("chamou o doTheRequest", url)
 	local proto, domain, port , uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+):([0-9]+)(/.*)')
-	if not port then 
-		proto, domain, uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+)(/.*)')	
+	if not port then
+		proto, domain, uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+)(/.*)')
 	end
-	
+
 	local h = headers or {}
 	if not proto then
 		error('Invalid URL', 2)
 	end
 
 	local c, err
-	local req = req_get:format(uri, domain)
+	local req = nil
+	if (type == "get") then
+		req = req_get:format(uri, domain)
+	else
+		req = req_post:format(uri, domain)
+	end
+
 	local res
-	
+
 	if headers then
 		for key,value in pairs(headers) do
 			req = req .. key ..": " .. value .. "\r\n"
 		end
 	end
 	req = req .. "Connection: close\r\n\r\n"
+	if (type == "post") then
+		req =  req .. data
+	end
+
+
 	if proto == self.proto and domain == self.domain then
 		c = self.conn
 		if c:write(req) then
@@ -153,7 +166,7 @@ function Client:get(url, headers)
 		end
 
 		if proto == 'http' then
-			c, err = io.tcp.connect(domain, port or '80')			
+			c, err = io.tcp.connect(domain, port or '80')
 			port  = port and port or '80'
 		elseif proto == 'https' then
 			local ssl = self.ssl
@@ -184,6 +197,17 @@ function Client:get(url, headers)
 	return res
 end
 
+
+function Client:get(url, headers)
+	return doTheRequest(self, url, "get", nil, headers)
+end
+
+function Client:post(url, data, headers)
+	headers['Content-Length'] = #data
+	headers['Content-Type'] = 'application/x-www-form-urlencoded'
+	return doTheRequest(self, url,"post", data, headers)
+end
+
 function Client:download(url, filename)
 	local res, err = self:get(url)
 	if not res then return res, err end
@@ -193,7 +217,7 @@ function Client:download(url, filename)
 	if not file then return file, err end
 
 	local ok
-	ok, err = file:write(res.body)
+	ok, err = file:write(res:body())
 	if not ok then return ok, err end
 	ok, err = file:close()
 	if not ok then return ok, err end

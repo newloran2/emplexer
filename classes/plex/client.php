@@ -70,7 +70,7 @@ class Client
             throw new Exception($err_msg);
         }
 
-        if ($http_code != 200 && $http_code != 201)
+        if ($http_code != 200 && $http_code != 201 && $http_code != 204)
         {
             $err_msg = "HTTP request failed ($http_code)";
             //hd_print($err_msg);
@@ -84,17 +84,26 @@ class Client
         return $content;
     }
 
-
+    public function startEmplexerServerAndRegisterAsPlayer()
+    {
+        if ($this->startEmplexerServer()){
+            $this->registerAsPlayer();
+        }
+    }
     public function startEmplexerServer(){
-        $pid = shell_exec('pgrep emplexer.lua');
+        // HD::print_backtrace();
+        $pid = shell_exec('pgrep lem-dune.bin');
         // $pid = null;
         if (!$pid){
-            // $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
-            $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
+            $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
+            // $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
             hd_print("executando commando $command");
-
-            shell_exec($command);
+            // ExecUtils::execute($command);
+            exec($command);
+            sleep(1);
+            return true;
         }
+        return false;
     }
 
     public function registerAsPlayer($name='emplexer') {
@@ -167,7 +176,8 @@ class Client
 
     public function startMonitor($key, $viewOffset){
         $this->startEmplexerServer();
-        $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
+        $url = sprintf("http://127.0.0.1:3000/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", $this->plexIp,$this->plexPort, $key,10,$viewOffset);
+        // $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
         $this->get($url);
     }
 

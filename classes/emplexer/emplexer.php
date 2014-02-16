@@ -8,14 +8,17 @@
         public $stream_name;
 
         function __construct($foo = null) {
-            // Client::getInstance()->startEmplexerServer();
-            // sleep(1);
-            // Client::getInstance()->registerAsPlayer();
+        }
+
+        function __destruct()
+        {
+            shell_exec('kill $(pgrep lem-dune.bin)');
         }
 
         public function get_folder_view($media_url, &$plugin_cookies) {
 
             Config::getInstance()->setPluginCookies($plugin_cookies);
+            Client::getInstance()->startEmplexerServerAndRegisterAsPlayer();
             // Client::getInstance()->getMyPlexServers();
             if (strstr(strtolower($media_url), 'setup')){
                 $menu = $menu = new SetupScreen($media_url);
