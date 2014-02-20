@@ -12,11 +12,11 @@
       "paint_scrollbar": false,
       "paint_help_line": false,
       "paint_details": false,
-      "content_box_x": 0,
-      "content_box_y": 0,
-      "content_box_width": 1920,
-      "content_box_height": 1080,
-      "paint_content_box_background": true
+      "content_box_x": 30,
+      "content_box_y": 30,
+      "content_box_width": 1820,
+      "content_box_height": 1012,
+      "paint_content_box_background": false
     },
     "base_view_item_params": {
       "item_paint_icon": false,
@@ -36,14 +36,14 @@
       }
     },
     "view_params": {
-      "num_cols": 7,
+      "num_cols": 8,
       "num_rows": 3,
       "paint_sandwich": true,
       "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
       "sandwich_mask": "cut_icon://{name=sandwich_mask}",
       "sandwich_cover": "cut_icon://{name=sandwich_cover}",
-      "sandwich_width": 200,
-      "sandwich_height": 300,
+      "sandwich_width": 185,
+      "sandwich_height": 285,
       "sandwich_icon_upscale_enabled": true,
       "sandwich_icon_keep_aspect_ratio": true,
       "paint_item_info_in_details": true,
@@ -74,8 +74,9 @@
     "view_params": {
       "num_cols": 2,
       "num_rows": 5,
-      "sandwich_width": 800,
-      "sandwich_height": 150
+      "sandwich_width": 750,
+      "sandwich_height": 150,
+      "content_box_padding_left": 50
     },
     "not_loaded_view_item_params": {
       "unset": true,
@@ -103,21 +104,21 @@
     "view_params": {
       "num_cols": 6,
       "num_rows": 5,
-      "sandwich_width": 250,
-      "sandwich_height": 150,
+      "sandwich_width": 240,
+      "sandwich_height": 140,
       "background_path": "plex_image_field:art",
       "background_width": 1920,
       "background_height": 1080,
       "background_order": "before_all",
       "optimize_full_screen_background": true,
-      "paint_content_box_background": false
+      "content_box_padding_left": 50
     },
     "not_loaded_view_item_params": {
       "item_caption_font_size": 1
     },
     "base_view_item_params": {
       "item_caption_font_size": 1,
-      "icon_sel_scale_factor": 1.4
+      "icon_sel_scale_factor": 1.3
     }
   },
   "photo": {
@@ -131,14 +132,15 @@
     "inherits": "episode",
     "async_icon_loading": false,
     "items": {
+      "media_url": "plex_item_xpath://Media[@height<480]/Part/@key||plex_item_xpath://@key",
       "view_item_params": {
-        "icon_path": "plex_image_item_field:thumb"
+        "icon_path": "plex_thumb_item_field:thumb:300:300"
       }
     },
-    "base_view_item_params":{
-      "item_paint_caption" :  true
+    "base_view_item_params": {
+      "item_paint_caption": true
     },
-    "view_params":{
+    "view_params": {
       "num_rows": 4,
       "paint_sandwich": false,
       "sandwich_width": 200,

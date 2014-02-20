@@ -1,7 +1,9 @@
 <?php
 
 // require_once 'classes/emplexer/utils/translations.php';
+require_once  'lib/dune_core/bootstrap.php';
 require_once 'AutoLoad.php';
+
 error_reporting(E_ALL);
 
 
@@ -43,9 +45,19 @@ error_reporting(E_ALL);
 // // print_r(iterator_to_array($b));
 // $a->unMount();
 
-$xml = Client::getInstance()->getAndParse("http://192.168.2.8:32400/library/sections");
+// $data = Client::getInstance()->getFinalThumbUrl("http://192.168.2.8:32400/:/plugins/com.plexapp.plugins.youtube/resources/contentWithFallback?urls=http%253A%2F%2Fi1.ytimg.com%2Fvi%2FlDtQwVF_Nc8%2Fhqdefault.jpg%2Chttp%253A%2F%2Fi1.ytimg.com%2Fvi%2FlDtQwVF_Nc8%2Fdefault.jpg");
 
-print_r($xml);
+// print_r($data);
+//
+//
+//
+
+
+$xml = simplexml_load_file("/tmp/index.xml");
+
+$element = simplexml_load_string($xml->Directory[0]->asXml());
+print_r($element->xpath("/*"));
+
 
 
 

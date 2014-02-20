@@ -31,6 +31,7 @@ class Client
 
         // echo "url = $url";
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,    false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,    10);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,    true);
@@ -48,7 +49,7 @@ class Client
         if (isset($opts))
         {
 
-            hd_print(print_r($opts, true));
+            // hd_print(print_r($opts, true));
 
             foreach ($opts as $k => $v)
 
@@ -73,6 +74,7 @@ class Client
         if ($http_code != 200 && $http_code != 201 && $http_code != 204)
         {
             $err_msg = "HTTP request failed ($http_code)";
+            hd_print("deu erro na url $url");
             //hd_print($err_msg);
             throw new Exception($err_msg);
         }
@@ -86,41 +88,68 @@ class Client
 
     public function startEmplexerServerAndRegisterAsPlayer()
     {
-        if ($this->startEmplexerServer()){
-            $this->registerAsPlayer();
-        }
+        // if ($this->startEmplexerServer()){
+        //     $this->registerAsPlayer();
+        // }
     }
     public function startEmplexerServer(){
         // HD::print_backtrace();
         $pid = shell_exec('pgrep lem-dune.bin');
         // $pid = null;
-        if (!$pid){
-            $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
-            // $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
-            hd_print("executando commando $command");
-            // ExecUtils::execute($command);
-            exec($command);
-            sleep(1);
-            return true;
-        }
+        // if (!$pid){
+        //     $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
+        //     // $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
+        //     hd_print("executando commando $command");
+        //     // ExecUtils::execute($command);
+        //     exec($command);
+        //     sleep(1);
+        //     return true;
+        // }
         return false;
     }
 
     public function registerAsPlayer($name='emplexer') {
-        $url = sprintf("http://127.0.0.1:3000/startServer/%s", $name);
-        $this->get($url);
+        // $url = sprintf("http://127.0.0.1:3000/startServer/%s", $name);
+        // $this->get($url);
     }
 
     public function getFinalThumbUrl($url){
-        return $this->get($url, array(
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_NOBODY => true,
-                CURLOPT_HEADER => true
-            )
-        );
+
+        // $data  =  $this->get($url, array( CURLOPT_FOLLOWLOCATION => true, CURLOPT_NOBODY => true,CURLOPT_HEADER => true));
+
+        // return curl_getinfo($ch,CURLINFO_EFFECTIVE_URL );
+    }
+
+    public function getRemoteFileType($url){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,               $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,    false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+
+        $data  =  curl_exec($ch);
+
+        $ret =  curl_getinfo($ch,CURLINFO_CONTENT_TYPE);
+        curl_close($ch);
+        return $ret;
+    }
+
+
+    public function getFinalVideoUrl($url){
+        $this->get($url, array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_NOBODY => true,CURLOPT_HEADER => true));
+        $info = curl_getinfo($ch);
+        // hd_print_r("info" , $info);
+        if ($info['content_type'] ==  "application/xml") {
+            $data = $this->getAndParse($url);
+            $videoUrl = $this->getUrl(null, $data->Video[0]->Media->Part->attributes()->key);
+            hd_print(__METHOD__ . ": video url $videoUrl");
+            return $this->getFinalVideoUrl($videoUrl);
+        }
     }
 
     public function getThumbUrl($key, $with=250, $height=250){
+
+        // hd_print("key = $key");
         // hd_print(__METHOD__ . ":" .  $key . ": " . $this->plexIp . ": "  . $this->plexPort);
         if (trim($this->plexIp) === "" && !filter_var($this->plexIp, FILTER_VALIDATE_IP)){
             $this->refreshPlexIpAndPort();
@@ -135,11 +164,8 @@ class Client
         if (strstr($url, "?") || strstr($url, "&")){
             $url = urlencode($url);
         }
-
         return sprintf("http://%s:%d/photo/:/transcode?width=%d&height=%d&url=%s", $this->plexIp, $this->plexPort,$with, $height, $url );
-        // http://192.168.2.8:32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2F%3A%2Fresources%2Fmovie.png&width=150&height=150&X-Plex-Token=Fdxv1u7Rk97GspiQwqPy
     }
-
 
     public function getUrl($lastKey, $newKey)
     {
@@ -175,18 +201,18 @@ class Client
 
 
     public function startMonitor($key, $viewOffset){
-        $this->startEmplexerServer();
-        $url = sprintf("http://127.0.0.1:3000/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", $this->plexIp,$this->plexPort, $key,10,$viewOffset);
-        // $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
-        $this->get($url);
+        // $this->startEmplexerServer();
+        // $url = sprintf("http://127.0.0.1:3000/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", $this->plexIp,$this->plexPort, $key,10,$viewOffset);
+        // // $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
+        // $this->get($url);
     }
 
 
     public function getAndParse($url){
         $data = $this->get($url);
-        // hd_print("url = $url");
-        return simplexml_load_string($data);
+        $xml=  simplexml_load_string($data);
         // return new SimpleXMLElement($url, 0, true);
+        return $xml;
     }
 
     //myPlex

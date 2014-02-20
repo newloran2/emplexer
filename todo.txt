@@ -19,3 +19,7 @@ PlayBackManager:
 
 FileSystemManager:
     Criar estruturas de classes para gerenciar montagem e navegação no dune por file system tanto remoto quanto local
+
+Trailers:
+	Adicionar uma função para ver o trailer de um filme
+	Uma possibilidade é adicionar uma interface para obtenção de trailers de diversas fontes como youtube, vimeo e apple trailers.
