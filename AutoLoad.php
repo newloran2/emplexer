@@ -50,11 +50,12 @@ class autoloader {
         if (count($files) == 1){
             require_once current($files) ;
         } else {
-            echo "arquivo $fileName não existe ou há mais de um com o mesmo nome\n";
-            // var_dump($files);
+            // echo "arquivo $fileName não existe ou há mais de um com o mesmo nome\n";
+            // var_dump($this->includes);
         }
         return false;
     }
+
 
 
     public function duneCore($class)

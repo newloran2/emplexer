@@ -6,6 +6,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     private $cachemanager;
 
     function __construct($key=null, $func=null) {
+        hd_print(__METHOD__);
         parent::__construct($key);
         // echo "teste\n";
         // $this->cachemanager =  new CacheManager('/tmp/cache');
@@ -18,6 +19,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
 
 	public function generateScreen(){
+        hd_print(__METHOD__);
         // print_r($this->data);
 
 		$viewGroup = (string)$this->data->attributes()->viewGroup;
@@ -48,6 +50,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
     public function generatePlayList($key)
     {
+        hd_print(__METHOD__);
         $url = Client::getInstance()->getUrl(null, "/library/metadata/$key/children");
         // $url .= "?unwatched=1";
 
@@ -65,7 +68,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	 * Exec the media with default dune player and refresh screen after the playback stops
 	 */
 	public function templatePlay(){
-
+        hd_print(__METHOD__);
         hd_print('templatePlay');
         $item = isset($this->data->Video[0]) ? $this->data->Video[0] : null;
         $item = isset($this->data->Track[0]) && is_null($item)? $this->data->Track[0] : $item;
@@ -77,20 +80,38 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 		$invalidate =  ActionFactory::invalidate_folders(array($parentUrl));
         // hd_print(__METHOD__ . ":" . print_r($this->data->Video[0]->attributes()->ratingKey, true));
 
-        $key = $this->data->Video[0]->attributes()->ratingKey;
-        $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;
+        // $key = $this->data->Video[0]->attributes()->ratingKey;
+        // $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;
 
-        Client::getInstance()->startMonitor($key, $viewOffset);
+        // Client::getInstance()->startMonitor($key, $viewOffset);
 
-        // the viedeo are mp4 container i use the especioal mp4:// syntax to optimise streaming
-        if (Client::getInstance()->getRemoteFileType($url) == "video/mp4"){
+        // the viedeo are mp4 container i use the especial mp4:// syntax to optimise streaming
+        if (strstr($url, "http://") && Client::getInstance()->getRemoteFileType($url) == "video/mp4"){
             $url = str_replace("http://", "http://mp4://", $url);
         }
+        hd_print("count de media é =  " . count($item->Media) );
+        if (count($item->Media)>1){
+            $menu = array();
+            $d = $item->Media;
+            $m = array();
+            foreach ( $d as $key => $value) {
+                $action =  ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, $value->Part->attributes()->key));
+                $m[] = array(
+                    'caption' =>  sprintf("%sp",$value->attributes()->videoResolution),
+                    'action' => $action
+                );
+            }
+            return ActionFactory::show_popup_menu($m);
+        }
+
+
 		return ActionFactory::launch_media_url($url);
+
 
 	}
 
 	public function getField($name, $item){
+        // hd_print(__METHOD__);
         if (strstr($name, "gui_skin") || strstr($name, "cut_icon") ){
             // hd_print("gui_skin or cut_icon detected returning the nam $name");
     		return $name;
@@ -159,10 +180,12 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	}
 
     public function getData(){
+        hd_print(__METHOD__);
     	return $this->data;
     }
 
     public function getMediaUrl($data){
+        hd_print(__METHOD__);
     	return Client::getInstance()->getUrl($this->path , (string)$this->data->attributes()->key);
     }
 

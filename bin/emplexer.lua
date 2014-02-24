@@ -3,11 +3,11 @@ print (basedir)
 if basedir == "emplexer.lua" then
   basedir = ""
 end
-package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
-package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
+-- package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+-- package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
--- package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
--- package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
+package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
 print(package.path)
 print(package.cpath)
@@ -33,6 +33,14 @@ local format = string.format
 hathaway.debug = print -- must be set before import()
 hathaway.import()      -- when using single instance API
 
+
+function log( text )
+  utils.spawn(function()
+    file = io.open("/D/dune_plugin_logs/emplexer2.log",  "a")
+    file:write(text.."\n");
+    file:close()
+  end)
+end
 
 local currentPlaylist = nil
 function table_print (tt, indent, done)
@@ -62,7 +70,7 @@ end
 
 
 GET('/', function(req, res)
-    print(req.client:getpeer())
+    log(req.client:getpeer())
     res:add("erik")
 
   end)
@@ -84,7 +92,7 @@ GET('/startNotifier', function (req, res)
       playing=function(data)
           --reduce the monitor frequence to 5 seconds
           dune:setPlayBackMonitorFrequence(5)
-          print("playing callback", data.playback_url)
+          log("playing callback", data.playback_url)
           -- the dune works with seconds and plex with miliseconds i need to convert
           duration = tonumber(data.playback_duration) *1000
           position = tonumber(data.playback_position) *1000
@@ -97,18 +105,18 @@ GET('/startNotifier', function (req, res)
           end
           end,
           buffering=function(data)
-          print("buffering callback ")
+          log("buffering callback ")
           if (viewOffset > 0 and moved) then
             dune:goToPosition(viewOffset/1000)
             moved=true
           end
           end,
           standby = function ( data )
-            print("buffering callback ")
+            log("buffering callback ")
             dune:stopPLaybackMonitor()
           end,
           stop=function( data )
-            print("stop callback ")
+            log("stop callback ")
             dune:stopPLaybackMonitor()
           end,
           navigator=function( data )
@@ -119,44 +127,44 @@ GET('/startNotifier', function (req, res)
 end)
 
 GET('/stopServer', function ( req, res )
-    print(req.client:getpeer())
+    log(req.client:getpeer())
     res:add('stopServer')
     plex:stopRegister()
   end)
 
 GET('/findServers' , function ( req, res )
-    print('findServers');
+    log('findServers');
     res:add (json.encode(plex:getPlexServers()))
   end)
 
 GET('/player/application/playMedia', function(req,res)
     a=  urlParser.parse(req.uri)
-    print (dump.tostring(a))
+    log (dump.tostring(a))
     b= urlParser.parse(a.query.path)
-    print (dump.tostring(b))
+    log (dump.tostring(b))
 
     local c = client.new()
-    print(a.query.path)
+    log(a.query.path)
     headers =  {}
     -- headers['Accept'] = 'application/json'
     local  req = c:get(a.query.path, headers )
 
     j=json.decode(req:body());
     url = "http://127.0.0.1:3000/startNotifier/127.0.0.1/32400/"..j.key.."/10/0"
-    print (t"tentando chamar a url", url)
+    log (t"tentando chamar a url", url)
     req =  c:get(url)
-    print (req:body())
+    log (req:body())
 end)
 
 GET("/player/playback/playMedia", function ( req,res )
      a=  urlParser.parse(req.uri)
-    print(req.client:getpeer())
+    log(req.client:getpeer())
     ip = a.query.address
     if (ip == '127.0.0.1') then
         ip =req.client:getpeer()
     end
     url = a.query.protocol.."://"..ip..":".. a.query.port..a.query.key
-    print ("url = ", url)
+    log ("url = ", url)
     local c = client.new()
     headers =  {}
     -- headers['Accept'] = 'application/json'

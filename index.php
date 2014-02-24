@@ -8,12 +8,15 @@
 	require_once 'lib/dune_core/dune_plugin_fw.php';
 	require_once 'lib/utils.php';
 	require_once 'AutoLoad.php';
+
+
 	$xml = simplexml_load_file("dune_plugin.xml");
 
 	// print_r($xml);
 
 	file_put_contents("/tmp/out.json", "\n\n");
 	$data =json_decode($_POST['data']);
+	// hd_print_r("data = ", $data);
 	// var_dump("data");
 	// var_dump($data->plugin_cookies);
 	// $data =json_decode(base64_decode($_POST['data']));

@@ -9,7 +9,7 @@
 class TemplateManager
 {
 
-    private $reload =false; //if true reload the template on every call
+    private $reload =true; //if true reload the template on every call
     private $templateFile ;
     private $templateJson;
     private static $instance;

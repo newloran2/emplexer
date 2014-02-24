@@ -38,6 +38,7 @@
   "Enter the ip and port for the plex media server": "Enter the ip and port for the plex media server",
   "Plex Port":"Plex Port",
   "Plex Ip": "Plex Ip",
-  "Save": "Save"
+  "Save": "Save",
+  "NFS server ip": "NFS server ip"
 }
 

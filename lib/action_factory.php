@@ -307,6 +307,29 @@ class ActionFactory
             return ActionFactory::show_dialog($modalTitle, $defs);
     }
 
+
+    public static function show_add_nfs_ip_modal($modalTitle, $post_action = null){
+        ControlFactory::add_text_field(
+            $defs,
+            null,
+            null,
+            $name            = 'ip',
+            $title           = _('NFS server ip'),
+            $initial_value   = '',
+            $numeric         = false,
+            $password        = false,
+            $has_osk         = false,
+            $always_active   = 0,
+            $width           = 500
+        );
+
+        ControlFactory::add_custom_close_dialog_and_apply_buffon($defs,
+        'addNFSIP', _('Save'), 200, $post_action);
+
+
+        return ActionFactory::show_dialog($modalTitle, $defs);
+    }
+
      public static function show_nfs_advanced_configuration_modal($modalTitle, &$plugin_cookies,$post_action= null){
 
         $defs = array();

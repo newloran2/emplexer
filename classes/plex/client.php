@@ -88,29 +88,29 @@ class Client
 
     public function startEmplexerServerAndRegisterAsPlayer()
     {
-        // if ($this->startEmplexerServer()){
-        //     $this->registerAsPlayer();
-        // }
+        if ($this->startEmplexerServer()){
+            $this->registerAsPlayer();
+        }
     }
     public function startEmplexerServer(){
         // HD::print_backtrace();
         $pid = shell_exec('pgrep lem-dune.bin');
-        // $pid = null;
-        // if (!$pid){
-        //     $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
-        //     // $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
-        //     hd_print("executando commando $command");
-        //     // ExecUtils::execute($command);
-        //     exec($command);
-        //     sleep(1);
-        //     return true;
-        // }
+        if (!$pid){
+            $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
+            // $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua >> /D/dune_plugin_logs/emplexer2.log &";
+            // $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
+            hd_print("executando commando $command");
+            // ExecUtils::execute($command);
+            exec($command);
+            sleep(1);
+            return true;
+        }
         return false;
     }
 
     public function registerAsPlayer($name='emplexer') {
-        // $url = sprintf("http://127.0.0.1:3000/startServer/%s", $name);
-        // $this->get($url);
+        $url = sprintf("http://127.0.0.1:3000/startServer/%s", $name);
+        $this->get($url);
     }
 
     public function getFinalThumbUrl($url){
@@ -201,10 +201,10 @@ class Client
 
 
     public function startMonitor($key, $viewOffset){
-        // $this->startEmplexerServer();
-        // $url = sprintf("http://127.0.0.1:3000/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", $this->plexIp,$this->plexPort, $key,10,$viewOffset);
-        // // $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
-        // $this->get($url);
+        $this->startEmplexerServer();
+        $url = sprintf("http://127.0.0.1:3000/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", $this->plexIp,$this->plexPort, $key,10,$viewOffset);
+        // $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
+        $this->get($url);
     }
 
 
@@ -232,7 +232,7 @@ class Client
 
         $url = sprintf('%s/%s', $this->myPlexBaseUr, '/users/sign_in.xml');
 
-        $opts = array( CURLOPT_HTTPHEADER =>
+        $opts = array( CURLOPT_HTTPHEApR =>
                         array(
                             'X-Plex-Client-Identifier:sdsdsdsds',
                             'X-Plex-Client-Platform:DuneOS',

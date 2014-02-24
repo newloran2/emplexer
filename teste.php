@@ -53,10 +53,26 @@ error_reporting(E_ALL);
 //
 
 
-$xml = simplexml_load_file("/tmp/index.xml");
+// $xml = simplexml_load_file("/tmp/teste.xml");
 
-$element = simplexml_load_string($xml->Directory[0]->asXml());
-print_r($element->xpath("/*"));
+// // print_r($xml);
+
+
+// $data = $xml->xpath("//Media/@videoResolution|//Media/Part/@key");
+
+// print_r($data);
+
+// $v = array();
+// $temp = null;
+
+// foreach ($data as $key => $value) {
+//     $temp = $data
+// }
+
+
+$a= "nfs://192.168.2.9:/volume1/Download/FilmeDeTeste";
+
+echo (filter_var($a, FILTER_VALIDATE_URL)? "é um ip\n" : "não é um ip\n");
 
 
 

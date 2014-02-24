@@ -23,3 +23,6 @@ FileSystemManager:
 Trailers:
 	Adicionar uma função para ver o trailer de um filme
 	Uma possibilidade é adicionar uma interface para obtenção de trailers de diversas fontes como youtube, vimeo e apple trailers.
+
+httpfs:
+    user o seguinte comando para montar  o device fuse mknod /dev/fuse c 10 229

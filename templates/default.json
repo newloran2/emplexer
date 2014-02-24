@@ -132,7 +132,7 @@
     "inherits": "episode",
     "async_icon_loading": false,
     "items": {
-      "media_url": "plex_item_xpath://Media[@height<480]/Part/@key||plex_item_xpath://@key",
+      "media_url": "plex_item_xpath://@key",
       "view_item_params": {
         "icon_path": "plex_thumb_item_field:thumb:300:300"
       }
