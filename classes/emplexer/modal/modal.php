@@ -8,7 +8,7 @@ class Modal
     private $width;
     private $components;
 
-    function __construct($title, GuiControlContainer $container = null, $width = 200){
+    function __construct($title, GuiControlContainer $container = null, $width = -1){
         $this->title =  $title;
         $this->width = $width;
         $this->components = isset($container)? $container : new GuiControlContainer();

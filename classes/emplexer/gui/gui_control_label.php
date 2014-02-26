@@ -5,9 +5,9 @@ class GuiControlLabel extends AbstractGuiControl
 
     public $text;
 
-    function __construct($title, $text)
+    function __construct($text, $vgap = 0, $title=null)
     {
-        parent::__construct('', $title);
+        parent::__construct('', $title, $vgap);
         $this->text = $text;
     }
 

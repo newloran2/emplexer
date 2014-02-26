@@ -18,9 +18,9 @@ class GuiControlText extends AbstractGuiControl
     private $initialValue;
     private $action;
 
-    function __construct($name, $title, $initialValue = "", $width = -1,  $action=null)
+    function __construct($name, $title, $initialValue = "", $width = -1 , $vgap=0,  $action=null)
     {
-        parent::__construct($name, $title);
+        parent::__construct($name, $title, $vgap);
         $this->initialValue = $initialValue;
         $this->action =  $action;
         $this->width = $width;

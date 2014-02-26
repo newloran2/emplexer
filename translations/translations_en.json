@@ -39,6 +39,9 @@
   "Plex Port":"Plex Port",
   "Plex Ip": "Plex Ip",
   "Save": "Save",
-  "NFS server ip": "NFS server ip"
+  "NFS server ip": "NFS server ip",
+  "This ip does not have an active nfs server.": "This ip does not have an active nfs server.",
+  "Please check and try again.": "Please check and try again.",
+  "Please enter a valid ip.": "Please enter a valid ip."
 }
 

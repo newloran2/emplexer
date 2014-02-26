@@ -13,8 +13,21 @@ class NFS {
 
     function __construct($ip)
     {
-        $this->ip = $ip;
-        $this->updateWithIp($ip);
+        // var_dump($ip);
+        if (filter_var($ip, FILTER_VALIDATE_IP)){
+            $this->ip = $ip;
+        } else {
+            $this->ip = parse_url($ip,PHP_URL_HOST);
+
+        }
+        // var_dump($this->ip);
+        $this->updateWithIp($this->ip);
+    }
+
+    public static function isANFSServer($ip){
+        $a  =  ExecUtils::execute("/usr/bin/showmount -d $ip", 5) ;
+        // hd_print_r("retorno de exec = ", $a);
+        return $a !== "timeout";
     }
 
     public function updateWithIp($ip){
@@ -25,7 +38,7 @@ class NFS {
         }
 
 
-        $data = ExecUtils::execute($this->showMountCommand . " $ip");
+        $data = ExecUtils::execute($this->showMountCommand . " $ip", 5);
         $data =preg_filter("/^(?!\/).*/", "", $data);
         $paths = array_filter(explode("\n", $data));
         $this->exports = $paths;
@@ -87,6 +100,8 @@ class NFS {
     }
 
     public function getIteratorForNfsPath($share){
+        // var_dump($share);
+        // var_dump($this->iterators);
         if (isset($this->iterators[$share])){
             // var_dump("tem o caminho $share");
             // var_dump($this->iterators[$share]);

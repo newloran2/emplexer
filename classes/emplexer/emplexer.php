@@ -75,9 +75,10 @@
                 $d = explode("|", $media_url);
                 hd_print_r("d ", $d);
                 // $menu = new NfsScreen('192.168.2.9');
-                $v = explode("nfs://", $d[1])[1];
+                // $t = explode("nfs://", $d[1]);
+                // $v = $t[1];
                 hd_print_r("v ", $v);
-                $menu = new NfsScreen(count($d) >  1 ? $v: $d[0]);
+                $menu = new NfsScreen(count($d) >  1 ? $d[1]: $d[0]);
             }
             else {
                 $menu =   new PlexScreen($media_url);
@@ -135,6 +136,7 @@
         }
 
         public function handle_user_input(&$user_input, &$plugin_cookies) {
+            Config::getInstance()->setPluginCookies($plugin_cookies);
             hd_print(__METHOD__);
             hd_print(__METHOD__ . ':' . print_r($user_input, true));
 
@@ -154,7 +156,7 @@
                 return ActionFactory::open_folder($user_input->selected_media_url);
             }
 
-            Config::getInstance()->setPluginCookies($plugin_cookies);
+
 
 
 

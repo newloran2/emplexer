@@ -26,11 +26,12 @@ class DefaultDunePluginFw extends DunePluginFw
         // return json_encode($ret);
         // HD::print_backtrace();
         // var_dump("call_ctx_json");
-        hd_print(__METHOD__ . ":" . print_r($call_ctx_json, true));
+        hd_print(__METHOD__ . " request :" . print_r($call_ctx_json, true));
         $a = json_encode(
                 $this->call_plugin_impl(
                     json_decode($call_ctx_json)));
-        hd_print(__METHOD__ . ':' . print_r(json_decode($a), true));
+        hd_print(__METHOD__ . ' response :' . print_r(json_decode($a), true));
+        // hd_print(__METHOD__ . ' response :' . print_r(json_decode($a), true));
         // hd_print(__METHOD__ . ":" . print_r($a, true));
         // HD::print_backtrace();
         return $a;
@@ -98,6 +99,7 @@ class DefaultDunePluginFw extends DunePluginFw
         catch (Exception $e)
         {
             hd_print("Error: Exception caught: " . $e->getMessage());
+            HD::print_backtrace();
 
             return
                 array
@@ -128,17 +130,8 @@ class DefaultDunePluginFw extends DunePluginFw
 
         if ($plugin_output_data[PluginOutputData::has_data])
         {
-            hd_print_r("data",$out_data->handler_string_id);
-            if ($out_data['handler_string_id'] == "show_dialog"){
-                hd_print('1');
-                $plugin_output_data[PluginOutputData::data_type] =PLUGIN_OUT_DATA_GUI_ACTION;
-            } else {
-                hd_print('2');
-                $plugin_output_data[PluginOutputData::data_type] =
-                $this->get_out_type_code($call_ctx->op_type_code);
-            }
-
-
+            $plugin_output_data[PluginOutputData::data_type] =
+            $this->get_out_type_code($call_ctx->op_type_code);
             $plugin_output_data[PluginOutputData::data] = $out_data;
         }
 

@@ -38,6 +38,10 @@
   "Enter the ip and port for the plex media server": "Insira o ip e a porta do plex Media server",
   "Plex Port":"porta do Plex",
   "Plex Ip": "Ip do Plex",
-  "Save": "Salvar"
+  "Save": "Salvar",
+  "NFS server ip": "Ip do servidor NFS",
+  "This ip does not have an active nfs server.": "Este ip não possui um servidor de NFS ativo.",
+  "Please check and try again.": "Por favor verifique e tente novamente.",
+  "Please enter a valid ip.": "Por favor insira um ip válido."
 }
 

@@ -7,9 +7,9 @@ class GuiControlButton extends AbstractGuiControl
     private $width ;
     private $action;
 
-    function __construct($name, $caption, $width = 200,  $action=null)
+    function __construct($name, $caption, $width = 200, $action=null, $vgap=0)
     {
-        parent::__construct($name, null);
+        parent::__construct($name, null, $vgap);
         $this->caption = $caption;
         $this->action =  $action;
         $this->width = $width;

@@ -90,18 +90,31 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
             $url = str_replace("http://", "http://mp4://", $url);
         }
         hd_print("count de media é =  " . count($item->Media) );
+
         if (count($item->Media)>1){
+            $b = new Modal("", null ,100);
             $menu = array();
             $d = $item->Media;
             $m = array();
             foreach ( $d as $key => $value) {
-                $action =  ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, $value->Part->attributes()->key));
-                $m[] = array(
-                    'caption' =>  sprintf("%sp",$value->attributes()->videoResolution),
-                    'action' => $action
+                // $action =  ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, $value->Part->attributes()->key));
+                // $m[] = array(
+                //     'caption' =>  sprintf("%sp",$value->attributes()->videoResolution),
+                //     'action' => $action
+                // );
+                $b->addControl(new GuiControlButton(
+                        'bt1',
+                        sprintf("%sp",$value->attributes()->videoResolution) ,
+                        600,
+                        ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, $value->Part->attributes()->key))
+                    )
                 );
             }
-            return ActionFactory::show_popup_menu($m);
+            $b->show();
+            // return ActionFactory::show_popup_menu($m);
+
+
+
         }
 
 

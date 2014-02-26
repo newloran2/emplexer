@@ -15,7 +15,10 @@ class GuiControlContainer implements Countable
     public function generate(){
         $controls =  array();
         foreach ($this->controls as $control) {
-            $controls[] = $control->generate();
+            foreach ($control->generate() as $c) {
+                $controls[] = $c;
+            }
+
         }
         return $controls;
     }

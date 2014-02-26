@@ -7,7 +7,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
+define("SIGTERM", 143);
+
 class ExecUtils {
+
+
 
     /**
      * Exec one Command and return the output
@@ -17,9 +21,13 @@ class ExecUtils {
      * @param array $extraEnv
      * @return string
      */
-    public static function execute($command, $extraEnv=array()) {
-
-        // echo "command =$command\n";
+    public static function execute($command, $timeout=0, $extraEnv=array()) {
+        $timeoutScript = sprintf("%s/bin/timeout.sh", ROOT_PATH);
+        if ($timeout > 0 ){
+            //set command to use timeout script and redirect stderr to stdout for timeout error catch
+            $command =  sprintf("%s -t %d %s 2>&1", $timeoutScript, $timeout, $command);
+        }
+        // hd_print("command =$command");
         $command = trim($command);
         $output = "";
 
@@ -41,10 +49,17 @@ class ExecUtils {
 
             $return_value = proc_close($process);
         }
-        if ($return_value==0) {
-            return $output;
-        } else {
-            return "";
+
+        switch ($return_value) {
+            case 0:
+                return $output;
+                break;
+            case SIGTERM:
+                return "timeout";
+                break;
+            default:
+                return  "";
+                break;
         }
     }
 

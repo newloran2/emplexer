@@ -4,10 +4,12 @@ abstract class AbstractGuiControl
 {
     protected $name;
     protected $title;
-    function __construct($name, $title)
+    protected $vgap;
+    function __construct($name, $title, $vgap=0)
     {
         $this->name = $name;
         $this->title= $title;
+        $this->vgap = $vgap;
     }
 
     public abstract function getControlType();
@@ -15,13 +17,27 @@ abstract class AbstractGuiControl
 
     public function generate()
     {
-        return array
+        $ret= array();
+        if ($this->vgap != 0){
+            $ret[] = array(
+                GuiControlDef::name => 'vgap',
+                GuiControlDef::title => null,
+                GuiControlDef::kind => GUI_CONTROL_VGAP,
+                GuiControlDef::specific_def => array(
+                    GuiVGapDef::vgap => $this->vgap
+                ),
+            );
+        }
+
+        $ret[] =array
         (
             GuiControlDef::name => $this->name,
             GuiControlDef::title => $this->title,
             GuiControlDef::kind => $this->getControlType(),
             GuiControlDef::specific_def => $this->getSpecificDef(),
         );
+
+        return $ret;
     }
 }
 ?>
