@@ -59,23 +59,22 @@ class TemplateManager
 
     private function walk(&$item, $key, $data){
         $getFieldCallBack = $data[0];
-        $upItem = $data[1];
-        $json =  $data[2];
-        $item = call_user_func_array($getFieldCallBack, array($item,$upItem , $json));
+        $upItem           = $data[1];
+        $json             = $data[2];
+        $item             = call_user_func_array($getFieldCallBack, array($item,$upItem , $json));
     }
 
     private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){
         $t = $this->getTag1($template, $tag);
-
         array_walk_recursive($t,array($this, 'walk'), array($getFieldCallBack, $item, $json));
         return isset($t[$tag]) ?  $t[$tag] : null;
     }
 
     public function getTemplate($name, $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){
 
-        $itens = array();
+        $itens       = array();
         $folderItems = array();
-        $data = call_user_func($getDataCallback);
+        $data        = call_user_func($getDataCallback);
 
         foreach ( $data as $item)
         {
@@ -95,23 +94,23 @@ class TemplateManager
         // var_dump($this->templateJson[$name]['async_icon_loading']);
         $async_icon_loading = isset($this->templateJson[$name]['async_icon_loading'])? $this->templateJson[$name]['async_icon_loading']  : true;
         $availableTemplates = array(
-            PluginRegularFolderView::async_icon_loading             => $async_icon_loading,
-            PluginRegularFolderView::initial_range                  =>
+            PluginRegularFolderView::async_icon_loading => $async_icon_loading,
+            PluginRegularFolderView::initial_range      =>
             array(
-                PluginRegularFolderRange::items                         =>  $folderItems,
-                PluginRegularFolderRange::total                         =>  count($folderItems),
-                PluginRegularFolderRange::count                         =>  count($folderItems),
-                PluginRegularFolderRange::more_items_available          =>  false,
-                PluginRegularFolderRange::from_ndx                      =>  0
+                PluginRegularFolderRange::items                => $folderItems,
+                PluginRegularFolderRange::total                => count($folderItems),
+                PluginRegularFolderRange::count                => count($folderItems),
+                PluginRegularFolderRange::more_items_available => false,
+                PluginRegularFolderRange::from_ndx             => 0
                 ),
-            PluginRegularFolderView::view_params                    => $this->getTag($name, "view_params",  $getFieldCallBack),
-            PluginRegularFolderView::base_view_item_params          => $this->getTag($name, "base_view_item_params",  $getFieldCallBack),
-            PluginRegularFolderView::not_loaded_view_item_params    => $this->getTag($name, "not_loaded_view_item_params",  $getFieldCallBack),
+            PluginRegularFolderView::view_params                 => $this->getTag($name, "view_params",  $getFieldCallBack),
+            PluginRegularFolderView::base_view_item_params       => $this->getTag($name, "base_view_item_params",  $getFieldCallBack),
+            PluginRegularFolderView::not_loaded_view_item_params => $this->getTag($name, "not_loaded_view_item_params",  $getFieldCallBack),
         );
 
         $a = array(
-            PluginFolderView::view_kind                             =>  PLUGIN_FOLDER_VIEW_REGULAR,
-            PluginFolderView::data                                  => $availableTemplates
+            PluginFolderView::view_kind => PLUGIN_FOLDER_VIEW_REGULAR,
+            PluginFolderView::data      => $availableTemplates
         );
         return $a;
 

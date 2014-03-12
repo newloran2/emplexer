@@ -42,6 +42,8 @@
   "NFS server ip": "Ip do servidor NFS",
   "This ip does not have an active nfs server.": "Este ip não possui um servidor de NFS ativo.",
   "Please check and try again.": "Por favor verifique e tente novamente.",
-  "Please enter a valid ip.": "Por favor insira um ip válido."
+  "Please enter a valid ip.": "Por favor insira um ip válido.",
+  "Mark as seen" : "Marcar como visto",
+  "Mark as unseen": "Marcar como não visto"
 }
 

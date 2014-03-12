@@ -27,7 +27,7 @@ class ExecUtils {
             //set command to use timeout script and redirect stderr to stdout for timeout error catch
             $command =  sprintf("%s -t %d %s 2>&1", $timeoutScript, $timeout, $command);
         }
-        // hd_print("command =$command");
+        hd_print("command =$command");
         $command = trim($command);
         $output = "";
 

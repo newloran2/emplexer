@@ -6,7 +6,6 @@ interface TemplateCallbackInterface{
     public function getData();
     public function getMediaUrl($data);
 
-
 }
 
 ?>

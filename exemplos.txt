@@ -23,4 +23,7 @@
 }}}
 
 }}}
+"{{{main 
+{"input_data":{"media_url":"main"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+"}}}
 

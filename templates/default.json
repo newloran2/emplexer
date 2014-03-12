@@ -21,7 +21,7 @@
     "base_view_item_params": {
       "item_paint_icon": false,
       "item_paint_caption": true,
-      "item_layout": 0
+      "item_layout": 0 
     },
     "not_loaded_view_item_params": {}
   },
@@ -58,7 +58,7 @@
       "item_paint_caption": false,
       "icon_scale_factor": 1,
       "icon_sel_scale_factor": 1.2,
-      "item_layout": 1
+      "item_layout":1 
     },
     "not_loaded_view_item_params": {
       "icon_path": "plugin_file://icons/poster.png"
@@ -145,6 +145,17 @@
       "paint_sandwich": false,
       "sandwich_width": 200,
       "sandwich_height": 145
+    }
+  },
+  "nfsScreen": {
+    "inherits": "base",
+    "async_icon_loading": false,
+    "items": {
+      "media_url": "{{key}}",
+      "caption": "{{value}}"
+    },
+    "view_params": {
+      "num_rows": 20
     }
   }
 }

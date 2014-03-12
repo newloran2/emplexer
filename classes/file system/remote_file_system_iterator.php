@@ -23,7 +23,7 @@ abstract class RemoteFileSystemIterator implements Iterator
         // echo "mountPoint = $mountPoint\n";
         $mountPoint = trim($mountPoint);
         if (!file_exists($mountPoint)){
-            echo "vou criar o path $mountPoint teste\n";
+            hd_print( "vou criar o path $mountPoint teste\n");
             mkdir($mountPoint, 0777, true);
         }
         $this->ip=$ip;
@@ -62,6 +62,22 @@ abstract class RemoteFileSystemIterator implements Iterator
         unset($this->filesystemIterator);
         ExecUtils::execute($this->unMountCommand);
 
+    }
+
+    public function getOnlyFolders(){
+        $this->filesystemIterator->seek(0);
+        $files = new CallbackFilterIterator($this->filesystemIterator, function ($current, $key, $iterator) {
+                return $current->isDir() && ! $iterator->isDot();
+        });
+        return $files;
+    }
+
+    public function getOnlyFiles(){
+        $this->filesystemIterator->seek(0);
+        $files = new CallbackFilterIterator($this->filesystemIterator, function ($current, $key, $iterator) {
+                return !$current->isDir() && ! $iterator->isDot();
+        });
+        return $files;
     }
 
     //emcapsulate filesystemIterator methods

@@ -1,6 +1,7 @@
 <?php
 
 /**
+
 *
 */
 class SetupScreen implements ScreenInterface, TemplateCallbackInterface

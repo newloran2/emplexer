@@ -31,6 +31,16 @@ class Actions{
 
         );
     }
+
+    public static function runThisStaticMethod($name){
+       return array(
+                GuiAction::handler_string_id => PLUGIN_HANDLE_USER_INPUT_ACTION_ID,
+                GuiAction::params =>  array(
+                    'type'=>__FUNCTION__,
+                    'method' => $name,
+                ),
+            );
+    }
 }
 
 

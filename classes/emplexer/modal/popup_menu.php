@@ -12,6 +12,12 @@ class PopupMenu
     }
 
     public function addItem($item){
+        foreach($this->itens as $_item){
+
+            hd_print($_item['caption']);
+            hd_print($item->caption);
+            if ($_item['caption'] == $item->caption) return;
+        }
         $this->itens[] = $item->generate();
     }
 
@@ -25,15 +31,15 @@ class PopupMenu
     }
     public function generate(){
         return array
-        (
-            GuiAction::handler_string_id => SHOW_POPUP_MENU_ACTION_ID,
-            GuiAction::data =>
-                array
-                (
-                    ShowPopupMenuActionData::menu_items => $this->itens,
-                    ShowPopupMenuActionData::selected_menu_item_index => 0,
-                ),
-        );
+            (
+             GuiAction::handler_string_id => SHOW_POPUP_MENU_ACTION_ID,
+             GuiAction::data =>
+             array
+             (
+              ShowPopupMenuActionData::menu_items => $this->itens,
+              ShowPopupMenuActionData::selected_menu_item_index => 0,
+             ),
+            );
     }
 
 }

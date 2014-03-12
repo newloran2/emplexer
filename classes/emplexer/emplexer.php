@@ -1,6 +1,5 @@
 
 <?php
-
     require_once 'AutoLoad.php';
 
     class Emplexer implements DunePlugin {
@@ -26,14 +25,6 @@
                 $menu =  new PlexScreen($media_url);
                 $a = $menu->generateScreen();
 
-                // $myPlex =  new PlexScreen("https://plex.tv/library/sections");
-
-                // $b = $myPlex->generateScreen();
-
-                // hd_print(print_r($b, true));
-
-                // var_dump($a['data']['initial_range']['items']);
-
                 array_push($a['data']['initial_range']['items'], array(
                     "caption"=> "local",
                     "media_url"=> "local",
@@ -41,7 +32,7 @@
                 ));
                 array_push($a['data']['initial_range']['items'], array(
                     "caption"=> "nfs",
-                    "media_url"=> "nfs",
+                    "media_url"=> "nfs|nfs",
                     "view_item_params"=> array()
                 ));
                 array_push($a['data']['initial_range']['items'], array(
@@ -73,11 +64,11 @@
                 //nfs|192.168.2.9
                 //nfs|nfs://192.168.2.9:/volume1/Animes
                 $d = explode("|", $media_url);
-                hd_print_r("d ", $d);
+                // hd_print_r("d ", $d);
                 // $menu = new NfsScreen('192.168.2.9');
                 // $t = explode("nfs://", $d[1]);
                 // $v = $t[1];
-                hd_print_r("v ", $v);
+                // hd_print_r("v ", $v);
                 $menu = new NfsScreen(count($d) >  1 ? $d[1]: $d[0]);
             }
             else {
@@ -139,15 +130,14 @@
             Config::getInstance()->setPluginCookies($plugin_cookies);
             hd_print(__METHOD__);
             hd_print(__METHOD__ . ':' . print_r($user_input, true));
-
-
             if (isset($user_input->type) && $user_input->type == "closeAndRunThisStaticMethod"){
                 return call_user_func($user_input->method, $user_input);
             }
 
-
+            if (isset($user_input->type) && $user_input->type == "runThisStaticMethod"){
+                return call_user_func($user_input->method, $user_input);
+            }
             HD::print_backtrace();
-
             if (isset($user_input->selected_control_id) && $user_input->selected_control_id === "quickSavePlexPrefs"){
                 // hd_print("entrou");
                 $plugin_cookies->plexIp = $user_input->plexIp;
@@ -155,9 +145,6 @@
                 Config::getInstance()->setPluginCookies($plugin_cookies);
                 return ActionFactory::open_folder($user_input->selected_media_url);
             }
-
-
-
 
 
             if (strstr(strtolower($user_input->selected_media_url), "setup")){
@@ -175,4 +162,8 @@
             // return ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, (string)"http://www.google.com"));
         }
 }
+
+
 ?>
+
+

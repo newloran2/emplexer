@@ -1,6 +1,7 @@
 <?php
 
 // require_once 'classes/emplexer/utils/translations.php';
+define('ROOT_PATH', __DIR__);
 require_once  'lib/dune_core/bootstrap.php';
 require_once 'AutoLoad.php';
 
@@ -53,26 +54,32 @@ error_reporting(E_ALL);
 //
 
 
-// $xml = simplexml_load_file("/tmp/teste.xml");
 
-// // print_r($xml);
+$xml = Client::getInstance()->getAndParse("http://192.168.2.8:32400/library/metadata/139");
+// $xml = Client::getInstance()->getAndParse("http://192.168.2.8:32400/library/metadata/20306");
+
+// print_r($xml);
 
 
-// $data = $xml->xpath("//Media/@videoResolution|//Media/Part/@key");
+$data = $xml->xpath("//Stream[@codec=\"srt\"][1]/@key");
 
-// print_r($data);
+print_r((string)$data[0]);
 
-// $v = array();
-// $temp = null;
+$v = array();
+$temp = null;
 
+
+$httpfs = new Httpfs("http://192.168.2.8:32400/library/metadata/42523");
+
+print_r($httpfs);
+$httpfs->mount();
+// $httpfs->umount();
 // foreach ($data as $key => $value) {
 //     $temp = $data
 // }
 
 
-$a= "nfs://192.168.2.9:/volume1/Download/FilmeDeTeste";
 
-echo (filter_var($a, FILTER_VALIDATE_URL)? "é um ip\n" : "não é um ip\n");
 
 
 

@@ -17,7 +17,9 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         }
     }
 
-
+    public static function showpopup($userInput){
+        $popUp = new PopupMenu();
+    }
 	public function generateScreen(){
         hd_print(__METHOD__);
         // print_r($this->data);
@@ -44,6 +46,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         //download images
         // $this->cachemanager->exec();
         // $this->cachemanager->clear();
+        hd_print_r(__METHOD__, $data);
         return $data;
 	}
 
@@ -74,10 +77,10 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         $item = isset($this->data->Track[0]) && is_null($item)? $this->data->Track[0] : $item;
         $item = isset($this->data->Photo[0]) && is_null($item)? $this->data->Photo[0] : $item;
 
-		$url=Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
-        // $url =  Client::getInstance()->getFinalVideoUrl($url);
-		$parentUrl =  Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
-		$invalidate =  ActionFactory::invalidate_folders(array($parentUrl));
+		$url        = Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
+        // $url     = Client::getInstance()->getFinalVideoUrl($url);
+		$parentUrl  = Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
+		$invalidate = ActionFactory::invalidate_folders(array($parentUrl));
         // hd_print(__METHOD__ . ":" . print_r($this->data->Video[0]->attributes()->ratingKey, true));
 
         // $key = $this->data->Video[0]->attributes()->ratingKey;
@@ -92,15 +95,15 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         hd_print("count de media é =  " . count($item->Media) );
 
         if (count($item->Media)>1){
-            $b = new Modal("", null ,100);
-            $menu = array();
-            $d = $item->Media;
-            $m = array();
+            $b                   = new Modal("", null ,100);
+            $menu                = array();
+            $d                   = $item->Media;
+            $m                   = array();
             foreach ( $d as $key => $value) {
-                // $action =  ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, $value->Part->attributes()->key));
-                // $m[] = array(
-                //     'caption' =>  sprintf("%sp",$value->attributes()->videoResolution),
-                //     'action' => $action
+                // $action       = ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, $value->Part->attributes()->key));
+                // $m[]          = array(
+                //     'caption' = >  sprintf("%sp",$value->attributes()->videoResolution),
+                //     'action'  = > $action
                 // );
                 $b->addControl(new GuiControlButton(
                         'bt1',
@@ -124,6 +127,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 	}
 
 	public function getField($name, $item){
+        hd_print("name = $name , item = $item");
         // hd_print(__METHOD__);
         if (strstr($name, "gui_skin") || strstr($name, "cut_icon") ){
             // hd_print("gui_skin or cut_icon detected returning the nam $name");

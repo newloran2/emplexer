@@ -1,13 +1,14 @@
+-- vim: foldmethod=indent
 basedir = string.gsub(arg[0], "(.*/)(.*)", "%1")
 print (basedir)
 if basedir == "emplexer.lua" then
   basedir = ""
 end
--- package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
--- package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
+package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
-package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
-package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
+-- package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+-- package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
 print(package.path)
 print(package.cpath)
@@ -22,10 +23,15 @@ local json = require ("dkjson")
 local xmlParser =  require('xml')
 local handler = require ('handler')
 local dune = require ('dune')
-local dump = require ('dump')
+local inspect = require ('inspect')
 local urlParser =  require ('urlParser')
 local client   = require 'lem.http.client'
 local lfs   = require 'lem.lfs'
+
+local downloadQueue  =require 'downloadQueue'
+
+
+print (inspect(downloadQueue))
 
 
 
@@ -36,38 +42,14 @@ hathaway.import()      -- when using single instance API
 
 function log( text )
   utils.spawn(function()
-    file = io.open("/D/dune_plugin_logs/emplexer2.log",  "a")
+    local file = io.open("/tmp/emplexer2.log",  "a")
+    print (file)
     file:write(text.."\n");
     file:close()
   end)
 end
 
 local currentPlaylist = nil
-function table_print (tt, indent, done)
-  done = done or {}
-  indent = indent or 0
-  if type(tt) == "table" then
-    for key, value in pairs (tt) do
-      io.write(string.rep (" ", indent)) -- indent it
-      if type (value) == "table" and not done [value] then
-        done [value] = true
-        io.write(string.format("[%s] => table\n", tostring (key)));
-        io.write(string.rep (" ", indent+4)) -- indent it
-        io.write("(\n");
-        table_print (value, indent + 7, done)
-        io.write(string.rep (" ", indent+4)) -- indent it
-        io.write(")\n");
-      else
-        io.write(string.format("[%s] => %s\n",
-            tostring (key), tostring(value)))
-      end
-    end
-  else
-    io.write(tt .. "\n")
-  end
-end
-
-
 
 GET('/', function(req, res)
     log(req.client:getpeer())
@@ -80,9 +62,7 @@ GETM('^/startServer/([^/]+)$', function(req, res, name)
   plex:startRegister(name)
   end)
 
--- GETM('^/startNotifier/(.+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$', function (req, res, ip, port, key, percentToDone,viewOffset)
 GET('/startNotifier', function (req, res)
-    -- , ip, port, key, percentToDone,viewOffset
   local query = urlParser.parse(req.uri).query
   table_print(query)
   viewOffset = tonumber(query.viewOffset)
@@ -105,11 +85,11 @@ GET('/startNotifier', function (req, res)
           end
           end,
           buffering=function(data)
-          log("buffering callback ")
-          if (viewOffset > 0 and moved) then
-            dune:goToPosition(viewOffset/1000)
-            moved=true
-          end
+            log("buffering callback ")
+            if (viewOffset > 0 and moved) then
+              dune:goToPosition(viewOffset/1000)
+              moved=true
+            end
           end,
           standby = function ( data )
             log("buffering callback ")
@@ -139,9 +119,9 @@ GET('/findServers' , function ( req, res )
 
 GET('/player/application/playMedia', function(req,res)
     a=  urlParser.parse(req.uri)
-    log (dump.tostring(a))
+    log (inspect(a))
     b= urlParser.parse(a.query.path)
-    log (dump.tostring(b))
+    log (inspect(b))
 
     local c = client.new()
     log(a.query.path)
@@ -167,20 +147,15 @@ GET("/player/playback/playMedia", function ( req,res )
     log ("url = ", url)
     local c = client.new()
     headers =  {}
-    -- headers['Accept'] = 'application/json'
     local  req, err  = c:get(url, headers )
-    table_print(req)
+    -- table_print(req)
     body, err = req:body()
 
-    -- print ("body, err", body, err)
+
     xml =  xmlParser:new(handler:simpleTreeHandler())
-    -- j=json.decode(body);
     xml:parse(body)
-    -- table_print(j)
-    -- print (j._children[1].key)
     fileUrl  = format("http://%s:%s%s", ip, a.query.port, xml._handler.root.MediaContainer.Video.Media.Part._attr.key)
     viewOffset = xml._handler.root.MediaContainer.Video._attr.viewOffset or '0'
-    -- print ("fileurl=", fileUrl)
     url = format("http://127.0.0.1:3000/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", a.query.address, a.query.port, xml._handler.root.MediaContainer.Video._attr.ratingkey,10,0)
     req =  c:get(url)
     dune:startPlayback(fileUrl,viewOffset)
@@ -203,11 +178,22 @@ GET('/player/timeline/subscribe', function(req, res)
 <Response code="200" status="OK" />]])
 end)
 
+GET('/getImage', function (req, res)
+    local a=  urlParser.parse(req.uri)
+    res.status = 302
+    res.headers['Location'] =  downloadQueue:add(a.query.imageUrl, a.query.fileName)
+
+end)
+
+downloadQueue:start()
+-- downloadQueue:add("http://192.168.2.8:32400/library/metadata/44250/thumb/1382223457", "teste.jpg")
+
+
 
 if arg[1] == 'socket' then
     local sock = assert(io.unix.listen('socket', 666))
     Hathaway(sock)
 else
-    Hathaway('*', arg[1] or '3000')
+    Hathaway('*', arg[1] or '3005')
 end
 utils.exit(0)

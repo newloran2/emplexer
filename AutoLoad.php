@@ -4,7 +4,7 @@ class autoloader {
     public static $loader;
     private $isDune = false;
     private $includes ;
-
+    //teste   s
     public static function init()
     {
         if (self::$loader == NULL)
@@ -31,27 +31,28 @@ class autoloader {
         // var_dump($this->includes);
     	$this->isDune =  file_exists("/tmp/run");
 		if (!$this->isDune){
-			// spl_autoload_register(array($this,'duneCore'));
-		}
+			// spl_autoload_register(array($this,'duneCore'));		}
+        }
 
         spl_autoload_register(array($this,'generic'));
    	}
 
    	private function putUndersCoreOnCamelCase($class){
-   		$pattern = '/(.*?[a-z]{1})([A-Z]{1}.*?)/';
-		$replace = '${1}_${2}';
-		$fileName =  strtolower(preg_replace($pattern, $replace, $class));
+   		$pattern  = '/(.*?[a-z]{1})([A-Z]{1}.*?)/';
+		$replace  = '${1}_${2}';
+		$fileName = strtolower(preg_replace($pattern, $replace, $class));
     	return $fileName;
    	}
 
     public function generic($class){
-        $fileName  = $this->putUndersCoreOnCamelCase($class);
-        $files = preg_grep("/.*\/$fileName.php/", $this->includes);
-        if (count($files) == 1){
+        $fileName         = $this->putUndersCoreOnCamelCase($class);
+        $files            = preg_grep("/.*\/$fileName.php/", $this->includes);
+        if (count($files)== 1){
             require_once current($files) ;
         } else {
             // echo "arquivo $fileName não existe ou há mais de um com o mesmo nome\n";
             // var_dump($this->includes);
+            hd_print_r("arquio $fileName não existe ou há mais de um com o mesmo nome", $files);
         }
         return false;
     }

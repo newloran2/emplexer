@@ -46,6 +46,12 @@ class Config {
 
         }
 	}
+    
+    public function getPlexBaseUrl(){
+        $ip   = $this->plexIp;
+        $port = $this->plexPort;
+        return sprintf("http://%s:%s", $ip, $port);
+    }
 
 	public function __get($key)
 	{

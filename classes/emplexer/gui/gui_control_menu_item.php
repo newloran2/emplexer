@@ -2,11 +2,15 @@
 
 class GuiControlMenuItem
 {
-    private $caption;
+    public $caption;
     private $action;
     function __construct($caption, $action)
     {
         $this->caption = $caption;
+        $this->action = $action;
+    }
+
+    public function setAction($action){
         $this->action = $action;
     }
 

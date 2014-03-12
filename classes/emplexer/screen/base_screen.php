@@ -98,7 +98,8 @@ abstract class BaseScreen implements TemplateCallbackInterface
 				GuiAction::params => array(
 					"function"=> "playAll||". $this->data->attributes()->key
 				)
-			)
+			),
+            GUI_EVENT_KEY_POPUP_MENU => Actions::runThisStaticMethod("PlexScreen::showpopup")
 		);
 		$a['data']['actions'] = $actions;
 		return $a;
@@ -156,12 +157,19 @@ abstract class BaseScreen implements TemplateCallbackInterface
 
 	}
 
+    public function getField($name, $item){
+        hd_print("entrou no getField de BaseScreen name =$name e item = $item");
+	}
+    public function getData(){
 
+	}
+    public function getMediaUrl($data){
+
+	}
 
 
 
 
 }
-
 
 ?>
