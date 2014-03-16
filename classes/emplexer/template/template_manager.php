@@ -61,12 +61,14 @@ class TemplateManager
         $getFieldCallBack = $data[0];
         $upItem           = $data[1];
         $json             = $data[2];
-        $item             = call_user_func_array($getFieldCallBack, array($item,$upItem , $json));
+        $item             = call_user_func_array($getFieldCallBack, array($item,$upItem , $key));
     }
 
     private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){
         $t = $this->getTag1($template, $tag);
+        //hd_print_r(__METHOD__ . " $template 1", $t);
         array_walk_recursive($t,array($this, 'walk'), array($getFieldCallBack, $item, $json));
+        //hd_print_r(__METHOD__ . " $template 2", $t);
         return isset($t[$tag]) ?  $t[$tag] : null;
     }
 
@@ -84,7 +86,7 @@ class TemplateManager
 
         // foreach ( $data as $key => $xml)
         // {
-        //     hd_print("key = $key");
+        //     //hd_print("key = $key");
         //     foreach ($xml as $item) {
         //         $folderItems[] =  $this->getTag($name, "items",  $getFieldCallBack, $item, array($key=>$xml));
         //     }

@@ -69,7 +69,8 @@
                 // $t = explode("nfs://", $d[1]);
                 // $v = $t[1];
                 // hd_print_r("v ", $v);
-                $menu = new NfsScreen(count($d) >  1 ? $d[1]: $d[0]);
+                // $menu = new NfsScreen(count($d) >  1 ? $d[1]: $d[0]);
+                $menu = new NfsScreen(count($d) > 1 ? $d[1]: $d[0]);
             }
             else {
                 $menu =   new PlexScreen($media_url);

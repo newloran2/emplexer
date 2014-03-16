@@ -23,6 +23,7 @@ class PlexSectionPopupMenu
             $menuItem = new GuiControlMenuItem((string)$dir->attributes()->title, null);
             $menuLocations =new PopupMenu();
             foreach($dir as $location){
+                $this->action['params']['selected_item_label'] =  (string)$location->attributes()->path;
                 $menuLocations->addItem(new GuiControlMenuItem((string)$location->attributes()->path, $this->action));
             }
             $menuItem->setAction($menuLocations->generate());

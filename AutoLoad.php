@@ -48,11 +48,11 @@ class autoloader {
         $fileName         = $this->putUndersCoreOnCamelCase($class);
         $files            = preg_grep("/.*\/$fileName.php/", $this->includes);
         if (count($files)== 1){
-            require_once current($files) ;
+            $f = current($files);
+            require_once $f;
         } else {
             // echo "arquivo $fileName não existe ou há mais de um com o mesmo nome\n";
             // var_dump($this->includes);
-            hd_print_r("arquio $fileName não existe ou há mais de um com o mesmo nome", $files);
         }
         return false;
     }
@@ -78,6 +78,5 @@ class autoloader {
 
 }
 
-//call
 autoloader::init();
 ?>

@@ -1,7 +1,7 @@
 <?php
 /**
-*
-*/
+ *
+ */
 class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
 {
 
@@ -28,13 +28,20 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
 
     }
 
-    public function getField($key, $name){
+    public function getField($key, $name, $field=null){
+
         if (gettype($key) !=  "string"){
             return $key;
         } 
-        if (strcmp($key ,"{{key}}")){
-            return array_search($name, $this->data);
-        } else if (strcmp($key , "{{value}}")){
+        if ($key == "{{key}}"){
+            $ret =  array_search($name, $this->data);
+            if ($field == "caption"){
+                if($v = Config::getInstance()->isValueInPluginCookies($name)){
+                    return sprintf("%s (%s)", $ret, $v);
+                }
+            }
+            return $ret;
+        } else if ($key  == "{{value}}"){
             return $name;
         } else {
             return $key;
@@ -49,8 +56,8 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
                 $a->mount();
             }
             $files = new CallbackFilterIterator($a, function ($current, $key, $iterator) {
-                return $current->isDir() && ! $iterator->isDot();
-            });
+                    return $current->isDir() && ! $iterator->isDot();
+                    });
 
             foreach ($files as $key => $value) {
                 $ret[basename($value)] = "nfs|$value";
@@ -63,7 +70,7 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
             }
 
         } else if (isset($this->decomposedPath['scheme']) && isset($this->decomposedPath['host'])){
-             $a =  $this->nfs->getIteratorForNfsPath($this->path);
+            $a =  $this->nfs->getIteratorForNfsPath($this->path);
             $a->mount();
 
             foreach ($a->getOnlyFolders() as $key => $value) {
@@ -98,6 +105,12 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
     }
 
 
+    public static function chose($user_input){
+        hd_print_r("camour o metodo chose", $user_input);
+        Config::getInstance()->{$user_input->selected_item_label} = $user_input->selected_media_url;
+        return ActionFactory::invalidate_folders(array($user_input->parent_media_url), null);
+
+    }
     public static function saveNfsIp($user_input){
         if (!filter_var($user_input->nfsIp, FILTER_VALIDATE_IP)){
             $b = new Modal(_("NFS server ip"), null ,-1);
@@ -132,24 +145,25 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
         return ActionFactory::open_folder("nfs");
     }
 
-   
+
 
     public function generateScreen(){
         $a = TemplateManager::getInstance()->getTemplate("nfsScreen", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
-        $popup = new PopupMenu();
-        $popup->addItem(new GuiControlMenuItem(_("escolher esse"), Actions::runThisStaticMethod('NfsScreen::chose')));
-        $b = new PlexSectionPopupMenu(Actions::runThisStaticMethod('NfsScreen::chose'));
+
         $actions = array(
-            GUI_EVENT_KEY_ENTER => array(
-                     GuiAction::handler_string_id => PLUGIN_OPEN_FOLDER_ACTION_ID
-                ),
-            GUI_EVENT_KEY_POPUP_MENU => $b->generate()
-                
-            );
+                GUI_EVENT_KEY_ENTER => array(
+                    GuiAction::handler_string_id => PLUGIN_OPEN_FOLDER_ACTION_ID
+                    )
+                );
+        if (isset($this->decomposedPath['host'])){
+
+            $b = new PlexSectionPopupMenu(Actions::runThisStaticMethod('NfsScreen::chose'));
+            $actions[GUI_EVENT_KEY_POPUP_MENU] = $b->generate();
+        }
         $a['data']['actions'] = $actions;
         return $a;
     }
 }
-    
+
 ?>
 

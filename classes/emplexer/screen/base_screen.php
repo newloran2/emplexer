@@ -157,7 +157,7 @@ abstract class BaseScreen implements TemplateCallbackInterface
 
 	}
 
-    public function getField($name, $item){
+    public function getField($name, $item, $field = null){
         hd_print("entrou no getField de BaseScreen name =$name e item = $item");
 	}
     public function getData(){

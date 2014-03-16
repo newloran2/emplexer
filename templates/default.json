@@ -48,7 +48,8 @@
       "sandwich_icon_keep_aspect_ratio": true,
       "paint_item_info_in_details": true,
       "paint_icon_selection_box": false,
-      "item_paint_caption_within_icon": true
+      "item_paint_caption_within_icon": true,
+      "content_box_padding_left": 50
     },
     "base_view_item_params": {
       "item_paint_icon": true,
@@ -76,7 +77,7 @@
       "num_rows": 5,
       "sandwich_width": 750,
       "sandwich_height": 150,
-      "content_box_padding_left": 50
+      "content_box_padding_left": 70
     },
     "not_loaded_view_item_params": {
       "unset": true,
@@ -151,8 +152,8 @@
     "inherits": "base",
     "async_icon_loading": false,
     "items": {
-      "media_url": "{{key}}",
-      "caption": "{{value}}"
+      "media_url": "{{value}}",
+      "caption": "{{key}}"
     },
     "view_params": {
       "num_rows": 20

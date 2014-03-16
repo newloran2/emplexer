@@ -13,7 +13,7 @@ function! EmplexerTester()
     silent execute '$read !'. command
     silent execute 'resize' . line ('$')
     silent execute 'goto 1'
-    set syntax=javasctipt
+    setlocal syntax=javasctipt
 endfunction
 
 map <F9> :call EmplexerTesterNoNewWin()<cr>
