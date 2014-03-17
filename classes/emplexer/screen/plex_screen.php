@@ -6,13 +6,9 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     private $cachemanager;
 
     function __construct($key=null, $func=null) {
-        //hd_print(__METHOD__);
         parent::__construct($key);
-        // echo "teste\n";
-        // $this->cachemanager =  new CacheManager('/tmp/cache');
         if (isset($func)){
             $a= explode("||", $func);
-            // var_dump($a);
             $this->generatePlayList($a[1]);
         }
     }
@@ -21,8 +17,6 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         $popUp = new PopupMenu();
     }
     public function generateScreen(){
-        //hd_print(__METHOD__);
-        // print_r($this->data);
 
         $viewGroup = (string)$this->data->attributes()->viewGroup;
 
@@ -40,27 +34,15 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
             $viewGroup = 'play';
         }
 
-        //hd_print("viewGroup selecionado $viewGroup");
-
         $data = $this->getTemplateByType($viewGroup);
-        //download images
-        // $this->cachemanager->exec();
-        // $this->cachemanager->clear();
-        //hd_print_r(__METHOD__, $data);
         return $data;
     }
 
 
     public function generatePlayList($key)
     {
-        //hd_print(__METHOD__);
         $url = Client::getInstance()->getUrl(null, "/library/metadata/$key/children");
-        // $url .= "?unwatched=1";
-
-        // var_dump($url);
-
         $xml = Client::getInstance()->getAndParse($url);
-        // var_dump($xml);
         foreach ($xml as $value) {
             // //hd_print($value->Video->attributes()->title);
         }
@@ -98,7 +80,6 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
             $url = Config::getInstance()->getMapForUrl($file);
             hd_print("o valor de url = $url e file = $file");
         }
-        //hd_print("count de media é =  " . count($item->Media) );
 
         if (count($item->Media)>1){
             $b                   = new Modal("", null ,100);
@@ -120,10 +101,6 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                         );
             }
             $b->show();
-            // return ActionFactory::show_popup_menu($m);
-
-
-
         }
 
 
@@ -133,10 +110,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     }
 
     public function getField($name, $item, $field=null){
-        //hd_print("name = $name , item = $item");
-        // //hd_print(__METHOD__);
         if (strstr($name, "gui_skin") || strstr($name, "cut_icon") ){
-            // //hd_print("gui_skin or cut_icon detected returning the nam $name");
             return $name;
         } else {
             $fields = explode("||", $name);
@@ -146,7 +120,6 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         foreach ($fields as $value) {
             $field =  explode(":", $value);
             if (count($field) <=1){
-                // //hd_print("single value that's not plex_field returning name $name");
                 return $name;
             }
 
@@ -181,19 +154,12 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                     if (isset($ret) && is_array($ret) && count($ret)>=1 ){
                         $ret = Client::getInstance()->getUrl($currentPath, (string)$ret[0]);
                     } else {
-                        {                       $ret = null;
-                        }
-
-                        // //hd_print("valor de ret2 $ret" );
+                        $ret = null;
                     }
                 }
 
-                // if (strstr($field[0], "thumb")){
-                //     $ret = $this->cachemanager->addSession($ret);
-                // }
                 if (isset($ret)){
                     $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
-                    // //hd_print("returning plex_fiel value $a");
                     return $a;
                 }
             }

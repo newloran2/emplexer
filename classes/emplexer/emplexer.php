@@ -5,8 +5,13 @@
     class Emplexer implements DunePlugin {
 
         public $stream_name;
+        private $availableScreens;
 
         function __construct($foo = null) {
+            $this->availableScreens = array(
+                'configRoot' => 'EmplexerSetupScreen',
+                'language' => 'LanguageChose'
+                );
         }
 
         function __destruct()
@@ -15,7 +20,8 @@
         }
 
         public function get_folder_view($media_url, &$plugin_cookies) {
-            hd_print(__METHOD__);
+            hd_print_r('this->availableScreens = ' , $this->availableScreens);
+            hd_print(__METHOD__ . " MediaURL = $media_url");
             Config::getInstance()->setPluginCookies($plugin_cookies);
             // Client::getInstance()->startEmplexerServerAndRegisterAsPlayer();
             // Client::getInstance()->getMyPlexServers();
@@ -46,14 +52,11 @@
                     "media_url"=> "/video",
                     "view_item_params"=> array()
                 ));
-
-                // array_push($a['data']['initial_range']['items'], array(
-                //     "caption"=> "MyPlex",
-                //     "media_url"=> Client::getInstance()->getUrl(null, "https://plex.tv/library/sections"),
-                //     "view_item_params"=> array()
-                // ));
-                // $a[]
-                // print_r($a);
+                array_push($a['data']['initial_range']['items'], array(
+                    "caption"=> "Config Test",
+                    "media_url"=> "configRoot",
+                    "view_item_params"=> array()
+                ));
 
                 $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
                 $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);
@@ -61,18 +64,11 @@
                 return $a;
 
             } else if (strstr(strtolower($media_url), 'nfs')) {
-                //nfs|192.168.2.9
-                //nfs|nfs://192.168.2.9:/volume1/Animes
                 $d = explode("|", $media_url);
-                // hd_print_r("d ", $d);
-                // $menu = new NfsScreen('192.168.2.9');
-                // $t = explode("nfs://", $d[1]);
-                // $v = $t[1];
-                // hd_print_r("v ", $v);
-                // $menu = new NfsScreen(count($d) >  1 ? $d[1]: $d[0]);
                 $menu = new NfsScreen(count($d) > 1 ? $d[1]: $d[0]);
-            }
-            else {
+            } else if (array_key_exists($media_url, $this->availableScreens)){
+                $menu = new $this->availableScreens[$media_url]();
+            } else {
                 $menu =   new PlexScreen($media_url);
             }
 
