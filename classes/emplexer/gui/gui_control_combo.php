@@ -19,5 +19,19 @@ class GuiControlCombo extends AbstractGuiControl{
             }
         }
     }
+
+    public function getControlType() {
+        return GUI_CONTROL_COMBOBOX;
+    }
+
+    public function getSpecificDef(){
+        return array(
+            GuiComboboxDef::initial_value       => $this->initialValue,
+            GuiComboboxDef::value_caption_pairs => $this->itens,
+            GuiComboboxDef::width               => $this->width,
+            GuiComboboxDef::apply_action        => null,
+            GuiComboboxDef::confirm_action      => $this->action
+        );
+    }
 }
 
