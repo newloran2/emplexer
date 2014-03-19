@@ -19,4 +19,4 @@ endfunction
 map <F9> :call EmplexerTesterNoNewWin()<cr>
 map <F8> :call EmplexerTester()<cr>
 set relativenumber 
-autocmd BufEnter *.php execute 'NeoSnippetSource snippets/php.snippets' 
+" autocmd BufEnter *.php execute 'NeoSnippetSource snippets/php.snippets' 

@@ -8,16 +8,15 @@ class TranslationManager
 {
     private $translationTable;
     private $supportedLanguages = array(
-        "english" =>  "en",
-        "french"  =>  "fr",
-        "german"  =>  "de"
+        "translations_en.json", "translations_pt_br.json"
     );
     private static $instance;
 
 
     private function __construct()
     {
-        $this->loadTranslationLanguage('en');
+        $systemLang = Config::getInstance()->language;
+        $this->loadTranslationLanguage(GetterUtils::getValueOrDefault($systemLang, 'translation_en.json'));
     }
 
     public static function getInstance(){
@@ -28,7 +27,11 @@ class TranslationManager
     }
 
     public function loadTranslationLanguage($lang){
-        $this->translationTable = json_decode(file_get_contents(ROOT_PATH . "/translations/translations_en.json"), true);
+        if (!in_array($lang, $this->supportedLanguages)){
+            hd_print("error: selected language are not supported $lang");
+            $lang = "translations_en.json";
+        }
+        $this->translationTable = json_decode(file_get_contents(ROOT_PATH . "/translations/$lang"), true);
     }
 
 

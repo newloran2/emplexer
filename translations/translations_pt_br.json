@@ -44,6 +44,9 @@
   "Please check and try again.": "Por favor verifique e tente novamente.",
   "Please enter a valid ip.": "Por favor insira um ip válido.",
   "Mark as seen" : "Marcar como visto",
-  "Mark as unseen": "Marcar como não visto"
+  "Mark as unseen": "Marcar como não visto",
+  "English" : "Inglês",
+  "Brazilian Portuguese": "Portugues do Brasil",
+  "Manually specify server": "Especificar o servidor manualmente"
 }
 

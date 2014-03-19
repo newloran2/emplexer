@@ -6,8 +6,9 @@ class EmplexerSetupScreen implements ScreenInterface, TemplateCallbackInterface
     public function __construct()
     {
        $this->data = array(
-            'Nfs Setup' =>  'nfs',
-            _('Language') => 'language'
+            'Nfs Setup'       => 'nfs',
+            _('Language')     => 'language',
+            _('Media Server') => 'mediaServer'
        );
     }
     public function generateScreen(){
@@ -19,12 +20,7 @@ class EmplexerSetupScreen implements ScreenInterface, TemplateCallbackInterface
     }
 
     public static function chose($user_input){
-         $menu = null;
-         if (strstr($user_input->selected_media_url, 'nfs')){
-            return ActionFactory::open_folder('nfs');
-         } else if (strstr($user_input->selected_media_url, 'language')){
-            return ActionFactory::open_folder('language');
-         }
+         return ActionFactory::open_folder($user_input->selected_media_url);
     }
 
     public function getField($key, $name, $field=null){

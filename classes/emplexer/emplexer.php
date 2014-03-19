@@ -10,7 +10,8 @@
         function __construct($foo = null) {
             $this->availableScreens = array(
                 'configRoot' => 'EmplexerSetupScreen',
-                'language' => 'LanguageChose'
+                'language' => 'LanguageChose',
+                'mediaServer'=> 'SetupMediaServer',
                 );
         }
 
