@@ -1,4 +1,4 @@
-all: local_deploy
+all: local_deploy deploy_303d
 
 local_deploy:
 	rsync -ravzup  --exclude '.git'  --exclude '.sublime-project' --exclude '.sublime-workspace' --exclude 'Makefile' --exclude *.zip --exclude '*.swp'	--exclude '*.swo' ~/Dropbox/Projeto/Dune/emplexer   /Library/WebServer/Documents/

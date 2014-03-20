@@ -66,10 +66,12 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         $invalidate = ActionFactory::invalidate_folders(array($parentUrl));
         // //hd_print(__METHOD__ . ":" . print_r($this->data->Video[0]->attributes()->ratingKey, true));
 
-        // $key = $this->data->Video[0]->attributes()->ratingKey;
-        // $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;
+        if (isset($this->data->Video[0])){
+            $key = $this->data->Video[0]->attributes()->ratingKey;
+            $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;
 
-        // Client::getInstance()->startMonitor($key, $viewOffset);
+            Client::getInstance()->startMonitor($key, $viewOffset);
+        }
 
         // the viedeo are mp4 container i use the especial mp4:// syntax to optimise streaming
         if (strstr($url, "http://") && Client::getInstance()->getRemoteFileType($url) == "video/mp4"){

@@ -31,7 +31,7 @@
     </entry_point>
     <entry_point>
       <parent_media_url>setup://applications</parent_media_url>
-      <media_url>rootSetup</media_url>
+      <media_url>configRoot</media_url>
       <caption>emplexer 2.0-B02</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>

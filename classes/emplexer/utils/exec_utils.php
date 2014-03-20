@@ -37,8 +37,8 @@ class ExecUtils {
             1 => array("pipe", "w"),
             2 => array("pipe", "w")
         );
-        // $env = array('LD_LIBRARY_PATH' => '/tango/firmware/lib');
-        $env = array();
+        $env = array('LD_LIBRARY_PATH' => '/tango/firmware/lib');
+        // $env = array();
 
 
         $process = proc_open($command, $descriptorspec, $pipes, '/tmp', $env);

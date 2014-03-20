@@ -2,11 +2,15 @@
 
 class NFS {
     // private $command = '/firmware/bin/showmount -d --no-headers';
-    private $showMountCommand = '/usr/bin/showmount -d ';
-    private $mountCommand = '/sbin/mount -o nolock ';
-    private $umountCommand = '/sbin/umount ';
-    private $mountCheck = "/sbin/mount | grep -i ";
-    private $mountPoint =  '/Library/WebServer/Documents/emplexer/teste';
+    private $showMountCommand = '/tango/firmware/bin/showmount  -d';
+    //private $showMountCommand = '/usr/bin/showmount -d ';
+    private $mountCommand = '/bin/mount -o nolock ';
+    // private $mountCommand = '/sbin/mount -o nolock ';
+    private $mountCheck = "/bin/mount | grep -i ";
+    // private $umountCommand = '/sbin/umount ';
+    private $umountCommand = '/bin/umount ';
+    // private $mountPoint =  '/Library/WebServer/Documents/emplexer/teste';
+    private $mountPoint =  '/tmp/emplexer';
     private $exports = array();
     private $ip;
     private $iterators =  array();
@@ -25,7 +29,8 @@ class NFS {
     }
 
     public static function isANFSServer($ip){
-        $a  =  ExecUtils::execute("/usr/bin/showmount -d $ip", 5) ;
+        // $a  =  ExecUtils::execute("/usr/bin/showmount -d $ip", 5) ;
+        $a  =  ExecUtils::execute(sprintf("%s %s",$this->mountCommand, $ip), 5) ;
         // hd_print_r("retorno de exec = ", $a);
         return $a !== "timeout";
     }

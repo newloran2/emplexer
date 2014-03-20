@@ -64,7 +64,7 @@ function plex:startRegister(serverName)
 -- 		local hello_broadcast_string =
 -- "HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3000\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1\r\nProtocol-Version: 1\r\nProtocol-Capabilities: navigation,playback,timeline"
 		local hello_broadcast_string =
-"HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3005\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1\r\nProtocol-Version: 1\r\nProtocol-Capabilities: navigation,playback"
+"HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: emplexer\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3005\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1\r\nProtocol-Version: 1\r\nProtocol-Capabilities: navigation,playback"
 		local bye_broadcast_string ="BYE * HTTP/1.0\r\n"
 		local port =32413
 		local ip="255.255.255.255"
@@ -128,7 +128,6 @@ function plex:timeline(ip, port, key, time, duration, state)
 	url = format("http://%s:%s/:/timeline", ip, port )
 
 	local c = client.new()
-	table_print(c)
 	header ={}
 	header["X-Plex-Client-Identifier"] = "emplexer"
 	-- c:get(url, header)

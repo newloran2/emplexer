@@ -24,40 +24,40 @@
             hd_print_r('this->availableScreens = ' , $this->availableScreens);
             hd_print(__METHOD__ . " MediaURL = $media_url");
             Config::getInstance()->setPluginCookies($plugin_cookies);
-            // Client::getInstance()->startEmplexerServerAndRegisterAsPlayer();
+            Client::getInstance()->startEmplexerServerAndRegisterAsPlayer();
             // Client::getInstance()->getMyPlexServers();
             if (strstr(strtolower($media_url), 'setup')){
                 $menu = $menu = new SetupScreen($media_url);
             } else if ($media_url == 'main'){
                 $menu =  new PlexScreen($media_url);
                 $a = $menu->generateScreen();
-
-                array_push($a['data']['initial_range']['items'], array(
-                    "caption"=> "local",
-                    "media_url"=> "local",
-                    "view_item_params"=> array()
-                ));
-                array_push($a['data']['initial_range']['items'], array(
-                    "caption"=> "nfs",
-                    "media_url"=> "nfs|nfs",
-                    "view_item_params"=> array()
-                ));
-                array_push($a['data']['initial_range']['items'], array(
-                    "caption"=> "smb",
-                    "media_url"=> "smb",
-                    "view_item_params"=> array()
-                ));
-
                 array_push($a['data']['initial_range']['items'], array(
                     "caption"=> "Channels",
                     "media_url"=> "/video",
                     "view_item_params"=> array()
                 ));
-                array_push($a['data']['initial_range']['items'], array(
-                    "caption"=> "Config Test",
-                    "media_url"=> "configRoot",
-                    "view_item_params"=> array()
-                ));
+
+//                 array_push($a['data']['initial_range']['items'], array(
+//                     "caption"=> "local",
+//                     "media_url"=> "local",
+//                     "view_item_params"=> array()
+//                 ));
+//                 array_push($a['data']['initial_range']['items'], array(
+//                     "caption"=> "nfs",
+//                     "media_url"=> "nfs|nfs",
+//                     "view_item_params"=> array()
+//                 ));
+//                 array_push($a['data']['initial_range']['items'], array(
+//                     "caption"=> "smb",
+//                     "media_url"=> "smb",
+//                     "view_item_params"=> array()
+//                 ));
+//
+//                 array_push($a['data']['initial_range']['items'], array(
+//                     "caption"=> "Config Test",
+//                     "media_url"=> "configRoot",
+//                     "view_item_params"=> array()
+//                 ));
 
                 $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
                 $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);
@@ -125,16 +125,7 @@
         }
 
         public function handle_user_input(&$user_input, &$plugin_cookies) {
-            Config::getInstance()->setPluginCookies($plugin_cookies);
             hd_print(__METHOD__);
-            hd_print(__METHOD__ . ':' . print_r($user_input, true));
-            if (isset($user_input->type) && $user_input->type == "closeAndRunThisStaticMethod"){
-                return call_user_func($user_input->method, $user_input);
-            }
-
-            if (isset($user_input->type) && $user_input->type == "runThisStaticMethod"){
-                return call_user_func($user_input->method, $user_input);
-            }
             HD::print_backtrace();
             if (isset($user_input->selected_control_id) && $user_input->selected_control_id === "quickSavePlexPrefs"){
                 // hd_print("entrou");
@@ -142,6 +133,15 @@
                 $plugin_cookies->plexPort = $user_input->plexPort;
                 Config::getInstance()->setPluginCookies($plugin_cookies);
                 return ActionFactory::open_folder($user_input->selected_media_url);
+            }
+            Config::getInstance()->setPluginCookies($plugin_cookies);
+            hd_print(__METHOD__ . ':' . print_r($user_input, true));
+            if (isset($user_input->type) && $user_input->type == "closeAndRunThisStaticMethod"){
+                return call_user_func($user_input->method, $user_input);
+            }
+
+            if (isset($user_input->type) && $user_input->type == "runThisStaticMethod"){
+                return call_user_func($user_input->method, $user_input);
             }
 
 

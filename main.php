@@ -1,6 +1,7 @@
 <?php
 //////////////////////////////////////////////////////////////////////////
 define('ROOT_PATH', __DIR__);
+define('DEV', false);
 function hd_print_r($text, $data){
     hd_print($text);
     hd_print(print_r($data, true));

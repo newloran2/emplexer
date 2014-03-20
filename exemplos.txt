@@ -30,7 +30,7 @@
 "}}}
 
 "{{{setup 
-{"input_data":{"media_url":"configRoot"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+{"input_data":{"media_url":"configRoot"},"plugin_cookies":{"nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
 "}}}
 "{{{setup language
 {"input_data":{"media_url":"language"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}

@@ -88,29 +88,41 @@ class Client
 
     public function startEmplexerServerAndRegisterAsPlayer()
     {
-        if ($this->startEmplexerServer()){
-            $this->registerAsPlayer();
+        hd_print("valor de DEV " . DEV);
+        if (!DEV){
+            hd_print(__METHOD__. " entrou");
+            if ($this->startEmplexerServer()){
+                $this->registerAsPlayer();
+            }
         }
     }
     public function startEmplexerServer(){
         // HD::print_backtrace();
-        $pid = shell_exec('pgrep lem-dune.bin');
-        if (!$pid){
-            $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
-            // $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua >> /D/dune_plugin_logs/emplexer2.log &";
-            // $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
-            hd_print("executando commando $command");
-            // ExecUtils::execute($command);
-            exec($command);
-            sleep(1);
-            return true;
+        if (!DEV){
+            hd_print(__METHOD__. " entrou");
+            $pid = shell_exec('pgrep lem-dune.bin');
+            hd_print(__METHOD__. " valor do pid $pid");
+            if (!$pid){
+                hd_print(__METHOD__ . "pid inválido registrando");
+                $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua > /dev/null &";
+                // $command = ROOT_PATH . "/bin/lem-dune.bin " . ROOT_PATH . "/bin/emplexer.lua >> /D/dune_plugin_logs/emplexer2.log &";
+                // $command = ROOT_PATH . "/bin/lem-mac " . ROOT_PATH . "/bin/emplexer.lua > /tmp/teste.log &";
+                hd_print("executando commando $command");
+                // ExecUtils::execute($command);
+                exec($command);
+                sleep(3);
+                return true;
+            }
         }
         return false;
     }
 
     public function registerAsPlayer($name='emplexer') {
-        $url = sprintf("http://127.0.0.1:3000/startServer/%s", $name);
-        $this->get($url);
+        if (!DEV){
+            hd_print(__METHOD__. " entrou");
+            $url = sprintf("http://127.0.0.1:3005/startServer/%s", $name);
+            $this->get($url);
+        }
     }
 
     public function getFinalThumbUrl($url){
@@ -201,10 +213,12 @@ class Client
 
 
     public function startMonitor($key, $viewOffset){
-        $this->startEmplexerServer();
-        $url = sprintf("http://127.0.0.1:3000/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", $this->plexIp,$this->plexPort, $key,10,$viewOffset);
-        // $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
-        $this->get($url);
+        if (!DEV){
+            $this->startEmplexerServer();
+            $url = sprintf("http://127.0.0.1:3005/startNotifier?ip=%s&port=%s&key=%s&percentToDone=%s&viewOffset=%s", $this->plexIp,$this->plexPort, $key,10,$viewOffset);
+            // $url = sprintf("http://127.0.0.1:3000/startNotifier/%s/%d/%d/%d/%d",$this->plexIp, $this->plexPort,$key, 10, $viewOffset);
+            $this->get($url);
+        }
     }
 
 
@@ -243,7 +257,7 @@ class Client
                             'X-Plex-Product:emplexer',
                             'X-Plex-Version:1'
                             ),
-                        CURLOPT_USERPWD => "newloran2@gmail.com:bastard123",
+                        CURLOPT_USERPWD => "",
                         CURLOPT_POSTFIELDS =>  "",
                         CURLOPT_POST => true,
                      );

@@ -106,6 +106,8 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
 
 
     public static function chose($user_input){
+        hd_print(Config);
+        HD::print_backtrace();
         Config::getInstance()->{$user_input->selected_item_label} = $user_input->selected_media_url;
         return ActionFactory::invalidate_folders(array($user_input->parent_media_url), null);
 

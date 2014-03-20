@@ -1,14 +1,16 @@
+
+
 -- vim: foldmethod=indent
 basedir = string.gsub(arg[0], "(.*/)(.*)", "%1")
 print (basedir)
 if basedir == "emplexer.lua" then
   basedir = ""
 end
-package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
-package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
+-- package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+-- package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
--- package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
--- package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
+package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
 print(package.path)
 print(package.cpath)
@@ -27,11 +29,6 @@ local inspect = require ('inspect')
 local urlParser =  require ('urlParser')
 local client   = require 'lem.http.client'
 local lfs   = require 'lem.lfs'
-
-local downloadQueue  =require 'downloadQueue'
-
-
-print (inspect(downloadQueue))
 
 
 
@@ -64,7 +61,6 @@ GETM('^/startServer/([^/]+)$', function(req, res, name)
 
 GET('/startNotifier', function (req, res)
   local query = urlParser.parse(req.uri).query
-  table_print(query)
   viewOffset = tonumber(query.viewOffset)
   moved = false
   dune:startPlayBackMonitor(1,
@@ -178,16 +174,16 @@ GET('/player/timeline/subscribe', function(req, res)
 <Response code="200" status="OK" />]])
 end)
 
-GET('/getImage', function (req, res)
-    local a=  urlParser.parse(req.uri)
-    res.status = 302
-    res.headers['Location'] =  downloadQueue:add(a.query.imageUrl, a.query.fileName)
-
+GET('/resources', function(req,res)
+    print(inspect(res))
+    res.headers['X-Plex-Client-Identifier'] =  '97512d2c-e5c8-4cd8-85ef-deef2c092b35'
+    res.headers['Content-Type'] = 'Content-Type'
+    res:add([[<?xml version="1.0" encoding="utf-8" ?>
+<MediaContainer>
+  <Player title="emplexer" protocol="plex" protocolVersion="1" protocolCapabilities="navigation,playback" machineIdentifier="emplexer" product="emplexer" platform="dune" platformVersion="1" deviceClass="htpc" />
+</MediaContainer>]])
+    
 end)
-
-downloadQueue:start()
--- downloadQueue:add("http://192.168.2.8:32400/library/metadata/44250/thumb/1382223457", "teste.jpg")
-
 
 
 if arg[1] == 'socket' then
