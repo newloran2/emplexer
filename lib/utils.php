@@ -3,6 +3,7 @@
 
 
 
+
 function _($key)
 {
     return TranslationManager::getInstance()->getTranslation($key);

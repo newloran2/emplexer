@@ -13,9 +13,6 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         }
     }
 
-    public static function showpopup($userInput){
-        $popUp = new PopupMenu();
-    }
     public function generateScreen(){
 
         $viewGroup = (string)$this->data->attributes()->viewGroup;
@@ -176,6 +173,31 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     public function getMediaUrl($data){
         //hd_print(__METHOD__);
         return Client::getInstance()->getUrl($this->path , (string)$this->data->attributes()->key);
+    }
+    public static function showpopup($user_input){
+        $xml = Client::getInstance()->getAndParse($user_input->selected_media_url);
+        if (isset($xml->Video)){
+            $extraParams = array();
+            $extraParams['key'] = (string)$xml->Video->attributes()->ratingKey;
+            $alert = new Modal('');
+
+            if (isset($xml->Video->attributes()->viewCount)){
+                $label =  _('Mark as unseen');
+                $extraParams['function'] = 'unscrobble';
+            } else {
+                $label = _('Mark as seen');
+                $extraParams['function'] = 'scrobble';
+            }
+            $alert->addControl(new GuiControlButton('mark', $label,-1, Actions::closeAndRunThisStaticMethod('PlexScreen::markAsSeenOrUnSeen', $extraParams), -50));
+            return $alert->generate();
+        }
+    }
+
+    public static function markAsSeenOrUnSeen($user_input){
+        $url = Client::getInstance()->getUrl(null, sprintf('/:/%s?key=%s&identifier=com.plexapp.plugins.library', $user_input->function,$user_input->key));
+        hd_print(__METHOD__ . " O valor de url = $url");
+        Client::getInstance()->get($url);
+        return ActionFactory::invalidate_folders(array($user_input->parent_media_url));
     }
 
 }

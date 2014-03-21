@@ -176,7 +176,7 @@ end)
 
 GET('/resources', function(req,res)
     print(inspect(res))
-    res.headers['X-Plex-Client-Identifier'] =  '97512d2c-e5c8-4cd8-85ef-deef2c092b35'
+    res.headers['X-Plex-Client-Identifier'] =  'emplexer'
     res.headers['Content-Type'] = 'Content-Type'
     res:add([[<?xml version="1.0" encoding="utf-8" ?>
 <MediaContainer>

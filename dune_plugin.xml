@@ -1,11 +1,11 @@
 <dune_plugin>
   <name>emplexer2</name>
-  <caption>emplexer 2.0-B02</caption>
+  <caption>emplexer 2.0-B03</caption>
   <entry_points>
     <entry_point>
       <parent_media_url>root://applications</parent_media_url>
       <media_url>main</media_url>
-      <caption>emplexer 2.0-B02</caption>
+      <caption>emplexer 2.0-B03</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
@@ -18,7 +18,7 @@
     <entry_point>
       <parent_media_url>root://sources</parent_media_url>
       <media_url>emplexer_section_secreen</media_url>
-      <caption>emplexer 2.0-B02</caption>
+      <caption>emplexer 2.0-B03</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
@@ -32,7 +32,7 @@
     <entry_point>
       <parent_media_url>setup://applications</parent_media_url>
       <media_url>configRoot</media_url>
-      <caption>emplexer 2.0-B02</caption>
+      <caption>emplexer 2.0-B03</caption>
       <icon_url>plugin_file://icons/emplexer.aai</icon_url>
       <actions>
         <key_enter>
@@ -56,6 +56,6 @@
     <timeout>86400</timeout>
     <required>no</required>
   </check_update>
-  <version_index>2</version_index>
-  <version>2.0-B02</version>
+  <version_index>3</version_index>
+  <version>2.0-B03</version>
 </dune_plugin>

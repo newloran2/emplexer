@@ -30,7 +30,7 @@ class NFS {
 
     public static function isANFSServer($ip){
         // $a  =  ExecUtils::execute("/usr/bin/showmount -d $ip", 5) ;
-        $a  =  ExecUtils::execute(sprintf("%s %s",$this->mountCommand, $ip), 5) ;
+        $a  =  ExecUtils::execute("/bin/showmount -d $ip", 5) ;
         // hd_print_r("retorno de exec = ", $a);
         return $a !== "timeout";
     }

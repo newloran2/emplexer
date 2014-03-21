@@ -8,7 +8,7 @@ class TranslationManager
 {
     private $translationTable;
     private $supportedLanguages = array(
-        "translations_en.json", "translations_pt_br.json"
+        "translations_en.json", "translations_pt_br.json",  "translations_de.json","translations_ru.json",
     );
     private static $instance;
 

@@ -164,6 +164,7 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
         $a['data']['actions'] = $actions;
         return $a;
     }
+    
 }
 
 ?>

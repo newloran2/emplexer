@@ -5,7 +5,9 @@ class LanguageChose extends BaseConfigScreen {
     public function __construct(){
         $langs = array(
             'translations_en.json'    => _('English'),
-            'translations_pt_br.json' => _('Brazilian Portuguese')
+            'translations_pt_br.json' => _('Brazilian Portuguese'),
+            'translations_de.json' => _('German'),
+            'translations_ru.json' => _('Russian (Russia)')
             );
         $this->addControl(new GuiControlCombo('language', GetterUtils::getValueOrDefault(Config::getInstance()->language, 'translations_en.json'), $langs));
         $this->addControl(new GuiControlButton('save', _('Save'),100, Actions::runThisStaticMethod('LanguageChose::saveLanguageAndReload')));

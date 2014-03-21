@@ -18,12 +18,12 @@ class Actions{
                 );
 
         // hd_print_r("postAction", $postAction);
+
         if (isset($extraParams)){
             foreach ($extraParams as $key => $value) {
                 $postAction['post_action']['params'][$key] = $value;
             }
         }
-
         return array(
             GuiAction::handler_string_id => CLOSE_AND_RUN_ACTION_ID,
             GuiAction::caption =>  null,
@@ -32,14 +32,20 @@ class Actions{
         );
     }
 
-    public static function runThisStaticMethod($name){
-       return array(
+    public static function runThisStaticMethod($name, $extraParams=null){
+       $a= array(
                 GuiAction::handler_string_id => PLUGIN_HANDLE_USER_INPUT_ACTION_ID,
                 GuiAction::params =>  array(
                     'type'=>__FUNCTION__,
                     'method' => $name,
                 ),
             );
+        if (isset($extraParams)){
+            foreach ($extraParams as $key => $value) {
+                $a['params'][$key] = $value;
+            }
+        }
+        return $a;
     }
 }
 
