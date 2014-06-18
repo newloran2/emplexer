@@ -25,7 +25,8 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         }
 
         if ($this->data->attributes()->size == 1 && isset($this->data->Video)){
-            $viewGroup = 'play';
+            // $viewGroup = 'play';
+            $viewGroup = 'vodplay';
         }
         if (!$viewGroup && strstr($this->path, 'metadata')){
             $viewGroup = 'play';
@@ -44,6 +45,51 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
             // //hd_print($value->Video->attributes()->title);
         }
 
+    }
+
+
+    public function templateVodPlay(){
+        $item = $this->data->Video[0];
+         $parentUrl  = Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
+        $extraParams = array();
+        $extraParams['key'] = $item->attributes()->ratingKey;
+         $url        = Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
+        $file       = GetterUtils::getValueOrDefault( $item->Media->Part->attributes()->file);
+  // the viedeo are mp4 container i use the especial mp4:// syntax to optimise streaming
+        if (strstr($url, "http://") && Client::getInstance()->getRemoteFileType($url) == "video/mp4"){
+            $url = str_replace("http://", "http://mp4://", $url);
+        }
+
+        if (isset($file)){
+            $mappedUrl = Config::getInstance()->getMapForUrl($file);
+            hd_print("o valor de url = $mappedUrl e file = $file");
+            $url = GetterUtils::getValueOrDefault($mappedUrl,$url);
+        }
+        hd_print("valor de url = $url");
+
+        $vodInfo = array(
+            PluginVodInfo::id => 1,
+            PluginVodInfo::name => (string)$item->attributes()->title,
+            PluginVodInfo::description => (string)$item->attributes()->summary,
+            PluginVodInfo::poster_url => Client::getInstance()->getThumbUrl((string)$item->attributes()->art),
+            PluginVodInfo::initial_series_ndx => 0,
+            PluginVodInfo::buffering_ms => 6000,
+            PluginVodInfo::initial_position_ms => GetterUtils::getValueOrDefault((string)$item->attributes()->viewOffset, 0),
+            PluginVodInfo::advert_mode => false,
+            PluginVodInfo::timer =>   array(GuiTimerDef::delay_ms => 5000),
+            PluginVodInfo::series => array(
+                array(
+			    	PluginVodSeriesInfo::name => (string)$item->attributes()->title,
+                    PluginVodSeriesInfo::playback_url => $url,
+                    PluginVodSeriesInfo::playback_url_is_stream_url => true,
+                )),
+            PluginVodInfo::actions => array(
+                GUI_EVENT_PLAYBACK_STOP => ActionFactory::invalidate_folders(array($parentUrl)),
+                GUI_EVENT_TIMER => Actions::runThisStaticMethod('PlexScreen::startMonitor', array('key'=>(string) $item->attributes()->ratingKey))
+            )
+        );
+        hd_print_r("valor de vodInfo", $vodInfo);
+        return ActionFactory::vod_play_with_vod_info($vodInfo);
     }
 
     /**
@@ -76,8 +122,9 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         }
 
         if (isset($file)){
-            $url = Config::getInstance()->getMapForUrl($file);
-            hd_print("o valor de url = $url e file = $file");
+            $mappedUrl = Config::getInstance()->getMapForUrl($file);
+            hd_print("o valor de url = $mappedUrl e file = $file");
+            $url = GetterUtils::getValueOrDefault($mappedUrl,$url);
         }
 
         if (count($item->Media)>1){
@@ -109,6 +156,9 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     }
 
     public function getField($name, $item, $field=null){
+        if ($field == "background_path"){
+            hd_print("name = $name item = $item");
+        }
         if (strstr($name, "gui_skin") || strstr($name, "cut_icon") ){
             return $name;
         } else {
@@ -126,15 +176,19 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
             if ($field[0] === "plex_field"){
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
                 $ret = $this->data->attributes()->{$field[1]};
+                return $ret;
             } else if ($field[0] === "plex_thumb_field") {
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
                 $ret = Client::getInstance()->getThumbUrl($this->data->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
+                return $ret;
             } else  if ($field[0] === "plex_image_field"){
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
                 $ret = Client::getInstance()->getUrl($currentPath, $this->data->attributes()->{$field[1]});
+                hd_print("ret = $ret");
+
             }
             if (isset($item)){
-
+                //"icon_path": "plex_thumb_item_field:atribute name:w:h:use plex helpers?"
                 if ($field[0] === "plex_thumb_item_field") {
                     if (!isset($item->attributes()->{$field[1]})) continue;
                     $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
@@ -151,16 +205,17 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                     $element =  simplexml_load_string($item->asXml());
                     $ret = $element->xpath($field[1]);
                     if (isset($ret) && is_array($ret) && count($ret)>=1 ){
+                        hd_print("entrou aqui e ret é $ret");
                         $ret = Client::getInstance()->getUrl($currentPath, (string)$ret[0]);
                     } else {
                         $ret = null;
                     }
                 }
 
-                if (isset($ret)){
-                    $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
-                    return $a;
-                }
+            }
+            if (isset($ret)){
+                $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);
+                return $a;
             }
         }
     }
@@ -198,6 +253,11 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         hd_print(__METHOD__ . " O valor de url = $url");
         Client::getInstance()->get($url);
         return ActionFactory::invalidate_folders(array($user_input->parent_media_url));
+    }
+
+    public static function startMonitor($user_input){
+        hd_print_r(__METHOD__. " O Valor de user_input", $user_input);
+        Client::getInstance()->startMonitor($user_input->key,0);
     }
 
 }

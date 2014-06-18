@@ -90,6 +90,8 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	protected function templateEpisode(){
 		hd_print(__METHOD__);
 		// var_dump($this->data);
+        $popup  = new PopupMenu();
+        $popup->addItem(new GuiControlMenuItem("marcar como visto"));
 		$a = TemplateManager::getInstance()->getTemplate("episode", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
 		$actions = array(
 			GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput),
@@ -99,7 +101,8 @@ abstract class BaseScreen implements TemplateCallbackInterface
 					"function"=> "playAll||". $this->data->attributes()->key
 				)
 			),
-            GUI_EVENT_KEY_POPUP_MENU => Actions::runThisStaticMethod("PlexScreen::showpopup")
+            GUI_EVENT_KEY_POPUP_MENU => $popup->generate()
+            // GUI_EVENT_KEY_POPUP_MENU => Actions::runThisStaticMethod("PlexScreen::showpopup")
 		);
 		$a['data']['actions'] = $actions;
 		return $a;

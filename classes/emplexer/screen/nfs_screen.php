@@ -20,6 +20,7 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
         $this->path = $path;
         $this->decomposedPath = parse_url($this->path);
 
+        hd_print("valor de path = $path");
         if (isset($path) && filter_var($path, FILTER_VALIDATE_URL)){
             $this->nfs = new NFS($path);
         } else  if (isset($path) && strstr($path, "/")){
@@ -55,16 +56,17 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
             if (!isset($this->localFileIterator)){
                 $a->mount();
             }
-            $files = new CallbackFilterIterator($a, function ($current, $key, $iterator) {
-                    return $current->isDir() && ! $iterator->isDot();
-                    });
-
+            $files = array();
+            foreach ($a as $file) {
+                if ($file->isDir()){ 
+                    $files[] = $file;
+                }
+            }
             foreach ($files as $key => $value) {
                 $ret[basename($value)] = "nfs|$value";
             }
         } else if (!isset($this->decomposedPath['path'])){
             $files =  $this->nfs->getAllNfsPaths();
-
             foreach ($files as $key => $value) {
                 $ret[basename($value)] = "nfs|$value";
             }
@@ -97,6 +99,7 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
             // return $ret;
         }
         $this->data =  $ret;
+        hd_print_r(__METHOD__ . ": o valor de rer é" , $ret);
         return $ret;
     }
 
@@ -106,8 +109,6 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
 
 
     public static function chose($user_input){
-        hd_print(Config);
-        HD::print_backtrace();
         Config::getInstance()->{$user_input->selected_item_label} = $user_input->selected_media_url;
         return ActionFactory::invalidate_folders(array($user_input->parent_media_url), null);
 
@@ -141,8 +142,6 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
         }
 
         Config::getInstance()->nfsIps = implode(',', $nfsIps);
-
-
         return ActionFactory::open_folder("nfs");
     }
 
@@ -150,7 +149,7 @@ class NfsScreen  implements ScreenInterface , TemplateCallbackInterface
 
     public function generateScreen(){
         $a = TemplateManager::getInstance()->getTemplate("nfsScreen", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
-
+        hd_print_r(__METHOD__ , $this->decomposedPath);
         $actions = array(
                 GUI_EVENT_KEY_ENTER => array(
                     GuiAction::handler_string_id => PLUGIN_OPEN_FOLDER_ACTION_ID

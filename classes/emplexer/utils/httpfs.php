@@ -42,7 +42,8 @@ class Httpfs {
     }
 
     public function umount(){
-        ExecUtils::execute(sprintf("/sbin/umount %s", $this->movieDir));
+        ExecUtils::execute(sprintf("/bin/umount %s", $this->movieDir));
+        // ExecUtils::execute(sprintf("/sbin/umount %s", $this->movieDir));
     }
 
 }

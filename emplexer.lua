@@ -61,12 +61,9 @@ GETM('^/startServer/([^/]+)$', function(req, res, name)
 
 GET('/startNotifier', function (req, res)
   local query = urlParser.parse(req.uri).query
+  table_print(query)
   viewOffset = tonumber(query.viewOffset)
-  if (viewOffset > 0) then
-    moved =  false
-  else 
-    moved =  true
-  end
+  moved = false
   dune:startPlayBackMonitor(1,
     {
       playing=function(data)
@@ -165,21 +162,14 @@ GET('/player/playback/play', function(req, res)
     dune:play()
 end)
 GET('/player/playback/pause', function(req, res)
-    dune:pause() 
-    res:add([[<?xml version="1.0" encoding="utf-8" ?>
-<Response code="200" status="OK" />]])
+    dune:pause()
 end)
-    
 GET('/player/playback/stop', function(req, res)
-    dune:stop()    
-    res:add([[<?xml version="1.0" encoding="utf-8" ?>
-<Response code="200" status="OK" />]])
-
+    dune:stop()
 end)
 
 
 GET('/player/timeline/subscribe', function(req, res)
-    print(inspect(req))
     plex:timeline('192.168.2.8', '32400', '20255', '10000', '1500083' )
     res:add([[<?xml version="1.0" encoding="utf-8" ?>
 <Response code="200" status="OK" />]])
@@ -187,7 +177,7 @@ end)
 
 GET('/resources', function(req,res)
     print(inspect(res))
-    res.headers['X-Plex-Client-Identifier'] =  'emplexer'
+    res.headers['X-Plex-Client-Identifier'] =  '97512d2c-e5c8-4cd8-85ef-deef2c092b35'
     res.headers['Content-Type'] = 'Content-Type'
     res:add([[<?xml version="1.0" encoding="utf-8" ?>
 <MediaContainer>

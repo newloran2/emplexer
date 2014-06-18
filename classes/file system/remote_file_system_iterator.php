@@ -32,8 +32,10 @@ abstract class RemoteFileSystemIterator implements Iterator
         $this->type = $type;
         $this->mountPoint = $mountPoint;
         $this->localPath = $mountPoint;
-        $this->isMountedCommand = sprintf('/sbin/mount -t %s | grep -i %s|grep -i %s', $this->type, $this->ip, $this->remotePath);
-        $this->unMountCommand = sprintf('/sbin/umount %s', $this->mountPoint);
+        $this->isMountedCommand = sprintf('/bin/mount -t %s | grep -i %s|grep -i %s', $this->type, $this->ip, $this->remotePath);
+        // $this->isMountedCommand = sprintf('/sbin/mount -t %s | grep -i %s|grep -i %s', $this->type, $this->ip, $this->remotePath);
+        $this->unMountCommand = sprintf('/bin/umount %s', $this->mountPoint);
+        // $this->unMountCommand = sprintf('/sbin/umount %s', $this->mountPoint);
         $this->flags = $flags;
     }
 
@@ -66,17 +68,23 @@ abstract class RemoteFileSystemIterator implements Iterator
 
     public function getOnlyFolders(){
         $this->filesystemIterator->seek(0);
-        $files = new CallbackFilterIterator($this->filesystemIterator, function ($current, $key, $iterator) {
-                return $current->isDir() && ! $iterator->isDot();
-        });
+        $files = array();
+        foreach ($this->filesystemIterator as $file) {
+            if ($file->isDir()){ 
+                $files[] = $file;
+            }
+        }
         return $files;
     }
 
     public function getOnlyFiles(){
         $this->filesystemIterator->seek(0);
-        $files = new CallbackFilterIterator($this->filesystemIterator, function ($current, $key, $iterator) {
-                return !$current->isDir() && ! $iterator->isDot();
-        });
+        $files = array();
+        foreach ($this->filesystemIterator as $file) {
+            if ($file->isDir()){
+                $files[] = $file;
+            }
+        }
         return $files;
     }
 

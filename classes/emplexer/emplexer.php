@@ -53,11 +53,11 @@
 //                     "view_item_params"=> array()
 //                 ));
 //
-//                 array_push($a['data']['initial_range']['items'], array(
-//                     "caption"=> "Config Test",
-//                     "media_url"=> "configRoot",
-//                     "view_item_params"=> array()
-//                 ));
+                array_push($a['data']['initial_range']['items'], array(
+                    "caption"=> "Config Test",
+                    "media_url"=> "configRoot",
+                    "view_item_params"=> array()
+                ));
 
                 $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
                 $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);

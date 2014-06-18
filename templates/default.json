@@ -1,7 +1,7 @@
 {
   "base": {
     "items": {
-      "caption": "plex_item_field:titleSort||plex_item_field:title",
+      "caption": "plex_item_field:titleSort||plex_item_field:title||\"\"",
       "media_url": "plex_image_item_field:key",
       "view_item_params": {}
     },
@@ -21,7 +21,7 @@
     "base_view_item_params": {
       "item_paint_icon": false,
       "item_paint_caption": true,
-      "item_layout": 0 
+      "item_layout": 0
     },
     "not_loaded_view_item_params": {}
   },
@@ -32,7 +32,7 @@
     "inherits": "base",
     "items": {
       "view_item_params": {
-        "icon_path": "plex_thumb_item_field:thumb:200:300"
+        "icon_path": "plex_thumb_item_field:thumb:200:300:true"
       }
     },
     "view_params": {
@@ -59,7 +59,7 @@
       "item_paint_caption": false,
       "icon_scale_factor": 1,
       "icon_sel_scale_factor": 1.2,
-      "item_layout":1 
+      "item_layout":1
     },
     "not_loaded_view_item_params": {
       "icon_path": "plugin_file://icons/poster.png"
@@ -103,7 +103,7 @@
   "episode": {
     "inherits": "movie",
     "view_params": {
-      "num_cols": 6,
+      "num_cols": 5,
       "num_rows": 5,
       "sandwich_width": 240,
       "sandwich_height": 140,
@@ -155,8 +155,16 @@
       "media_url": "{{value}}",
       "caption": "{{key}}"
     },
+    "base_view_item_params":{
+        "num_cols" :1,
+        "num_rows" : 20
+
+    },
     "view_params": {
-      "num_rows": 20
+        "unset":true,
+        "num_cols":1,
+        "num_rows": 10
+
     }
   }
 }

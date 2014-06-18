@@ -1,6 +1,8 @@
 <?php
 	header("Content-Type: application/json");
 	 error_reporting(E_ALL);
+
+    define('DEV', true);
  	ini_set("display_errors", 1);
 	require_once 'lib/dune_core/bootstrap.php';
 	require_once 'lib/dune_core/dune_api_nova.php';
@@ -85,3 +87,4 @@ function convert($size)
 // echo ("memoria = " .  memory_get_peak_usage(true) . "\n");
 
 ?>
+

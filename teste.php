@@ -1,9 +1,9 @@
 <?php
 
 // require_once 'classes/emplexer/utils/translations.php';
-define('ROOT_PATH', __DIR__);
-require_once  'lib/dune_core/bootstrap.php';
-require_once 'AutoLoad.php';
+// define('ROOT_PATH', __DIR__);
+// require_once  'lib/dune_core/bootstrap.php';
+// require_once 'AutoLoad.php';
 
 error_reporting(E_ALL);
 
@@ -55,36 +55,51 @@ error_reporting(E_ALL);
 
 
 
-$xml = Client::getInstance()->getAndParse("http://192.168.2.8:32400/library/metadata/139");
+// $xml = Client::getInstance()->getAndParse("http://192.168.2.8:32400/library/metadata/139");
 // $xml = Client::getInstance()->getAndParse("http://192.168.2.8:32400/library/metadata/20306");
 
 // print_r($xml);
 
 
-$data = $xml->xpath("//Stream[@codec=\"srt\"][1]/@key");
+// $data = $xml->xpath("//Stream[@codec=\"srt\"][1]/@key");
+//
+// print_r((string)$data[0]);
+//
+// $v = array();
+// $temp = null;
+//
+//
+// $httpfs = new Httpfs("http://192.168.2.8:32400/library/metadata/42523");
+//
+// print_r($httpfs);
+// $httpfs->mount();
+// // $httpfs->umount();
+// // foreach ($data as $key => $value) {
+// //     $temp = $data
+// // }
+//
+//
+//
+//
+//
+//
+//
+//
+//  echo "memoria maxima : " , memory_get_peak_usage(true),    "\n";
+//
+  // public static function v5($namespace, $name) {
+// echo (UUID::v1());
 
-print_r((string)$data[0]);
-
-$v = array();
-$temp = null;
 
 
-$httpfs = new Httpfs("http://192.168.2.8:32400/library/metadata/42523");
-
-print_r($httpfs);
-$httpfs->mount();
-// $httpfs->umount();
-// foreach ($data as $key => $value) {
-//     $temp = $data
-// }
-
-
-
-
-
-
-
-
- echo "memoria maxima : " , memory_get_peak_usage(true),    "\n";
-
-
+// $fp = stream_socket_client("udp://127.0.0.1:13", $errno, $errstr);
+$fp = stream_socket_client("udp://192.168.2.255:32414", $errno, $errstr);
+$data =  "M-SEARCH * HTTP/1.1\r\n\r\n";
+if (!$fp) {
+    echo "ERROR: $errno - $errstr<br />\n";
+} else {
+    fwrite($fp,$data);
+    echo fread($fp, strlen($data));
+    fclose($fp);
+}
+//

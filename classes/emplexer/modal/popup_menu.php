@@ -13,9 +13,8 @@ class PopupMenu
 
     public function addItem($item){
         foreach($this->itens as $_item){
-
-            hd_print($_item['caption']);
-            hd_print($item->caption);
+            hd_print( __METHOD__ . ':' .$_item['caption']);
+            hd_print(__METHOD__ . ':' .$item->caption);
             if ($_item['caption'] == $item->caption) return;
         }
         $this->itens[] = $item->generate();
