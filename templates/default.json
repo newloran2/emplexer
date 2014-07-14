@@ -1,8 +1,8 @@
 {
   "base": {
     "items": {
-      "caption": "plex_item_field:titleSort||plex_item_field:title||\"\"",
-      "media_url": "plex_image_item_field:key",
+      "caption": "plex_item_field::titleSort||plex_item_field::title||plex_item_field::name",
+      "media_url": "plex_image_item_field::key||plex_image_item_field::address",
       "view_item_params": {}
     },
     "view_params": {
@@ -25,6 +25,14 @@
     },
     "not_loaded_view_item_params": {}
   },
+  "servers": {
+    "inherits": "base",
+    "items": {
+      "caption": "plex_item_xpath::string(@name)",
+      "media_url": "plex_item_xpath::concat(@scheme, '://',@host, ':',@port, '/library/sections?X-Plex-Token=', @accessToken)",
+      "view_item_params": {}
+    }
+  },
   "secondary": {
     "inherits": "base"
   },
@@ -32,18 +40,18 @@
     "inherits": "base",
     "items": {
       "view_item_params": {
-        "icon_path": "plex_thumb_item_field:thumb:200:300:true"
+        "icon_path": "plex_thumb_item_field::thumb::200::300::true"
       }
     },
     "view_params": {
-      "num_cols": 8,
-      "num_rows": 3,
+      "num_cols": 6,
+      "num_rows": 2,
       "paint_sandwich": true,
       "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
       "sandwich_mask": "cut_icon://{name=sandwich_mask}",
       "sandwich_cover": "cut_icon://{name=sandwich_cover}",
-      "sandwich_width": 185,
-      "sandwich_height": 285,
+      "sandwich_width": 200,
+      "sandwich_height": 400,
       "sandwich_icon_upscale_enabled": true,
       "sandwich_icon_keep_aspect_ratio": true,
       "paint_item_info_in_details": true,
@@ -59,9 +67,10 @@
       "item_paint_caption": false,
       "icon_scale_factor": 1,
       "icon_sel_scale_factor": 1.2,
-      "item_layout":1
+      "item_layout": 1
     },
     "not_loaded_view_item_params": {
+      "item_paint_caption_within_icon": true,
       "icon_path": "plugin_file://icons/poster.png"
     }
   },
@@ -69,7 +78,7 @@
     "inherits": "movie",
     "items": {
       "view_item_params": {
-        "icon_path": "plex_image_item_field:banner"
+        "icon_path": "plex_image_item_field::banner"
       }
     },
     "view_params": {
@@ -88,11 +97,11 @@
     "inherits": "movie",
     "items": {
       "view_item_params": {
-        "icon_path": "plex_thumb_item_field:thumb:200:300||plex_thumb_field:thumb:200:300"
+        "icon_path": "plex_thumb_item_field::thumb::200::300::true||plex_thumb_field::thumb::200::300"
       }
     },
     "view_params": {
-      "background_path": "plex_image_field:art",
+      "background_path": "plex_image_field::art",
       "background_width": 1920,
       "background_height": 1080,
       "background_order": "before_all",
@@ -102,12 +111,17 @@
   },
   "episode": {
     "inherits": "movie",
+    "items": {
+      "view_item_params": {
+        "icon_path": "plex_thumb_item_field::thumb::360::300::true"
+      }
+    },
     "view_params": {
-      "num_cols": 5,
-      "num_rows": 5,
-      "sandwich_width": 240,
-      "sandwich_height": 140,
-      "background_path": "plex_image_field:art",
+      "num_cols": 4,
+      "num_rows": 3,
+      "sandwich_width": 290,
+      "sandwich_height": 240,
+      "background_path": "plex_image_field::art",
       "background_width": 1920,
       "background_height": 1080,
       "background_order": "before_all",
@@ -119,7 +133,7 @@
     },
     "base_view_item_params": {
       "item_caption_font_size": 1,
-      "icon_sel_scale_factor": 1.3
+      "icon_sel_scale_factor": 1.6
     }
   },
   "photo": {
@@ -135,7 +149,7 @@
     "items": {
       "media_url": "plex_item_xpath://@key",
       "view_item_params": {
-        "icon_path": "plex_thumb_item_field:thumb:300:300"
+        "icon_path": "plex_thumb_item_field::thumb::300::300"
       }
     },
     "base_view_item_params": {
@@ -155,16 +169,14 @@
       "media_url": "{{value}}",
       "caption": "{{key}}"
     },
-    "base_view_item_params":{
-        "num_cols" :1,
-        "num_rows" : 20
-
+    "base_view_item_params": {
+      "num_cols": 1,
+      "num_rows": 20
     },
     "view_params": {
-        "unset":true,
-        "num_cols":1,
-        "num_rows": 10
-
+      "unset": true,
+      "num_cols": 1,
+      "num_rows": 10
     }
   }
 }

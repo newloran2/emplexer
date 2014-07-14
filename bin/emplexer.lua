@@ -6,11 +6,11 @@ print (basedir)
 if basedir == "emplexer.lua" then
   basedir = ""
 end
--- package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
--- package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
+package.path = basedir..'mac/?.lua;'..basedir..'mac/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
-package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
-package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
+-- package.path = basedir..'dune/?.lua;'..basedir..'dune/lua/?.lua;'.. basedir.. 'emplexer/?.lua'
+-- package.cpath = basedir .. 'dune/?.so;'.. basedir..'dune/lua/?.so;' ..basedir.. 'emplexer/?.so'
 
 print(package.path)
 print(package.cpath)
@@ -29,6 +29,8 @@ local inspect = require ('inspect')
 local urlParser =  require ('urlParser')
 local client   = require 'lem.http.client'
 local lfs   = require 'lem.lfs'
+local http =  require 'socket.http'
+  local gd = require("gd")
 
 
 
@@ -194,6 +196,26 @@ GET('/resources', function(req,res)
   <Player title="emplexer" protocol="plex" protocolVersion="1" protocolCapabilities="navigation,playback" machineIdentifier="emplexer" product="emplexer" platform="dune" platformVersion="1" deviceClass="htpc" />
 </MediaContainer>]])
     
+end)
+
+
+GET('/generate', function(req,res)
+  print ('teste do erik', inspect(gd));
+
+
+local im = gd.createPalette(90, 90)
+
+local white = im:colorAllocate(255, 255, 255)
+local blue = im:colorAllocate(0, 0, 255)
+local red = im:colorAllocate(255, 0, 0)
+
+im:colorTransparent(white)
+im:filledRectangle(10, 10, 50, 50, blue)
+im:filledRectangle(40, 40, 80, 80, red)
+
+im:gif("out.gif")
+-- os.execute("xdg-open out.gif")
+
 end)
 
 

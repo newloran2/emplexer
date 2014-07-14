@@ -43,3 +43,18 @@
 
 }}}
 }}}
+"{{{myplex
+"{{{root
+{"input_data":{"media_url":"myPlex"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+"}}}
+"{{{mac mini
+{"input_data":{"media_url":"http://189.46.88.98:16885/library/sections?X-Plex-Token=mYCSANu3fqky815q6AbL"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+"}}}
+"{{{ 3d movies
+{"input_data":{"media_url":"http://189.46.88.98:16885/library/sections/13?X-Plex-Token=mYCSANu3fqky815q6AbL"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+"}}}
+"{{{mac mini
+{"input_data":{"media_url":"http://189.46.88.98:16885/library/sections?X-Plex-Token=mYCSANu3fqky815q6AbL"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+"}}}
+"}}}
+

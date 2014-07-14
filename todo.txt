@@ -26,3 +26,17 @@ Trailers:
 
 httpfs:
     user o seguinte comando para montar  o device fuse mknod /dev/fuse c 10 229
+
+ImageTranscodeManager:
+    Usar libgd juntamente com o lem para poder processar imagens dentro do dune (OK)
+    Fazer um módulo lua que use o libgd e leia um template json para gerar uma imagem(50%)
+
+TrascodeSessionManager:
+    Criar classe que possa ser configurada atravéz de algum arquivo de configuração para gerenciar sessões transcodificadas do plex.
+    Esse arquivo de config tem que indicar condicionais com base no xml de detalhe do video para decidir se irá fazer uma sessão transcodificada ou não.
+    Coisas como (se o audio codec for aac transcodificar deve ser possivel)
+    Mais exemplos:
+        if (vcodec == hi10p) transcode
+        if (container == newmkvcontainernotsupportedbydune) transcode
+        if (vcodec == hi10p || sub == ass) transcode
+        

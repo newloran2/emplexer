@@ -12,6 +12,7 @@
                 'configRoot' => 'EmplexerSetupScreen',
                 'language' => 'LanguageChose',
                 'mediaServer'=> 'SetupMediaServer',
+                'myPlex' => 'MyPlexScreen'
                 );
         }
 
@@ -30,12 +31,29 @@
                 $menu = $menu = new SetupScreen($media_url);
             } else if ($media_url == 'main'){
                 $menu =  new PlexScreen($media_url);
-                $a = $menu->generateScreen();
-                array_push($a['data']['initial_range']['items'], array(
-                    "caption"=> "Channels",
-                    "media_url"=> "/video",
-                    "view_item_params"=> array()
-                ));
+                $a = $menu->generateScreenWithExtraEntries(array(
+                        array(
+                            "caption"=> "Channels",
+                            "media_url"=> "/video",
+                            "view_item_params"=> array()
+                        ),
+                        array(
+                            "caption"=> "Config Test1",
+                            "media_url"=> "configRoot",
+                            "view_item_params"=> array()
+                        ),
+                        array(
+                            "caption"=> _("Shared Content"),
+                            "media_url"=> "myPlex",
+                            "view_item_params"=> array()
+                        )
+                    )
+                );
+                // array_push($a['data']['initial_range']['items'], array(
+                //     "caption"=> "Channels",
+                //     "media_url"=> "/video",
+                //     "view_item_params"=> array()
+                // ));
 
 //                 array_push($a['data']['initial_range']['items'], array(
 //                     "caption"=> "local",
@@ -53,14 +71,14 @@
 //                     "view_item_params"=> array()
 //                 ));
 //
-                array_push($a['data']['initial_range']['items'], array(
-                    "caption"=> "Config Test",
-                    "media_url"=> "configRoot",
-                    "view_item_params"=> array()
-                ));
+                // array_push($a['data']['initial_range']['items'], array(
+                //     "caption"=> "Config Test",
+                //     "media_url"=> "configRoot",
+                //     "view_item_params"=> array()
+                // ));
 
-                $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
-                $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);
+                // $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
+                // $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);
 
                 return $a;
 

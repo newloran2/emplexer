@@ -36,6 +36,16 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         return $data;
     }
 
+    public function generateScreenWithExtraEntries($extraEntries){
+        $data = $this->generateScreen();
+        foreach ($extraEntries as $value) {
+            array_push($data['data']['initial_range']['items'], $value);
+        }
+        $data['data']['initial_range']['total'] = count($data['data']['initial_range']['items']);
+        $data['data']['initial_range']['count'] = count($data['data']['initial_range']['items']);
+        return $data;
+    }
+
 
     public function generatePlayList($key)
     {
@@ -49,11 +59,12 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
 
     public function templateVodPlay(){
+        hd_print("este é o path = ". $this->path);
         $item = $this->data->Video[0];
          $parentUrl  = Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
         $extraParams = array();
         $extraParams['key'] = $item->attributes()->ratingKey;
-         $url        = Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
+         $url        = Client::getInstance()->getUrl($this->path, (string)$item->Media->Part->attributes()->key );
         $file       = GetterUtils::getValueOrDefault( $item->Media->Part->attributes()->file);
   // the viedeo are mp4 container i use the especial mp4:// syntax to optimise streaming
         if (strstr($url, "http://") && Client::getInstance()->getRemoteFileType($url) == "video/mp4"){
@@ -96,13 +107,16 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
      * Exec the media with default dune player and refresh screen after the playback stops
      */
     public function templatePlay(){
-        //hd_print(__METHOD__);
-        //hd_print('templatePlay');
+        hd_print(__METHOD__);
+        hd_print('templatePlay');
+        hd_print("este é o path = ". $this->path);
         $item = isset($this->data->Video[0]) ? $this->data->Video[0] : null;
         $item = isset($this->data->Track[0]) && is_null($item)? $this->data->Track[0] : $item;
         $item = isset($this->data->Photo[0]) && is_null($item)? $this->data->Photo[0] : $item;
 
-        $url        = Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
+        // $url        = Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );
+        $url        = Client::getInstance()->getUrl($this->path, (string)$item->Media->Part->attributes()->key );
+        hd_print("valor final de url = $url");
         $file       = GetterUtils::getValueOrDefault( $item->Media->Part->attributes()->file);
         // $url     = Client::getInstance()->getFinalVideoUrl($url);
         $parentUrl  = Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;
@@ -164,15 +178,19 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         } else {
             $fields = explode("||", $name);
         }
+        /**
+        * https://+plex_item_field:address+/library/sections
+        * https:// plex_item_field:address /library/sections
+        *
+        *
+        */
 
         $currentPath = $this->path;
         foreach ($fields as $value) {
-            $field =  explode(":", $value);
+            $field =  explode("::", $value);
             if (count($field) <=1){
                 return $name;
             }
-
-
             if ($field[0] === "plex_field"){
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
                 $ret = $this->data->attributes()->{$field[1]};
@@ -185,16 +203,32 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                 if (!isset($this->data->attributes()->{$field[1]})) continue;
                 $ret = Client::getInstance()->getUrl($currentPath, $this->data->attributes()->{$field[1]});
                 hd_print("ret = $ret");
-
             }
             if (isset($item)){
                 //"icon_path": "plex_thumb_item_field:atribute name:w:h:use plex helpers?"
                 if ($field[0] === "plex_thumb_item_field") {
                     if (!isset($item->attributes()->{$field[1]})) continue;
-                    $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
+                    if (!isset($field[4])){
+                        $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
+                    } else {
+                        //se tiver o campo leafCount no item significa que é uma listagem de série ou temporada então pego o thumb com o badge com a quantidade de episódios
+                        if (isset($item->attributes()->leafCount)){
+                            $count = (int)$item->attributes()->leafCount - (int)$item->attributes()->viewedLeafCount;
+                            $ret = Client::getInstance()->getEpisodeCouterThumbUrl($item->attributes()->{$field[1]}, $count, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
+                        } else if (isset($item->attributes()->viewOffset)){
+                            //se o campo viewOffset vier em item esse é um item de uma listagem de episódios parcialmente vista, então, preciso pedir o thumb com o progressbar.
+                            $percent =  (int)$item->attributes()->viewOffset/(int)$item->attributes()->duration *100;
+                            $ret = Client::getInstance()->getEpisodeProgressThumbUrl($item->attributes()->{$field[1]}, $percent, $item->attributes()->title, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
+                        }else {
+                            //se não apenas pego o thumb sem nada (caso de um thumb de série/temporada/epiódio que já tenha sido visto completamente)
+                            // $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
+                            $ret = Client::getInstance()->getEpisodeProgressThumbUrl($item->attributes()->{$field[1]}, $percent, $item->attributes()->title, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);
+                        }
+                    }
+
                 } else  if ($field[0] === "plex_image_item_field"){
                     if (!isset($item->attributes()->{$field[1]})) continue;
-
+                    hd_print("currentPath = $currentPath");
                     $ret = Client::getInstance()->getUrl($currentPath, $item->attributes()->{$field[1]});
 
                 } else if ($field[0] === "plex_item_field"){
@@ -202,16 +236,22 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                     $ret = $item->attributes()->{$field[1]};
                 } else if ($field[0] === "plex_item_xpath"){
                     //very strange but, xpath apply the xpath on entire tree instead the current element, becouse that i need to make a xml from the element and re create the tree to use xpath
-                    $element =  simplexml_load_string($item->asXml());
-                    $ret = $element->xpath($field[1]);
-                    if (isset($ret) && is_array($ret) && count($ret)>=1 ){
-                        hd_print("entrou aqui e ret é $ret");
-                        $ret = Client::getInstance()->getUrl($currentPath, (string)$ret[0]);
-                    } else {
-                        $ret = null;
-                    }
-                }
+                    $dom = new DOMDocument();
+                    $dom->loadXML($item->asXml());
+                    $xpath = new DOMXPath($dom);
+                    $ret = $xpath->evaluate($field[1]);
+                    // $element =  simplexml_load_string($item->asXml());
+                    // $element =  simplexml_load_string($item->asXml());
+                    // $ret = $element->xpath($field[1]);
 
+                    // if (isset($ret) && is_array($ret) && count($ret)>=1 ){
+                    //     hd_print("entrou aqui e ret é $ret");
+                    //     $ret = Client::getInstance()->getUrl($currentPath, (string)$ret[0]);
+                    // } else {
+                    //     $ret = null;
+                    // }
+                    return $ret;
+                }
             }
             if (isset($ret)){
                 $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);

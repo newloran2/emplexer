@@ -18,7 +18,7 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	function __construct($key=null, $nextTemplate=false) {
 		if (!$key || $key === 'main')
 			$key = '/library/sections';
-
+		hd_print("key = $key nextTemplate=$nextTemplate");
 		$this->path = Client::getInstance()->getUrl(null, $key);
 		$this->data = Client::getInstance()->getAndParse($this->path);
 		$this->nextTemplate = $nextTemplate != null ? $nextTemplate :  array();
@@ -54,6 +54,14 @@ abstract class BaseScreen implements TemplateCallbackInterface
 		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
 		$a['data']['actions'] = $actions;
 		return $a;
+	}
+	protected function templateServers(){
+		hd_print(__METHOD__);
+		$a = TemplateManager::getInstance()->getTemplate("servers", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));
+		$a['data']['actions'] = $actions;
+		return $a;
+
 	}
 	protected function templateSecondary(){
 		hd_print(__METHOD__);
