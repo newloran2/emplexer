@@ -1,0 +1,854 @@
+
+actions/actions.php,813
+actions.php1,0
+class Actions{Actions4,8
+     * that function make close_dialog_and_run handler and set a static method name to call on handler_user_inputmake7,32
+    public static function closeAndRunThisStaticMethod($name, $extraParams=null){closeAndRunThisStaticMethod10,201
+    public static function closeAndRunThisStaticMethod($name, $extraParams=null){extraParams10,201
+        $postAction = array("post_action" => array(postAction11,283
+            foreach ($extraParams as $key => $value) {key23,731
+    public static function runThisStaticMethod($name, $extraParams=null){runThisStaticMethod35,1073
+    public static function runThisStaticMethod($name, $extraParams=null){extraParams35,1073
+       $a= array(a36,1147
+            foreach ($extraParams as $key => $value) {key44,1443
+
+emplexer.php,2240
+emplexer.php1,0
+class Emplexer implements DunePlugin {Emplexer5,37
+    public $stream_name;stream_name7,77
+    private $availableScreens;availableScreens8,102
+    function __construct($foo = null) {__construct10,134
+        $this->availableScreens = array(availableScreens11,174
+    function __destruct()__destruct21,503
+    public function get_folder_view($media_url, &$plugin_cookies) {get_folder_view26,592
+            $menu = $menu = new SetupScreen($media_url);menu33,1039
+            $menu =  new PlexScreen($media_url);menu35,1138
+            $a = $menu->generateScreenWithExtraEntries(array(a36,1187
+            $d = explode("|", $media_url);d94,3755
+            $menu = new NfsScreen(count($d) > 1 ? $d[1]: $d[0]);menu95,3798
+            $menu = new $this->availableScreens[$media_url]();menu97,3938
+            $menu =   new PlexScreen($media_url);menu99,4018
+    public function get_next_folder_view($media_url, &$plugin_cookies) {get_next_folder_view105,4126
+        $menu =   new PlexScreen($media_url, true);menu108,4295
+    public function get_tv_info($media_url, &$plugin_cookies) {get_tv_info113,4395
+    public function get_tv_stream_url($media_url, &$plugin_cookies) {get_tv_stream_url118,4562
+    public function get_vod_info($media_url, &$plugin_cookies) {get_vod_info123,4783
+    public function get_vod_stream_url($media_url, &$plugin_cookies) {get_vod_stream_url128,4951
+    public function get_regular_folder_items($media_url, $from_ndx, &$plugin_cookies) {get_regular_folder_items133,5125
+    public function get_day_epg($channel_id, $day_start_tm_sec, &$plugin_cookies) {get_day_epg138,5316
+    public function get_tv_playback_url($channel_id, $archive_tm_sec, $protect_code, &$plugin_cookies) {get_tv_playback_url143,5503
+    public function change_tv_favorites($op_type, $channel_id, &$plugin_cookies) {change_tv_favorites148,5711
+    public function handle_user_input(&$user_input, &$plugin_cookies) {handle_user_input153,5897
+            $menu = new SetupScreen($user_input->selected_media_url);menu175,7007
+            $menu =   new PlexScreen($user_input->selected_media_url, isset($user_input->function)? $user_input->function : null  );menu177,7094
+
+gui/abstract_gui_control.php,686
+abstract_gui_control.php1,0
+abstract class AbstractGuiControl implements GeneratableInterfaceAbstractGuiControl3,7
+    protected $name;name5,75
+    protected $title;title6,96
+    protected $vgap;vgap7,118
+    function __construct($name, $title, $vgap=0)__construct8,139
+    function __construct($name, $title, $vgap=0)vgap8,139
+        $this->name = $name;name10,194
+        $this->title= $title;title11,223
+        $this->vgap = $vgap;vgap12,253
+    public abstract function getControlType();getControlType15,289
+    public abstract function getSpecificDef();getSpecificDef16,336
+    public function generate()generate18,384
+        $ret= array();ret20,421
+
+gui/component_screen.php,712
+component_screen.php1,0
+class ComponentScreen {ComponentScreen4,8
+    private $components;components6,37
+    private $async_icon_loading = false;async_icon_loading7,62
+    private $async_icon_loading = false;async_icon_loading7,62
+    private $king = PLUGIN_FOLDER_VIEW_REGULAR;king8,103
+    private $king = PLUGIN_FOLDER_VIEW_REGULAR;king8,103
+    private $templateName= 'base';templateName9,151
+    private $templateName= 'base';templateName9,151
+    function __construct($templaName){__construct11,187
+        $this->components = array();components12,226
+        $this->templateName =  $templateName;templateName13,263
+    public function addComponent($component){addComponent16,316
+
+gui/gccomps/gcomp_abstract_gui_control.php,1365
+gcomp_abstract_gui_control.php1,0
+abstract class GcompAbstractGuiControl implements GeneratableInterface{GcompAbstractGuiControl3,7
+    protected $id;id5,80
+    protected $role;role6,99
+    protected $w;w7,120
+    protected $h;h8,138
+    protected $x;x9,156
+    protected $y;y10,174
+    // public function __construct($representation, $x=0, $y=0, $w=-1, $h=-1, $role="unset"){__construct12,197
+    // public function __construct($representation, $x=0, $y=0, $w=-1, $h=-1, $role="unset"){x12,197
+    public function __construct($representation){__construct13,291
+        $this->x     = $representation['x'];x14,341
+        $this->y     = $representation['y'];y15,386
+        $this->w     = $representation['w'];w16,431
+        $this->h     = $representation['h'];h17,476
+        // $this->role = $representation['role'];role18,521
+        $this->role ="unset";role19,571
+    public static function isValid($representation){isValid22,608
+    public static function initWithRepresentation($representation){initWithRepresentation27,827
+        $ret = new GcompAbstractGuiControl($representation);ret29,972
+    public abstract function getControlType();getControlType33,1062
+    public abstract function getSpecificDef();getSpecificDef34,1109
+    public function generate(){generate36,1157
+        $ret = array(ret37,1189
+
+gui/gccomps/gcomp_control_button.php,1053
+gcomp_control_button.php1,0
+class GCompControlButton extends GcompAbstractGuiControlGCompControlButton6,63
+    protected $caption;caption8,122
+    protected $selected;selected9,146
+    protected $captionCentered;captionCentered10,171
+    // public function __construct($caption, $selected=false, $captionCentered=true)__construct12,204
+    // public function __construct($caption, $selected=false, $captionCentered=true)selected12,204
+    public function __construct($representation)__construct13,289
+        $this->caption          = $representation['caption'];caption16,390
+        $this->selected         = $representation['selected'];selected17,452
+        $this->captionCentered = $representation['captionCentered'];captionCentered18,515
+    public static function initWithRepresentation($representation){initWithRepresentation21,591
+    public static function isValid($representation){isValid25,793
+    public function getControlType(){getControlType36,1246
+    public function getSpecificDef(){getSpecificDef40,1316
+
+gui/gccomps/gcomp_control_container.php,115
+gcomp_control_container.php1,0
+class GcompControlContainer extends GuiControlContainerGcompControlContainer3,7
+
+gui/gccomps/gcomp_control_image.php,614
+gcomp_control_image.php1,0
+class GcompControlImage extends GcompAbstractGuiControlGcompControlImage7,63
+    protected $url;url9,121
+    public function __construct($representation)__construct10,141
+        $this->url = $representation['url'];url13,242
+    public static function initWithRepresentation($representation){initWithRepresentation16,294
+        $ret = new GcompControlImage($representation);ret18,433
+    public static function isValid($representation){isValid22,517
+    public function getControlType(){getControlType31,814
+    public function getSpecificDef(){getSpecificDef35,882
+
+gui/gccomps/gcomp_control_label.php,971
+gcomp_control_label.php1,0
+class GcompControlLabel extends GcompAbstractGuiControlGcompControlLabel7,64
+    protected $text;text9,122
+    protected $maxNumLines=1;maxNumLines10,143
+    protected $maxNumLines=1;maxNumLines10,143
+    protected $fontSize=1;fontSize11,173
+    protected $fontSize=1;fontSize11,173
+    protected $textColor="white";textColor12,200
+    protected $textColor="white";textColor12,200
+    public function __construct($text, $maxNumLines=1, $fontSize=1, $textColor="white")__construct13,234
+    public function __construct($text, $maxNumLines=1, $fontSize=1, $textColor="white")maxNumLines13,234
+        $this->text= $text;text16,359
+        $this->maxNumLines = $maxNumLines;maxNumLines17,387
+        $this->fontSize = $fontSize;fontSize18,430
+        $this->textColor = $textColor;textColor19,467
+    public function getControlType(){getControlType21,512
+    public function getSpecificDef(){getSpecificDef24,581
+
+gui/gccomps/gcomp_control_panel.php,269
+gcomp_control_panel.php1,0
+class GCompControlPanel extends GCompControlWindowGCompControlPanel7,63
+    public function __construct($controls=null)__construct9,116
+        $this->controls= $controls;controls11,170
+    public function generate(){generate14,213
+
+gui/gccomps/gcomp_control_prepaint_panel.php,610
+gcomp_control_prepaint_panel.php1,0
+class GCompControlPrepaintPanel extends GCompControlPanelGCompControlPrepaintPanel9,73
+    protected $nativeHeight;nativeHeight11,133
+    protected $nativeWidth;nativeWidth12,162
+    public function __construct($controls=null,$nativeWidth=1920, $nativeHeight=1080)__construct15,192
+    public function __construct($controls=null,$nativeWidth=1920, $nativeHeight=1080)nativeHeight15,192
+        $this->nativeHeight = $nativeHeight;nativeHeight18,324
+        $this->nativeWidth  = $nativeWidth;nativeWidth19,369
+    public function generate(){generate22,420
+
+gui/gccomps/gcomp_control_scroll_panel.php,608
+gcomp_control_scroll_panel.php1,0
+class GGCCompControlScrollPanel extends GCompControlPanelGGCCompControlScrollPanel9,72
+    protected $nativeHeight;nativeHeight11,132
+    protected $nativeWidth;nativeWidth12,161
+    public function __construct($controls=null,$nativeWidth=1920, $nativeHeight=1080)__construct15,191
+    public function __construct($controls=null,$nativeWidth=1920, $nativeHeight=1080)nativeHeight15,191
+        $this->nativeHeight = $nativeHeight;nativeHeight18,323
+        $this->nativeWidth  = $nativeWidth;nativeWidth19,368
+    public function generate(){generate22,419
+
+gui/gccomps/gcomp_control_window.php,1011
+gcomp_control_window.php1,0
+class GCompControlWindow extends GcompControlContainerGCompControlWindow7,64
+    protected $backgroundColor;backgroundColor9,121
+    protected $backgroundUrl;backgroundUrl10,153
+    protected $previousScreen;previousScreen11,183
+    public function __construct($backgroundUrl = null, $backgroundColor = null)__construct13,215
+    public function __construct($backgroundUrl = null, $backgroundColor = null)backgroundColor13,215
+        $this->backgroundColor = $backgroundColor;backgroundColor16,332
+        $this->backgroundUrl   = $backgroundUrl;backgroundUrl17,383
+        $this->previousScreen = "main";previousScreen18,432
+    public static function testeGompWindow(){testeGompWindow20,478
+    public function generate()generate23,575
+        $a= parent::generate();a25,612
+        $res = array(res26,644
+    public function setPreviousScreen($screenName){setPreviousScreen44,1188
+        $this->previousScreen = $screenName;previousScreen45,1240
+
+gui/generatable_interface.php,135
+generatable_interface.php1,0
+interface GeneratableInterface {GeneratableInterface2,6
+    public function generate();generate3,39
+
+gui/gui_control_button.php,756
+gui_control_button.php1,0
+class GuiControlButton extends AbstractGuiControlGuiControlButton3,7
+    private $caption;caption6,60
+    private $width ;width7,82
+    private $action;action8,103
+    function __construct($name, $caption, $width = 200, $action=null, $vgap=0)__construct10,125
+    function __construct($name, $caption, $width = 200, $action=null, $vgap=0)width10,125
+        $this->caption = $caption;caption13,259
+        $this->action =  $action;action14,294
+        $this->width = $width;width15,328
+    public function getControlType(){getControlType20,389
+    public function getSpecificDef(){getSpecificDef24,469
+    public function setAction($action){setAction33,754
+        $this->action = $action;action34,794
+
+gui/gui_control_combo.php,926
+gui_control_combo.php1,0
+class GuiControlCombo extends AbstractGuiControl{GuiControlCombo3,7
+    private $action;action5,58
+    private $width;width6,79
+    private $itens;itens7,99
+    private $initialValue;initialValue8,119
+    public function __construct($name, $initialValue, array $items = null, $title =null, $width = -1, $action=null, $vgap =0){__construct11,148
+    public function __construct($name, $initialValue, array $items = null, $title =null, $width = -1, $action=null, $vgap =0){items11,148
+        $this->action       = $action;action13,326
+        $this->width        = $width;width14,365
+        $this->initialValue = $initialValue;initialValue15,403
+        $this->itens        = array();itens16,448
+            foreach ($items as $key => $value) {key18,515
+    public function getControlType() {getControlType24,640
+    public function getSpecificDef(){getSpecificDef28,723
+
+gui/gui_control_container.php,449
+gui_control_container.php1,0
+class GuiControlContainer implements CountableGuiControlContainer3,7
+    private $controls;controls5,56
+    function __construct()__construct6,79
+        $this->controls = array();controls8,112
+    public function addControl(GeneratableInterface $control){addControl11,154
+    public function generate(){generate17,327
+        $controls =  array();controls18,359
+    public function count()count30,689
+
+gui/gui_control_label.php,424
+gui_control_label.php1,0
+class GuiControlLabel extends AbstractGuiControlGuiControlLabel3,7
+    public $text;text6,59
+    function __construct($text, $vgap = 0, $title=null)__construct8,78
+    function __construct($text, $vgap = 0, $title=null)vgap8,78
+        $this->text = $text;text11,188
+    public function getControlType(){getControlType15,225
+    public function getSpecificDef(){getSpecificDef19,304
+
+gui/gui_control_menu_item.php,455
+gui_control_menu_item.php1,0
+class GuiControlMenuItemGuiControlMenuItem3,7
+    public $caption;caption5,34
+    private $action;action6,55
+    function __construct($caption, $action)__construct7,76
+        $this->caption = $caption;caption9,126
+        $this->action = $action;action10,161
+    public function setAction($action){setAction13,201
+        $this->action = $action;action14,241
+    public function generate(){generate17,281
+
+gui/gui_control_menu_item_separator.php,274
+gui_control_menu_item_separator.php1,0
+class GuiControlMenuItemSeparator extends GuiControlMenuItemGuiControlMenuItemSeparator3,7
+    function __construct()__construct5,70
+    public function generate(){generate10,151
+        $data = parent::generate();data11,183
+
+gui/gui_control_numeric_text.php,235
+gui_control_numeric_text.php1,0
+class GuiControlNumericText extends GuiControlTextGuiControlNumericText3,7
+    public function getSpecificDef(){getSpecificDef5,60
+        $specificDef = parent::getSpecificDef();specificDef6,98
+
+gui/gui_control_password_text.php,238
+gui_control_password_text.php1,0
+class GuiControlPasswordText extends GuiControlTextGuiControlPasswordText3,7
+    public function getSpecificDef(){getSpecificDef5,61
+        $specificDef = parent::getSpecificDef();specificDef6,99
+
+gui/gui_control_text.php,850
+gui_control_text.php1,0
+// class GuiTextFieldDefGuiTextFieldDef3,7
+class GuiControlText extends AbstractGuiControlGuiControlText15,958
+    private $initialValue;initialValue18,1009
+    private $action;action19,1036
+    function __construct($name, $title, $initialValue = "", $width = -1 , $vgap=0,  $action=null)__construct21,1058
+    function __construct($name, $title, $initialValue = "", $width = -1 , $vgap=0,  $action=null)initialValue21,1058
+        $this->initialValue = $initialValue;initialValue24,1213
+        $this->action =  $action;action25,1258
+        $this->width = $width;width26,1292
+    public function getControlType(){getControlType31,1353
+    public function getSpecificDef(){getSpecificDef35,1437
+    public function setAction($action){setAction49,2011
+        $this->action = $action;action50,2051
+
+gui/plex_section_popup_menu.php,804
+plex_section_popup_menu.php1,0
+class PlexSectionPopupMenu PlexSectionPopupMenu6,19
+    private $popup;popup9,54
+    private $xml;xml10,74
+    private $url;url11,92
+    private $action;action12,110
+    public function __construct($action)__construct13,131
+        $this->popup= new PopupMenu();popup15,178
+        $this->url = sprintf("http://%s:%s/library/sections", Config::getInstance()->plexIp, Config::getInstance()->plexPort);url16,217
+        $this->xml =Client::getInstance()->getAndParse($this->url);xml17,344
+        $this->action = $action;action18,412
+    public function generate(){generate21,452
+            $menuItem = new GuiControlMenuItem((string)$dir->attributes()->title, null);menuItem23,523
+            $menuLocations =new PopupMenu();menuLocations24,612
+
+modal/modal.php,707
+modal.php1,0
+class ModalModal4,8
+    private $title;title7,23
+    private $width;width8,43
+    private $components;components9,63
+    function __construct($title, GuiControlContainer $container = null, $width = -1){__construct11,89
+    function __construct($title, GuiControlContainer $container = null, $width = -1){container11,89
+        $this->title =  $title;title12,175
+        $this->width = $width;width13,207
+        $this->components = isset($container)? $container : new GuiControlContainer();components14,238
+    public function addControl(AbstractGuiControl $control){addControl17,332
+    public function show(){show26,675
+    public function generate(){generate29,787
+
+modal/popup_menu.php,310
+popup_menu.php1,0
+class PopupMenuPopupMenu4,8
+    private $itens;itens8,28
+    function __construct(){__construct10,49
+        $this->itens = array();itens11,77
+    public function addItem($item){addItem14,116
+    public function show(){show28,657
+    public function generate(){generate31,769
+
+screen/base_config_screen.php,286
+base_config_screen.php1,0
+class BaseConfigScreen extends GuiControlContainer implements ScreenInterfaceBaseConfigScreen2,6
+    public function __construct()__construct5,87
+    public function generateScreen(){generateScreen9,134
+        $folder_view = array(folder_view10,172
+
+screen/base_gcomps_screen.php,361
+base_gcomps_screen.php1,0
+class BaseGcompsScreen implements ScreenInterface {BaseGcompsScreen3,7
+    protected $window;window4,59
+    function __construct($backgroundUrl=null)__construct6,87
+        $w = new GcompTemplateManager();w8,139
+        $this->window= $w->generate();window9,180
+    public function generateScreen() {generateScreen13,227
+
+screen/base_screen.php,6312
+base_screen.php1,0
+* Base Menu class for emplexerfor4,12
+abstract class BaseScreen implements TemplateCallbackInterfaceBaseScreen7,47
+	protected $iconFile = "gui_skin://small_icons/folder.aai";iconFile10,113
+	protected $iconFile = "gui_skin://small_icons/folder.aai";iconFile10,113
+	protected $openFolder = PLUGIN_OPEN_FOLDER_ACTION_ID;openFolder11,173
+	protected $openFolder = PLUGIN_OPEN_FOLDER_ACTION_ID;openFolder11,173
+	protected $handlerUserInput = PLUGIN_HANDLE_USER_INPUT_ACTION_ID;handlerUserInput12,228
+	protected $handlerUserInput = PLUGIN_HANDLE_USER_INPUT_ACTION_ID;handlerUserInput12,228
+	protected $path;path13,295
+	protected $data;data14,313
+	protected $nextTemplate = false;nextTemplate15,331
+	protected $nextTemplate = false;nextTemplate15,331
+	protected $templates =array();templates16,365
+	protected $templates =array();templates16,365
+	function __construct($key=null, $nextTemplate=false) {__construct18,398
+	function __construct($key=null, $nextTemplate=false) {nextTemplate18,398
+		if (!$key || $key === 'main')key19,454
+			$key = '/library/sections';key20,486
+		$this->path = Client::getInstance()->getUrl(null, $key);path22,570
+		$this->data = Client::getInstance()->getAndParse($this->path);data23,629
+		$this->nextTemplate = $nextTemplate != null ? $nextTemplate :  array();nextTemplate24,694
+		$this->templates = json_decode(Config::getInstance()->templateViewNumber);templates26,769
+	public function getTemplateByType($type){getTemplateByType30,851
+		$fun = 'template'.ucwords($type);fun32,918
+	private function getTemplateIndexAndUpdate($key){getTemplateIndexAndUpdate36,982
+		$templateIndex = Config::getInstance()->templateViewNumber;templateIndex38,1057
+		$index = isset($templateIndex->{$key}) ? (int)$templateIndex->{$key}+1 : 1;index40,1186
+	public function callback($name, $currentPath, &$data){callback47,1396
+	protected function template(){template51,1498
+		$a = TemplateManager::getInstance()->getTemplate("base", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a53,1554
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions54,1695
+	protected function templateServers(){templateServers58,1848
+		$a = TemplateManager::getInstance()->getTemplate("servers", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a60,1911
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions61,2055
+	protected function templateSecondary(){templateSecondary66,2209
+		$a = TemplateManager::getInstance()->getTemplate("secondary", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a68,2274
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions69,2420
+	protected function templateMovie(){templateMovie73,2573
+		$a = TemplateManager::getInstance()->getTemplate("movie", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a76,2635
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));actions77,2777
+	protected function templateShow(){templateShow82,2937
+		$a = TemplateManager::getInstance()->getTemplate("show", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a84,2997
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions85,3138
+	protected function templateSeason(){templateSeason90,3292
+		$a = TemplateManager::getInstance()->getTemplate("season", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a92,3354
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions93,3497
+	protected function templateEpisode(){templateEpisode98,3651
+        $popup  = new PopupMenu();popup101,3742
+		$a = TemplateManager::getInstance()->getTemplate("episode", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a103,3847
+		$actions = array(actions104,3991
+	protected function templateArtist(){templateArtist119,4515
+		$a = TemplateManager::getInstance()->getTemplate("artist", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a121,4577
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions122,4720
+	protected function templateAlbum()templateAlbum128,4875
+		$a = TemplateManager::getInstance()->getTemplate("album", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a131,4938
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions132,5080
+	protected function templateTrack()templateTrack137,5234
+		$a = TemplateManager::getInstance()->getTemplate("track", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a140,5297
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));actions141,5439
+	protected function templatePhoto()templatePhoto146,5599
+		$a = TemplateManager::getInstance()->getTemplate("photo", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a149,5662
+		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => isset($this->data->Photo)? $this->handlerUserInput : $this->openFolder));actions150,5804
+	protected function templatePlugins()templatePlugins155,6011
+		$a = TemplateManager::getInstance()->getTemplate("plugins", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a159,6107
+            $actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));actions161,6330
+        	$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->openFolder));actions163,6464
+    public function getField($name, $item, $field = null){getField171,6637
+    public function getField($name, $item, $field = null){field171,6637
+    public function getData(){getData174,6780
+    public function getMediaUrl($data){getMediaUrl177,6815
+
+screen/emplexer_setup_screen.php,829
+emplexer_setup_screen.php1,0
+class EmplexerSetupScreen implements ScreenInterface, TemplateCallbackInterfaceEmplexerSetupScreen3,7
+    protected $data;data5,89
+    public function __construct()__construct6,110
+       $this->data = array(data8,150
+    public function generateScreen(){generateScreen14,326
+        $a = TemplateManager::getInstance()->getTemplate("nfsScreen", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a15,364
+        $actions = array();actions16,516
+    public static function chose($user_input){chose22,712
+    public function getField($key, $name, $field=null){getField26,843
+    public function getField($key, $name, $field=null){field26,843
+    public function getData(){getData40,1261
+    public function getMediaUrl($data){getMediaUrl44,1324
+
+screen/language_chose.php,268
+language_chose.php1,0
+class LanguageChose extends BaseConfigScreen {LanguageChose3,7
+    public function __construct(){__construct5,55
+        $langs = array(langs6,90
+    public static function saveLanguageAndReload($user_input){saveLanguageAndReload17,670
+
+screen/my_plex_screen.php,417
+my_plex_screen.php1,0
+class MyPlexScreen extends PlexScreen{MyPlexScreen3,7
+    function __construct($key=null, $func=null){__construct6,48
+    function __construct($key=null, $func=null){func6,48
+            $key = "https://plex.tv/pms/servers?auth_token=mYCSANu3fqky815q6AbL";key8,124
+    public function generateScreen() {generateScreen14,302
+    public function getMediaUrl($data){getMediaUrl18,400
+
+screen/nfs_screen.php,2776
+nfs_screen.php1,0
+class NfsScreen  implements ScreenInterface , TemplateCallbackInterfaceNfsScreen5,17
+    private $path;path8,92
+    private $decomposedPath;decomposedPath9,111
+    private $nfs;nfs10,140
+    private $localFileIterator;localFileIterator11,158
+    private $serverIps;serverIps12,190
+    private  $data;data13,214
+    function __construct($path=null) {__construct14,234
+        $ipsString = Config::getInstance()->nfsIps;ipsString15,273
+            $this->serverIps =  json_decode(urldecode($ipsString));serverIps17,350
+        $this->path = $path;path20,429
+        $this->decomposedPath = parse_url($this->path);decomposedPath21,458
+            $this->nfs = new NFS($path);nfs25,627
+            $this->localFileIterator =  new FilesystemIterator($path);localFileIterator27,725
+    public function getField($key, $name, $field=null){getField32,814
+    public function getField($key, $name, $field=null){field32,814
+            $ret =  array_search($name, $this->data);ret38,980
+    public function getData(){getData52,1392
+        $ret = array();ret53,1423
+            $a = isset($this->localFileIterator)? $this->localFileIterator :   $this->nfs->getIteratorForNfsPath($this->path);a55,1493
+            $files = array();files59,1714
+            foreach ($files as $key => $value) {key65,1888
+            $files =  $this->nfs->getAllNfsPaths();files69,2065
+            foreach ($files as $key => $value) {key70,2117
+            $a =  $this->nfs->getIteratorForNfsPath($this->path);a75,2336
+            foreach ($a->getOnlyFolders() as $key => $value) {key78,2428
+            $ips =  Config::getInstance()->nfsIps;ips84,2579
+                $b = new Modal(_("NFS server ip"));b86,2661
+            $ips =  explode(',', $ips);ips93,2985
+            $ret = array();ret94,3025
+        $this->data =  $ret;data101,3188
+    public function getMediaUrl($data){getMediaUrl106,3308
+    public static function chose($user_input){chose111,3377
+    public static function saveNfsIp($user_input){saveNfsIp116,3626
+            $b = new Modal(_("NFS server ip"), null ,-1);b118,3743
+            $b = new Modal(_("NFS server ip"));b127,4196
+        $nfsIps = Config::getInstance()->nfsIps;nfsIps136,4697
+            $nfsIps =array($user_input->nfsIp);nfsIps138,4777
+            $nfsIps = explode(',', $nfsIps);nfsIps140,4842
+    public function generateScreen(){generateScreen150,5064
+        $a = TemplateManager::getInstance()->getTemplate("nfsScreen", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a151,5102
+        $actions = array(actions153,5310
+            $b = new PlexSectionPopupMenu(Actions::runThisStaticMethod('NfsScreen::chose'));b160,5556
+
+screen/plex_screen.php,8381
+plex_screen.php1,0
+class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallbackInterfacePlexScreen3,7
+    private $cachemanager;cachemanager6,100
+    function __construct($key=null, $func=null) {__construct8,128
+    function __construct($key=null, $func=null) {func8,128
+            $a= explode("||", $func);a11,240
+    public function generateScreen(){generateScreen16,339
+        $viewGroup = (string)$this->data->attributes()->viewGroup;viewGroup18,378
+            $viewGroup = 'plugins';viewGroup24,728
+            // $viewGroup = 'play';viewGroup28,855
+            $viewGroup = 'vodplay';viewGroup29,891
+            $viewGroup = 'play';viewGroup32,998
+        $data = $this->getTemplateByType($viewGroup);data35,1042
+    public function generateScreenWithExtraEntries($extraEntries){generateScreenWithExtraEntries39,1125
+        $data = $this->generateScreen();data40,1192
+    public function generatePlayList($key)generatePlayList50,1586
+        $url = Client::getInstance()->getUrl(null, "/library/metadata/$key/children");url52,1635
+        $xml = Client::getInstance()->getAndParse($url);xml53,1722
+    public function templateVodPlay(){templateVodPlay61,1896
+        $item = $this->data->Video[0];item63,1987
+         $parentUrl  = Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;parentUrl64,2026
+        $extraParams = array();extraParams65,2141
+         $url        = Client::getInstance()->getUrl($this->path, (string)$item->Media->Part->attributes()->key );url67,2235
+        $file       = GetterUtils::getValueOrDefault( $item->Media->Part->attributes()->file);file68,2350
+            $url = str_replace("http://", "http://mp4://", $url);url71,2637
+            $mappedUrl = Config::getInstance()->getMapForUrl($file);mappedUrl75,2741
+            $url = GetterUtils::getValueOrDefault($mappedUrl,$url);url77,2878
+            $url = sprintf("http://192.168.2.41:3005/download?url=%s", urlencode($url));url80,3026
+        $vodInfo = array(vodInfo84,3167
+    public function templatePlay(){templatePlay112,4685
+        $item = isset($this->data->Video[0]) ? $this->data->Video[0] : null;item116,4837
+        $item = isset($this->data->Track[0]) && is_null($item)? $this->data->Track[0] : $item;item117,4914
+        $item = isset($this->data->Photo[0]) && is_null($item)? $this->data->Photo[0] : $item;item118,5009
+        // $url        = Client::getInstance()->getUrl(null, (string)$item->Media->Part->attributes()->key );url120,5105
+        $url        = Client::getInstance()->getUrl($this->path, (string)$item->Media->Part->attributes()->key );url121,5215
+        $file       = GetterUtils::getValueOrDefault( $item->Media->Part->attributes()->file);file123,5376
+        // $url     = Client::getInstance()->getFinalVideoUrl($url);url124,5471
+        $parentUrl  = Client::getInstance()->getUrl(null, (string)$item->attributes()->parentKey . "/children") ;parentUrl125,5540
+        $invalidate = ActionFactory::invalidate_folders(array($parentUrl));invalidate126,5654
+            $key = $this->data->Video[0]->attributes()->ratingKey;key130,5879
+            $viewOffset = isset($this->data->Video[0]->attributes()->viewOffset) ? $this->data->Video[0]->attributes()->viewOffset : 0 ;viewOffset131,5946
+            $url = str_replace("http://", "http://mp4://", $url);url138,6361
+            $mappedUrl = Config::getInstance()->getMapForUrl($file);mappedUrl142,6465
+            $url = GetterUtils::getValueOrDefault($mappedUrl,$url);url144,6602
+            $b                   = new Modal("", null ,100);b148,6717
+            $menu                = array();menu149,6778
+            $d                   = $item->Media;d150,6822
+            $m                   = array();m151,6871
+            foreach ( $d as $key => $value) {key152,6915
+                // $action       = ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, $value->Part->attributes()->key));action153,6961
+                $url =Client::getInstance()->getUrl(null, $value->Part->attributes()->key);url158,7300
+        $url = sprintf("http://192.168.2.41:3005/download?url=%s", urlencode($url));url172,7812
+        // $url = "http://192.168.2.44/cgi-bin/plugins/emplexer2/testeGetter.sh?url=". urlencode($url);url174,7898
+    public function getField($name, $item, $field=null){getField180,8065
+    public function getField($name, $item, $field=null){field180,8065
+            $fields = explode("||", $name);fields187,8338
+        $currentPath = $this->path;currentPath196,8558
+            $field =  explode("::", $value);field198,8632
+                $ret = $this->data->attributes()->{$field[1]};ret204,8880
+                $ret = Client::getInstance()->getThumbUrl($this->data->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);ret208,9109
+                $ret = Client::getInstance()->getUrl($currentPath, $this->data->attributes()->{$field[1]});ret212,9442
+                        $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);ret220,9907
+                            $count = (int)$item->attributes()->leafCount - (int)$item->attributes()->viewedLeafCount;count224,10350
+                            // $ret = Client::getInstance()->getEpisodeCouterThumbUrl($item->attributes()->{$field[1]}, $count, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);ret225,10468
+                            $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]});ret226,10665
+                            $percent =  (int)$item->attributes()->viewOffset/(int)$item->attributes()->duration *100;percent230,11027
+                            $ret = Client::getInstance()->getEpisodeProgressThumbUrl($item->attributes()->{$field[1]}, $percent, $item->attributes()->title, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);ret231,11145
+                            // $ret = Client::getInstance()->getThumbUrl($item->attributes()->{$field[1]}, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);ret234,11557
+                            $ret = Client::getInstance()->getEpisodeProgressThumbUrl($item->attributes()->{$field[1]}, $percent, $item->attributes()->title, isset($field[2])? $field[2]:null, isset($field[3])? $field[3]:null);ret235,11733
+                    $ret = Client::getInstance()->getUrl($currentPath, $item->attributes()->{$field[1]});ret242,12212
+                    $ret = $item->attributes()->{$field[1]};ret246,12456
+                    $dom = new DOMDocument();dom249,12771
+                    $xpath = new DOMXPath($dom);xpath251,12868
+                    $ret = $xpath->evaluate($field[1]);ret252,12917
+                    // $element =  simplexml_load_string($item->asXml());element253,12973
+                    // $element =  simplexml_load_string($item->asXml());element254,13047
+                    // $ret = $element->xpath($field[1]);ret255,13121
+                    //     $ret = Client::getInstance()->getUrl($currentPath, (string)$ret[0]);ret259,13324
+                    //     $ret = null;ret261,13452
+                $a = gettype($ret) == "object" ? TranslationManager::getInstance()->getTranslation((string)$ret):TranslationManager::getInstance()->getTranslation($ret);a267,13612
+    public function getData(){getData273,13840
+    public function getMediaUrl($data){getMediaUrl278,13938
+    public static function showpopup($user_input){showpopup282,14116
+        $xml = Client::getInstance()->getAndParse($user_input->selected_media_url);xml283,14167
+            $extraParams = array();extraParams285,14284
+            $alert = new Modal('');alert287,14400
+                $label =  _('Mark as unseen');label290,14499
+                $label = _('Mark as seen');label293,14624
+    public static function markAsSeenOrUnSeen($user_input){markAsSeenOrUnSeen301,14957
+        $url = Client::getInstance()->getUrl(null, sprintf('/:/%s?key=%s&identifier=com.plexapp.plugins.library', $user_input->function,$user_input->key));url302,15017
+    public static function startMonitor($user_input){startMonitor308,15367
+
+screen/plex_source.php,245
+plex_source.php1,0
+class PlexSourcePlexSource6,18
+	private $ip;ip9,39
+	private $port;port10,53
+	private $name;name11,69
+	function __construct($url, $name = null)__construct14,102
+	function __construct($url, $name = null)name14,102
+
+screen/screen_interface.php,132
+screen_interface.php1,0
+interface ScreenInterface {ScreenInterface3,7
+    public function generateScreen();generateScreen4,35
+
+screen/setup_media_server.php,339
+setup_media_server.php1,0
+class SetupMediaServer extends BaseConfigScreen SetupMediaServer3,7
+    public function __construct()__construct5,58
+        $manualySpecifyServer=GetterUtils::getValueOrDefault(Config::getInstance()->dontFindServer,'NO');manualySpecifyServer7,98
+    public static function save($user_input){save16,865
+
+screen/setup_screen.php,1959
+setup_screen.php1,0
+class SetupScreen implements ScreenInterface, TemplateCallbackInterfaceSetupScreen7,17
+    protected $screenName;screenName9,91
+    private $data=array();data10,118
+    private $data=array();data10,118
+    function __construct($name='rootSetup') {__construct11,145
+            $s = explode(':', $name);s13,276
+            $this->screenName = $s[1];screenName15,342
+            $this->screenName =  $name;screenName17,398
+        $this->data= array(data20,449
+    public function generateScreen(){generateScreen27,634
+            $a = explode("_", $this->screenName);a29,719
+            $b= new NfsScreen('192.168.2.9');b30,769
+        $fun = "get".ucwords($this->screenName);fun33,866
+    public function getField($key, $name){getField38,953
+    public function getData(){getData57,1474
+    public function getMediaUrl($item){getMediaUrl61,1540
+        foreach ($this->data as $key => $value) {key63,1614
+    public function getRootSetup(){getRootSetup71,1760
+     $a = TemplateManager::getInstance()->getTemplate("config", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));a72,1796
+    $actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => PLUGIN_OPEN_FOLDER_ACTION_ID));actions73,1942
+    public function getPlexSetup(){getPlexSetup79,2117
+        // $servers = json_decode(Client::getInstance()->get("http://127.0.0.1:3000/findServers"));servers80,2153
+        // $serverPairs  = array();serverPairs81,2253
+        //     $name = trim($value->Name);name84,2332
+        //     $ip = trim($value->Host) . ':' . trim($value->Port);ip85,2375
+        $controls = array();controls91,2512
+        $availableTemplates = array(availableTemplates155,4520
+        $a = array(a160,4742
+    public function findServer(){findServer170,5018
+        $data = Client::getInstance()->get("http://127.0.0.1:3000/findServers");data171,5052
+
+screen/template_callback_interface.php,346
+template_callback_interface.php1,0
+interface TemplateCallbackInterface{TemplateCallbackInterface3,7
+    public function getField($name, $item, $field=null);getField5,45
+    public function getField($name, $item, $field=null);field5,45
+    public function getData();getData6,102
+    public function getMediaUrl($data);getMediaUrl7,133
+
+template/gcomp_template_manager.php,1090
+gcomp_template_manager.php1,0
+class GcompTemplateManager implements GeneratableInterface {GcompTemplateManager5,40
+    private $templateFile;templateFile7,102
+    private $templateJson;templateJson8,129
+    function __construct()__construct10,157
+        // $this->templateFile =  "/Users/newloran2/Dropbox/Projeto/Dune/emplexer/gcompsTemplate.json";templateFile12,190
+        $this->templateFile =  "gcompsTemplate.json";templateFile13,294
+        $this->templateJson = json_decode(file_get_contents($this->templateFile), true);templateJson15,396
+    public function generate(){generate18,492
+        $ret = $this->templateJson['base']['items'][1];ret20,565
+        $bgUrl =  $this->templateJson['base']['background_url'];bgUrl21,621
+        $window = new GcompControlWindow($bgUrl);window22,686
+                $function = 'GcompControl' . ucwords($value['type']) . '::initWithRepresentation';function28,973
+                $a = call_user_func($function, $value);a30,1153
+                    // $a= GcompControlImage::initWithRepresentation($value);a32,1234
+
+template/template_manager.php,2330
+template_manager.php1,0
+class TemplateManagerTemplateManager9,104
+    private $reload =true; //if true reload the template on every callreload12,129
+    private $reload =true; //if true reload the template on every callreload12,129
+    private $templateFile ;templateFile13,200
+    private $templateJson;templateJson14,228
+    private static $instance;instance15,255
+    private function __construct()__construct17,286
+        $this->templateFile = ROOT_PATH . "/templates/default.json" ;templateFile19,327
+    protected function reloadTemplate(){reloadTemplate23,437
+        $this->templateJson = json_decode(file_get_contents($this->templateFile), true);templateJson24,478
+    public static function getInstance(){getInstance28,576
+    private function getTag1($template, $tag){getTag139,856
+        $arrays = array();arrays40,903
+        $n = $template;n41,930
+            $n="base";n43,1000
+                $n= $this->templateJson[$n]['inherits'];n49,1263
+                $n= null;n51,1341
+        $a = call_user_func_array('array_replace_recursive', $arrays);a54,1409
+    private function walk(&$item, $key, $data){walk60,1508
+        $getFieldCallBack = $data[0];getFieldCallBack61,1556
+        $upItem           = $data[1];upItem62,1594
+        $json             = $data[2];json63,1632
+        $item             = call_user_func_array($getFieldCallBack, array($item,$upItem , $key));item64,1670
+    private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){getTag67,1775
+    private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){json67,1775
+        $t = $this->getTag1($template, $tag);t68,1868
+    public function getTemplate($name, $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){getTemplate75,2177
+        $itens       = array();itens77,2277
+        $folderItems = array();folderItems78,2309
+        $data        = call_user_func($getDataCallback);data79,2341
+        // foreach ( $data as $key => $xml)key87,2550
+        $async_icon_loading = isset($this->templateJson[$name]['async_icon_loading'])? $this->templateJson[$name]['async_icon_loading']  : true;async_icon_loading97,2906
+        $availableTemplates = array(availableTemplates98,3051
+        $a = array(a113,4073
+
+utils/AbstractInterceptor.php,945
+AbstractInterceptor.php1,0
+class AbstractInterceptor {AbstractInterceptor2,6
+    public $_object;_object3,34
+    public $_rootObject;_rootObject4,55
+    public function __construct($object) {__construct6,81
+        $this->_object = $object;_object7,124
+            $this->_rootObject = $object->_rootObject;_rootObject10,209
+            $this->_rootObject = $object;_rootObject12,277
+    public function callMethod($method, $args){callMethod17,365
+    public function __isset($name) {__isset21,496
+    public function __unset($name) {__unset25,589
+    public function __set($name, $value) {__set29,675
+    public function __get($name) {__get33,769
+    public function __call($method, $args) {__call37,853
+            $method = substr($method, 1);method39,929
+            $value = $this->around($this->_rootObject, $method, $args);value45,1124
+            $value = $this->callMethod($method, $args);value47,1209
+
+utils/cache_manager.php,853
+cache_manager.php1,0
+class CacheManager  extends CURLCacheManager6,16
+    private $downloadDirectory;downloadDirectory8,51
+    function __construct($downloadDirectory=null) {__construct10,84
+        $this->downloadDirectory =  $downloadDirectory;downloadDirectory11,136
+    public function addMultiSessions($urls, $opts=false){addMultiSessions14,199
+    public function addMultiSessions($urls, $opts=false){opts14,199
+        $toBedownload=array();toBedownload15,257
+            $a = $this->addSession($url, $opts);a17,322
+    public function addSession( $url, $opts = false ){addSession25,491
+    public function addSession( $url, $opts = false ){opts25,491
+        $name = sprintf('%s/%s.jpg', $this->downloadDirectory, md5($url) );name27,547
+        $ret  = null;ret28,623
+            $file = fopen($name, 'w');file31,752
+
+utils/config.php,1310
+config.php1,0
+class Config {Config7,59
+    // private const $pluginCookiesFile = '/config/emplexer_plugin_cookies.properties'pluginCookiesFile9,75
+    private $pluginCookies;pluginCookies10,162
+    public static $instance;instance11,190
+    private function __construct(){__construct16,288
+    public function __destruct(){__destruct20,332
+    public static function getInstance() {getInstance24,374
+    public function setPluginCookies(&$pluginCookies){setPluginCookies31,549
+        $this->pluginCookies = $pluginCookies;pluginCookies32,604
+    public function isValueInPluginCookies($value){isValueInPluginCookies50,1410
+        foreach($this->pluginCookies as $key => $_value){key51,1462
+    public function getMapForUrl($url){getMapForUrl58,1637
+        $retArray = array();retArray59,1677
+        foreach ($this->pluginCookies as $key => $value) {key60,1706
+                $a = explode('|', $value);a64,1907
+        foreach($retArray as $key  => $value){key74,2197
+                $a = explode('|', $value);a76,2287
+    public function getPlexBaseUrl(){getPlexBaseUrl82,2436
+        $ip   = $this->plexIp;ip83,2474
+        $port = $this->plexPort;port84,2505
+    public function __get($key)__get88,2597
+    public function __set($key, $value){__set103,2945
+
+utils/decorator.php,315
+decorator.php1,0
+class DecoratorDecorator2,6
+    protected $foo;foo4,24
+    function __construct($foo) {__construct6,45
+       $this->foo = $foo;foo7,78
+    public function __call($method_name, $args) {__call10,111
+       $ret =  call_user_func_array(array($this->foo, $method_name), $args);ret12,243
+
+utils/exec_utils.php,963
+exec_utils.php1,0
+define("SIGTERM", 143);SIGTERM10,167
+class ExecUtils {ExecUtils12,192
+    public static function execute($command, $timeout=0, $extraEnv=array()) {execute24,483
+    public static function execute($command, $timeout=0, $extraEnv=array()) {timeout24,483
+        $timeoutScript = sprintf("%s/bin/timeout.sh", ROOT_PATH);timeoutScript25,561
+            $command =  sprintf("%s -t %d %s 2>&1", $timeoutScript, $timeout, $command);command28,757
+        $command = trim($command);command31,895
+        $output = "";output32,930
+        $descriptorspec = arraydescriptorspec34,953
+        $env = array('LD_LIBRARY_PATH' => '/tango/firmware/lib');env40,1116
+        // $env = array();env41,1182
+        $process = proc_open($command, $descriptorspec, $pipes, '/tmp', $env);process44,1211
+            $output = stream_get_contents($pipes[1]);output46,1327
+            $return_value = proc_close($process);return_value50,1444
+
+utils/getter_utils.php,230
+getter_utils.php1,0
+class GetterUtilsGetterUtils4,8
+    public static function getValueOrDefault($value, $default=null){getValueOrDefault7,29
+    public static function getValueOrDefault($value, $default=null){default7,29
+
+utils/httpfs.php,1168
+httpfs.php1,0
+class Httpfs {Httpfs3,7
+    private  $baseDir;baseDir5,23
+    private $movieDir;movieDir6,46
+    private $subtitleDir;subtitleDir7,69
+    private  $videoUrl;videoUrl8,95
+    private  $subtitleUrl;subtitleUrl9,119
+    function __construct($url){__construct10,146
+        $this->baseDir = "/tmp/emplexer/httpfs";baseDir11,178
+        $this->movieDir = sprintf("%s/movie", $this->baseDir);movieDir12,227
+        $this->subtitleDir = sprintf("%s/subtitle", $this->baseDir);subtitleDir13,290
+        $data = Client::getInstance()->getAndParse($url);data25,717
+        $this->videoUrl = sprintf("http://192.168.2.8:32400%s", $data->Video->Media->Part->attributes()->key);videoUrl27,776
+        $subtitleKeys = $data->xpath("//Stream[@codec='srt' and @selected='1'][1]/@key");subtitleKeys28,887
+            // $this->subtitleUrl= Client::getInstance()->getUrl(null, (string)$subtitleKeys[0]);subtitleUrl30,1016
+            $this->subtitleUrl= sprintf("http://192.168.2.8:32400%s?encoding=utf-8", (string)$subtitleKeys[0]);subtitleUrl31,1114
+    public function mount(){mount36,1244
+    public function umount(){umount44,1565
+
+utils/LogInterceptor.php,216
+LogInterceptor.php1,0
+class LogInterceptor extends AbstractInterceptor {LogInterceptor2,6
+    function around($object, $method, $args){around3,57
+        $value = $this->callMethod($method, $args);value5,142
+
+utils/translation_manager.php,832
+translation_manager.php1,0
+class TranslationManagerTranslationManager7,17
+    private $translationTable;translationTable9,44
+    private $supportedLanguages = array(supportedLanguages10,75
+    private $supportedLanguages = array(supportedLanguages10,75
+    private static $instance;instance13,230
+    private function __construct()__construct16,262
+        $systemLang = Config::getInstance()->language;systemLang18,303
+    public static function getInstance(){getInstance22,473
+    public function loadTranslationLanguage($lang){loadTranslationLanguage29,658
+            $lang = "translations_en.json";lang32,842
+        $this->translationTable = json_decode(file_get_contents(ROOT_PATH . "/translations/$lang"), true);translationTable34,896
+    public function getTranslation($key){getTranslation38,1011
