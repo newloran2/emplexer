@@ -1,0 +1,10 @@
+((nil . (
+	 (compile-command . "make -f ~/Dropbox/Projeto/Dune/emplexer/Makefile")
+	 (projectile-enable-caching . nil)
+	 (defun makeDuneRequest()
+	   (interactive)
+	   (setq line (thing-at-point  'line))
+	   (setq command (concat("cd ~/Dropbox/Projeto/Dune/emplexer/project && php index.php -d " line  "'")))
+	   (shell-command command "teste")
+	   )
+	 )))

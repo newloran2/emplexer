@@ -157,7 +157,7 @@ function Hathaway:run(host, port)
 	self.server = server
 	server.debug = self.debug
 
-	self.debug('Hathaway run', host, port, inspect(server))
+	-- self.debug('Hathaway run', host, port, inspect(server))
 	local ok, err = server:run()
 	if not ok and err ~= 'interrupted' then
 		self.debug('run', err)

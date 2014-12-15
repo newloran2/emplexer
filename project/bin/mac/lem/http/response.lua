@@ -202,7 +202,6 @@ function M.new(req)
 			else
 				self[n] = fmt
 			end
-			print ("tamanho de self", #self)
 		end,
 		chunk = nil
 	}, Response)

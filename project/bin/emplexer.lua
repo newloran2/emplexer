@@ -1,6 +1,6 @@
 
 
--- vim: foldmethod=indent
+-- Vim: foldmethod=indent
 basedir = string.gsub(arg[0], "(.*/)(.*)", "%1")
 print (basedir)
 if basedir == "emplexer.lua" then

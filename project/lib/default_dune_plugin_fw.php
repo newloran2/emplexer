@@ -26,11 +26,12 @@ class DefaultDunePluginFw extends DunePluginFw
         // return json_encode($ret);
         // HD::print_backtrace();
         // var_dump("call_ctx_json");
-        hd_print(__METHOD__ . " request :" . print_r($call_ctx_json, true));
+        /* hd_print(__METHOD__ . " request :" . print_r($call_ctx_json, true)); */
         $a = json_encode(
                 $this->call_plugin_impl(
                     json_decode($call_ctx_json)));
-        hd_print(__METHOD__ . ' response :' . print_r(json_decode($a), true));
+        hd_print_r('response: ' , print_r(json_decode($a), true));
+        /* hd_print(__METHOD__ . ' response :' . print_r(json_decode($a), true)); */
         // hd_print(__METHOD__ . ' response :' . print_r(json_decode($a), true));
         // hd_print(__METHOD__ . ":" . print_r($a, true));
         // HD::print_backtrace();

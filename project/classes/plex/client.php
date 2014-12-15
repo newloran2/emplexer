@@ -211,7 +211,7 @@ class Client
         $decLastKey = parse_url($lastKey);
         hd_print_r("teste de print", $decLastKey);
         hd_print("parametros   lastKey= $lastKey,  newKey = $newKey");
-        HD::print_backtrace();
+        /* HD::print_backtrace(); */
         // hd_print(__METHOD__ . ":" . $this->plexIp  );
         //
         if (trim($this->plexIp) === "" && !filter_var($this->plexIp, FILTER_VALIDATE_IP)){
@@ -254,12 +254,12 @@ class Client
         }
         if (strpos($newKey, "/") !== 0){
             hd_print('strpos($newKey, "/") !== 0');
-            HD::print_backtrace();
+            /* HD::print_backtrace(); */
             return $newKey;
             $url = sprintf("http://%s:%d%s/%s", $this->plexIp, $this->plexPort, $lastKey, $newKey);
         } else {
             hd_print("else");
-            HD::print_backtrace();
+            /* HD::print_backtrace(); */
             $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
         }
         // HD::print_backtrace();

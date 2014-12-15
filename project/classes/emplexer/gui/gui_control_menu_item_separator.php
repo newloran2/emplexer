@@ -15,4 +15,5 @@ class GuiControlMenuItemSeparator extends GuiControlMenuItem
     }
 }
 
+
 ?>

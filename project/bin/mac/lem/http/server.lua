@@ -30,6 +30,7 @@ local remove = table.remove
 local io       = require 'lem.io'
                  require 'lem.http'
 local response = require 'lem.http.response'
+local inspect  = require 'inspect'
 
 local M = {}
 
@@ -130,8 +131,6 @@ local function handleHTTP(self, client)
 			end
 		end
 
-		print ('status =', res.status)
-
 		if headers['Content-Length'] == nil and res.status ~= 204 then
 			local len
 			if file then
@@ -156,11 +155,6 @@ local function handleHTTP(self, client)
 		if req.headers['connection'] == 'close' and headers['Connection'] == nil then
 			headers['Connection'] = 'close'
 		end
-
-		if res.chunk then
-				headers['Content-Length'] = nil
-				headers['Transfer-Encoding'] = 'chunked'
-		end
 		local rope = {}
 		do
 			local status = res.status
@@ -173,7 +167,7 @@ local function handleHTTP(self, client)
 		res:appendheader(rope, 1)
 
 		client:cork()
-
+		
 		local ok, err = client:write(concat(rope))
 		if not ok then self.debug('write', err) break end
 
@@ -181,25 +175,12 @@ local function handleHTTP(self, client)
 			if file then
 				ok, err = client:sendfile(file, headers['Content-Length'])
 				if close then file:close() end
-		  elseif res.chunk ~=nil and type(res.chunk)  == 'function' then
+			elseif res.chunk ~=nil and type(res.chunk)  == 'function' then
 				local body = res:chunk()
 				while body ~= nil do
-
-				  status = format('HTTP/%s %s\r\n', version, 200)
-					size = format("%X\r\n", #body)
-					
-					-- print("tamanho do pacote", size)
-					client:write(size)
 					client:write(body)
-					client:write("\r\n")
 					body = res:chunk()
 				end 
-				status = format('HTTP/%s %s\r\n', version, 200)
-					client:write(status)
-					client:write("Transfer-Encoding: chunked\r\n")
-
-				client:write("0\r\n")
-				client:write("\r\n")
 			else
 				local body = concat(res)
 				if #body > 0 then

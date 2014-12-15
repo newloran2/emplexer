@@ -260,7 +260,7 @@ class PluginMovie
     const /* (char *)                         */ scenarios_str                    = 'scenarios_str';
     const /* (char *)                         */ actors_str                       = 'actors_str';
     const /* (char *)                         */ genres_str                       = 'genres_str';
-    const /* (char *)                         */ rate_imdb                        = 'rate_imdb';
+          $a['data'] = PluginMovieFolderView:const /* (char *)                         */ rate_imdb                        = 'rate_imdb';
     const /* (char *)                         */ rate_kinopoisk                   = 'rate_kinopoisk';
     const /* (char *)                         */ rate_mpaa                        = 'rate_mpaa';
     const /* (char *)                         */ country                          = 'country';

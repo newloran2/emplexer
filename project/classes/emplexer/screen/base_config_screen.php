@@ -6,7 +6,7 @@ class BaseConfigScreen extends GuiControlContainer implements ScreenInterface
     {
     }
 
-G    public function generateScreen(){
+    public function generateScreen(){
         $folder_view = array(
             PluginControlsFolderView::defs            => $this->generate(),
             PluginControlsFolderView::initial_sel_ndx => -1,

@@ -1,0 +1,17 @@
+snippet impl "" its
+implements ${1:intrface}${0}
+endsnippet
+
+snippet ext "" w
+extends ${1:BaseClass}${0}
+endsnippet
+
+snippet class "classe de acordo com o padrão usado no projeto" b
+class  ${1:className} ${2:extends ${3:BaseClass}} ${4:implments ${5:interfaces}}{
+	${0}
+}
+endsnippet
+
+snippet iftv "if ternario com atribuição"
+${1:var} = (${2:condition1}) ? ${3:retTrue} : ${4:retFalse};$0
+endsnippet

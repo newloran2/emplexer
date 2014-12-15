@@ -1,4 +1,3 @@
-
 " NeoBundleLazy 'm2mdas/phpcomplete-extended'  , { 'autoload' : { 'filetypes' : 'php' }}
 function! EmplexerTesterNoNewWin()
     let line = getline(line('.'))

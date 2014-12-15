@@ -1,0 +1,106 @@
+/*
+
+funções:
+    Sempre começão com cifrão "$" isso indica para para o app que a função de "nome tudo que vier apos o cifrão e antes da (" 
+{   
+    "base": {
+        "items": [
+            {
+                "grid":{
+                    "source": "$current", //$current sera substituido pela url que foi usada para chamadar a tela EX: http://192.168.2.8:32400/library/sections/13/all esse conteudo será parseado pela aplicação e ira usar as informações abaixo para montar a tela
+                    "columns": 2,
+                    "lines": 2,
+                    "scroll": 1, "//1 vertical 2 horizontal
+                    "image":{ //caso esse bloco exista e esteja corretamente preenchido a tela ira mostrar em cada entrada do grid uma imagem ajustada igualmente e posicionada de acordo com o que foi definido em columns e lines.
+                        "source": "$xpath("@thumb")||urldummy" // campo expecial que define a url da imagem uma fução com xpath pode ser usada ou uma string absolua. não esquecer que esse bloco alimenta todas as fotos, caso uma string absolua seja usada todas as fotos estão iguais. uma expreção de ou  ||  pode ser usada  o app avalia a expreção da esqueda para direteira, até encontrar um resultado (se o resultado for uma string vazia apos ser trimada ou um nullo a proxima expreção é usada
+                        "text": {
+                            "position" : 2, //1 = topo 2 = centro 3 = baixo em todos os casos o texto fica fora da imagem
+                            "source": "$xpath("@description")||null"// idem a source da imagem mas caso seja null simplesmente não mostra o texto
+                        }
+                        "selected": {
+                            "scale": 1.2, //quando a imagem estiver selecionada o box vai aumentar 20%, quando não estiver selecionado volta ao tamanho normal, caso não seja definido a imagem não escala, se for um valor menor que 1 a imagem diminui
+                            "image": "url da imagem de seleção",// quando estiver selecionado posiciona uma imagem definida pelo usuário por cima do box, com isso pode-se fazer seleções mais customizadas.
+                            "textColor":"red" //cor do texto quando o box exiver selecionado, puramente opcional
+                        },
+                        "h": -1, //caso h e w sejam um número menor ou igual a zero um tamanho adequado para ocupar a tela sera calculado e usado.
+                        "w": -1
+                    }
+
+                    "text":{ //mutuamente exclusivo com image, image tem prioridade caso ela não seja definida text é usado
+                        "source": "$xpath("#description"), // idem a source de image->text->source
+                        "selected": {
+                            "textColor": "red"
+                        }
+                    }
+                },
+                "info":{
+                    "source": "$current",
+                    "backgroundUrl": "$xpath(/MediaContainer/Video/@art)||generic art url",
+                    "items": [
+                        {
+                            "type":"image",
+                            "url": "$xpath(/MediaContainer/Video/@thumb)||$xpath(/MediaContainer/Video/@grandparentThumb||generic thumb url",
+                            "x": 0,
+                            "y": 0,
+                            "w": 100,
+                            "h": 100
+                        },
+                        {
+                            "type":"label",
+                            "text":"$xpath(/MediaContainer/Video/@title)||untitled",
+                            "x": 0,
+                            "y": 0,
+                            "size":10
+                        }
+                    ],
+                    "actions":[
+                        /*ações permitidas:
+                            play: toca o video contido na url source
+                            next: avança para o proximo filme/episodio
+                            back: volta para o filme/serie anterior
+                            queue: adiciona a playlist
+                            refresh: executa um refresh na lista (baixa novamente o xml/json necessário para preenchimento da tela)
+                            exit: sai do infoscreen e volta para a ultima tela antes de entrar na infoscreen
+                        "key_enter": {
+                            "action": "play",
+                            "postAction": "refresh"
+                        },
+                        "key_play": {
+                            "action": play,
+                            "postAction": "refresh"
+                        },
+                        "key_next": {
+                            "action": "next"
+                        },
+                        "key_prev": {
+                            "action": "back"
+                        },
+                        "key_return":{
+                            "action": "exit"
+                        },
+                        "key_a_red":{
+                            "action": "refresh"
+                        },
+                        "key_b_green":{
+                            "action": "queue"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "movie": {
+        "inherits": "base",
+        "items":[
+            {
+                "grid": {
+                    "source": "outro source que não o de base",
+                    "lines": 4,
+                    "image": {
+                        "unset": true
+                    }
+                }
+            }
+        ]
+    }
+}

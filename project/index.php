@@ -1,7 +1,6 @@
 <?php
 	header("Content-Type: application/json");
 	 error_reporting(E_ALL);
-
     define('DEV', true);
  	ini_set("display_errors", 1);
 	require_once 'lib/dune_core/bootstrap.php';
@@ -10,24 +9,22 @@
 	require_once 'lib/dune_core/dune_plugin_fw.php';
 	require_once 'lib/utils.php';
 	require_once 'AutoLoad.php';
-
-
 	$xml = simplexml_load_file("dune_plugin.xml");
-
-	// print_r($xml);
-
-	file_put_contents("/tmp/out.json", "\n\n");
-	$data =json_decode($_POST['data']);
+    $jsonData = isset($_POST['data'])? ($_POST['data']) : getopt("d:")['d'];
+    
+	file_put_contents("/tmp/out.json", "\n\n vou postar o conteudo do post\n\n");
+file_put_contents("/tmp/out.json", print_r($jsonData, true));
+	$data =json_decode($jsonData);
 	// hd_print_r("data = ", $data);
 	// var_dump("data");
 	// var_dump($data->plugin_cookies);
 	// $data =json_decode(base64_decode($_POST['data']));
-	file_put_contents("/tmp/out.json", print_r($_POST, true) ,FILE_APPEND );
+	file_put_contents("/tmp/out.json", print_r($jsonData, true) ,FILE_APPEND );
 
 	// $config =  new Conf('emplexer_plugin_cookies.properties');
 
 
-	// //echo("incluindo arquivo ". (string)$xml->params->program);
+	//echo("incluindo arquivo ". (string)$xml->params->program);
 	require_once (string)$xml->params->program;
 
 

@@ -147,11 +147,15 @@ function Response:bodyLine()
 		local line = self.conn:read(100)
 		print ('tamanho de line', #line or 0)
 end
-function Response:read(pattern, totalRead)
-		local a =  self.conn:read(pattern)
-		-- print ("teste ", tonumber(totalRead) , tonumber(totalRead) +  #a)
-		return a, a and tonumber(totalRead) + #a or nil
 
+
+function Response:nextChunk(packetSize, size)
+   len = tonumber(self.headers['content-length'])
+   if size >=len then return nil end
+   packetSize = packetSize + size  > len and len - size or packetSize
+   size = size+packetSize
+   return self.conn:read(packetSize), size
+   
 end
 
 
@@ -200,7 +204,7 @@ local function readHeader(connection)
 			local key,value =line:match("([a-zA-Z-]+): (.*)")
 			-- print ("line =", line)
 			-- print ("key value", key, value)
-			ret.headers[key:lower()] = value
+			ret.headers[key] = value
 		  line = connection:read("*l")
 		end
 		
@@ -290,7 +294,7 @@ local function doTheRequest(self,url, type, data, headers)
 		else
 			res, err = c:read('HTTPResponse')
 		end
-			
+		print (inspect (res))	
 		if not res then return fail(self, err) end
 	end
 	res.conn = c
@@ -300,8 +304,6 @@ local function doTheRequest(self,url, type, data, headers)
 	self.domain = domain
 	self.port = port
 	self.conn = c
-	print ('req',inspect(req))
-	print ('res',inspect(res))
 	return res
 end
 

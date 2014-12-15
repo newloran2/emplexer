@@ -1,60 +1,69 @@
-  vim: foldmethod=marker 
-
-
-
-
-{{{nfsscreen 
-
-{{{chamada para nds screen, lista apenas o ip que foi inserido
 
 
 {"input_data":{"media_url":"nfs"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
 
-"}}}
-{{{chamda para o nfs no ip que foi inserido, lista todos os compartilhamentos disponiveis naquele ip
-
-
+#chamda para o nfs no ip que foi inserido, lista todos os compartilhamentos disponiveis naquele ip
 {"input_data":{"media_url":"nfs|nfs://192.168.2.9"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
 
-}}}
-{{{chamada para p conteudo de um determinado compartilhamento em um ip, mostra todas as pastas do compartilhamento
+#chamada para p conteudo de um determinado compartilhamento em um ip, mostra todas as pastas do compartilhamento
 
 {"input_data":{"media_url":"nfs|nfs://192.168.2.9:/volume1/Animes"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
 
-}}}
 
-}}}
 
-"{{{main 
+#main 
 {"input_data":{"media_url":"main"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
-"}}}
 
-"{{{setup 
+#setup 
+
 {"input_data":{"media_url":"configRoot"},"plugin_cookies":{"nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
-"}}}
-"{{{setup language
-{"input_data":{"media_url":"language"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
-"}}}
-{{{ playback 
 
-{{{ toca o filme planeta dos macados em volume 1
+#setup language
+
+{"input_data":{"media_url":"language"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+# playback 
+
+# toca o filme planeta dos macados em volume 1
 
 {"op_type_code":"handle_user_input","op_id":"1","input_data":{"parent_media_url":"http:\/\/192.168.2.8:32400\/library\/sections\/2\/all","selected_media_url":"http:\/\/192.168.2.8:32400\/library\/metadata\/79","sel_ndx":"131"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400","nfsIps":"192.168.2.9","\/Volumes\/Animes":"nfs|nfs:\/\/192.168.2.9:\/volume1\/Animes","\/Volumes\/Animes2":"nfs|nfs:\/\/192.168.2.9:\/volume2\/Animes2","\/Volumes\/Filmes":"nfs|nfs:\/\/192.168.2.9:\/volume1\/Filmes","\/Volumes\/Filmes2":"nfs|nfs:\/\/192.168.2.9:\/volume2\/Filmes2","\/Volumes\/MoviesThreeD":"nfs|nfs:\/\/192.168.2.9:\/volume2\/MoviesThreeD","\/Volumes\/photo":"nfs|nfs:\/\/192.168.2.9:\/volume2\/photo","\/Volumes\/music":"nfs|nfs:\/\/192.168.2.9:\/volume1\/music","\/Volumes\/Series":"nfs|nfs:\/\/192.168.2.9:\/volume1\/Series"}}
 
-}}}
-}}}
-"{{{myplex
-"{{{root
+#myplex
+#root
+POST http://127.0.0.1/emplexer/index.php
+Content-Type: application/x-www-form-urlencoded
+
 {"input_data":{"media_url":"myPlex"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
-"}}}
-"{{{mac mini
+#mac mini
+POST http://127.0.0.1/emplexer/index.php
+Content-Type: application/x-www-form-urlencoded
+
 {"input_data":{"media_url":"http://189.46.88.98:16885/library/sections?X-Plex-Token=mYCSANu3fqky815q6AbL"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
-"}}}
-"{{{ 3d movies
+# 3d movies
+POST http://127.0.0.1/emplexer/index.php
+Content-Type: application/x-www-form-urlencoded
+
 {"input_data":{"media_url":"http://189.46.88.98:16885/library/sections/13?X-Plex-Token=mYCSANu3fqky815q6AbL"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
-"}}}
-"{{{mac mini
-{"input_data":{"media_url":"http://189.46.88.98:16885/library/sections?X-Plex-Token=mYCSANu3fqky815q6AbL"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
-"}}}
-"}}}
+#mac mini
+POST http://127.0.0.1/emplexer/index.php
+Content-Type: application/x-www-form-urlencoded
+
+{"input_data":{"media_url":"http://192.168.2.8:32400/library/sections/13/all"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+# Gcomps
+
+# Tela de teste gcomp
+POST http://127.0.0.1/emplexer/index.php
+Content-Type: application/x-www-form-urlencoded
+
+{"input_data":{"media_url":"testGcomps"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
+
+#movie info screen
+{"op_type_code":"handle_user_input","op_id":"6","input_data":{"type":"runThisStaticMethod","method":"PlexScreen::openMovieInfo","parent_media_url":"http://192.168.2.8:32400/library/sections/2/all","selected_media_url":"http://192.168.2.8:32400/library/metadata/32462","sel_ndx":"0"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400","nfsIps":"192.168.2.9","/Volumes/Series":"nfs|nfs://192.168.2.9:/volume1/Series","/Volumes/Animes2":"nfs|nfs://192.168.2.9:/volume2/Animes2","/Volumes/Animes":"nfs|nfs://192.168.2.9:/volume1/Animes","/Volumes/Filmes":"nfs|nfs://192.168.2.9:/volume1/Filmes","/Volumes/Filmes2":"nfs|nfs://192.168.2.9:/volume2/Filmes2","/Volumes/MoviesThreeD":"nfs|nfs://192.168.2.9:/volume2/MoviesThreeD","/Volumes/music":"nfs|nfs://192.168.2.9:/volume1/music","/Volumes/Download/FilmeDeTeste":"nfs|nfs://192.168.2.9:/volume1/Download/FilmeDeTeste"}}
+
+
+#movie info screen
+{"has_data":true,"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400","connectionMethod":"nfs","hasSeenCaptionColor":"15","notSeenCaptionColor":"0","handler_id":"controls_emplexer_setup_screen","control_id":"btnSalvar","selected_control_id":"btnSalvar","selected_media_url":"emplexer_setup_screen","showOnMainScreen":"yes","useVodPlayback":"true","\/Volumes\/MoviesThreeD":"nfs:\/\/192.168.2.9:\/volume2\/MoviesThreeD","\/Volumes\/Animes":"nfs:\/\/192.168.2.9:\/volume1\/Animes","\/Volumes\/Animes2":"nfs:\/\/192.168.2.9:\/volume2\/Animes2","\/Volumes\/Filmes":"nfs:\/\/192.168.2.9:\/volume1\/Filmes","\/Volumes\/Download\/FilmeDeTeste":"nfs:\/\/192.168.2.9:\/volume1\/Download\/FilmeDeTeste","\/Volumes\/Filmes2":"nfs:\/\/192.168.2.9:\/volume2\/Filmes2","\/Volumes\/music":"nfs:\/\/192.168.2.9:\/volume1\/music","\/Volumes\/Fotos":"\/tmp\/mnt\/volume1\/Fotos","\/Volumes\/Series":"nfs:\/\/192.168.2.9:\/volume1\/Series","parent_media_url":"emplexer_setup_screen","useCache":"false","resumePlayBack":"ask","action_type":"apply","_DISKSTATION\/Filmes2":"nfs:\/\/192.168.2.9:\/volume2\/Filmes2","Q:\/":"nfs:\/\/192.168.2.9:\/volume2\/Filmes2\/","defaultMovieFilter":"unwatched","defaultShowFilter":"unwatched","defaultArtistFilter":"all","screen.emplexer_base_channel.view_idx":"2","channel_selected_index":"2","screen.plex_root_list.view_idx":"0","screen.emplexer_video_list.view_idx":"2","templateViewNumber":"{\"templateMovie\":29}","screen.emplexer_movie_list.view_idx":"0","\/Volumes\/photo":"nfs:\/\/192.168.2.8:\/Volumes\/photo","\/Volumes\/Series2":"nfs:\/\/192.168.2.9:\/volume2\/Series2"},"is_error":false,"error_action":null,"data_type":"plugin_folder_view","data":{"multiple_views_supported":false,"archive":null,"view_kind":"view_movie","data":{"movie":{"name":"","name_original":"Bait","description":"Bait 3D is an Australian-Singaporean 3D horror thriller film directed by Kimble Rendall based on the screenplay by John Kim and Russell Mulcahy. It featured Sharni Vinson, Phoebe Tonkin, Xavier Samuel, Julian McMahon, Cariba Heine, Alex Russell, Lincoln Lewis, Alice Parkinson, and Dan Wyllie. The film was released on 20 September 2012 in Australia.","poster_url":"http:\/\/192.168.2.8:32400\/photo\/:\/transcode?width=200&height=294&url=http:\/\/192.168.2.8:32400\/library\/metadata\/32320\/thumb\/1406888464","length_min":93,"year":2012,"directors_str":"Kimble Rendall\n","scenarios_str":"","actors_str":"Daniel Wyllie as Kirby\nAdrian Pang as Jessup\nDamien Garvey as Colins\nRhiannon Dannielle Pettett as Assistant Manager\nMiranda Deakin as TV Reporter\nCariba Heine as Heather\nJulian McMahon as Doyle\nSkye Fellman as Young Girl\nChris Betts as Lockie\nGypsy as Bulli\nMartin Sacks as Todd\nAlex Russell as Ryan\nRichard Brancatisano as Rory\nLincoln Lewis as Kyle\nSharni Vinson as Tina\nJoel Amos Byrnes as Survivor\nQi Yuwu as Steven\nAlice Parkinson as Naomi\nNicholas McCallum as Oceania Store Owner\nXavier Samuel as Josh\nPhoebe Tonkin as Jaimie\nSimon Edds as Lifeguard\n","genres_str":"Horror, Action film, Thriller, Science Fiction, ","rate_imdb":"6.2","rate_kinopoisk":"","rate_mpaa":"R","country":"Australia","budget":"","details":{"Video":"_","     Bitrate":"10277","     Width":"1920","     Height":"1080","     Aspect Ratio":"1.78","     Video Resolution":"1080","     Video Frame Rate":"24p","     Container":"mkv","     Codec":"h264"}},"has_right_button":false,"right_button_caption":null,"right_button_action":null,"has_multiple_series":false,"series_media_url":"{\"screen_id\":\"vod_series\",\"movie_id\":\"\\\/library\\\/metadata\\\/32320\"}","params":{"paint_path_box":false,"paint_content_box_background":true}}}}
+
+
+#movieInfo 
+{"input_data":{"media_url":"movieInfo||http://192.168.2.8:32400/library/metadata/32309?checkFiles=1&includeExtras=1"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
 

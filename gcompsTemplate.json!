@@ -1,0 +1,96 @@
+{
+    "base": {
+        "items": [
+            {
+                "type": "grid",
+                "source": "$current",
+                "columns": 2,
+                "lines": 2,
+                "scroll": 1,
+                "image": {
+                    "source": "$xpath(@thumb)||urldummy",
+                    "text": {
+                        "position": 2,
+                        "source": "$xpath(@description)||null"
+                    },
+                    "selected": {
+                        "scale": 1.2,
+                        "image": "url da imagem de seleção",
+                        "textColor": "red"
+                    },
+                    "h": -1,
+                    "w": -1
+                },
+                "text": {
+                    "source": "$xpath(#description)",
+                    "selected": {
+                        "textColor": "red"
+                    }
+                }
+            },
+            {
+                "type": "info",
+                "source": "$current",
+                "background_url": "http://192.168.2.8:32400/library/metadata/20304/art/1364756858",
+                "items": [
+                    
+                    {
+                        "type": "image",
+                        "url": "http://192.168.2.8:32400/library/metadata/43980/thumb/1381977789",
+                        "x": 100,
+                        "y": 100,
+                        "w": 100,
+                        "h": 100
+                    },
+                    {
+                        "type": "image",
+                        "url": "http://192.168.2.8:32400/library/metadata/43981/thumb/1381977789",
+                        "x": 0,
+                        "y": 100,
+                        "w": 100,
+                        "h": 100
+                    }
+                ],
+                "actions": {
+                    "key_enter": {
+                        "action": "play",
+                        "postAction": "refresh"
+                    },
+                    "key_play": {
+                        "action": "play",
+                        "postAction": "refresh"
+                    },
+                    "key_next": {
+                        "action": "next"
+                    },
+                    "key_prev": {
+                        "action": "back"
+                    },
+                    "key_return": {
+                        "action": "exit"
+                    },
+                    "key_a_red": {
+                        "action": "refresh"
+                    },
+                    "key_b_green": {
+                        "action": "queue"
+                    }
+                }
+            }
+        ]
+    },
+    "movie": {
+        "inherits": "base",
+        "items": [
+            {
+                "grid": {
+                    "source": "outro source que não o de base",
+                    "lines": 4,
+                    "image": {
+                        "unset": true
+                    }
+                }
+            }
+        ]
+    }
+}

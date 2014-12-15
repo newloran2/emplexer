@@ -1,6 +1,5 @@
 <?php
 
-
 require_once 'lib/abstract_preloaded_regular_screen.php';
 
 

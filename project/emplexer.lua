@@ -47,7 +47,7 @@ end
 local currentPlaylist = nil
 
 GET('/', function(req, res)
-    log(req.client:getpeer())
+    log(req.client:getzapeer())
     res:add("erik")
 
   end)

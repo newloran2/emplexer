@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 /**
 * Base Menu class for emplexer
@@ -31,6 +31,7 @@ abstract class BaseScreen implements TemplateCallbackInterface
 		hd_print(__METHOD__);
 		$fun = 'template'.ucwords($type);
 		return $this->$fun();
+        
 	}
 
 	private function getTemplateIndexAndUpdate($key){
@@ -74,7 +75,11 @@ abstract class BaseScreen implements TemplateCallbackInterface
 		hd_print(__METHOD__);
 
 		$a = TemplateManager::getInstance()->getTemplate("movie", array($this, 'getMediaUrl'),  array($this, 'getData'), array($this, 'getField'));
-		$actions = array(GUI_EVENT_KEY_ENTER => array(GuiAction::handler_string_id => $this->handlerUserInput));
+        $actions = array(
+            GUI_EVENT_KEY_ENTER => array(
+                GuiAction::handler_string_id => $this->handlerUserInput
+            )
+        );
 		$a['data']['actions'] = $actions;
 		return $a;
 	}

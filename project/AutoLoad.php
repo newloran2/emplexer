@@ -1,6 +1,6 @@
 <?php
 class autoloader {
-//teste
+
     public static $loader;
     private $isDune = false;
     private $includes ;

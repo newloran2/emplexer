@@ -5,6 +5,7 @@
 
 /**
 * Singleton to manage emplexer templates
+{"input_data":{"media_url":"movieInfo||http://192.168.2.8:32400/library/metadata/32309?checkFiles=1&includeExtras=1"},"plugin_cookies":{"plexIp":"192.168.2.8","plexPort":"32400", "nfsIps": "192.168.2.9"},"op_type_code":"get_folder_view","op_id":"2"}
 */
 class TemplateManager
 {
@@ -22,6 +23,7 @@ class TemplateManager
 
     protected function reloadTemplate(){
         $this->templateJson = json_decode(file_get_contents($this->templateFile), true);
+        /* hd_print_r("templatePath =" . $this->templateFile, $this->templateJson); */		
      }
 
 
@@ -96,14 +98,14 @@ class TemplateManager
         // var_dump($this->templateJson[$name]['async_icon_loading']);
         $async_icon_loading = isset($this->templateJson[$name]['async_icon_loading'])? $this->templateJson[$name]['async_icon_loading']  : true;
         $availableTemplates = array(
-            PluginRegularFolderView::async_icon_loading => $async_icon_loading,
-            PluginRegularFolderView::initial_range      =>
+            PluginRegularFolderView::async_icon_loading          => $async_icon_loading,
+            PluginRegularFolderView::initial_range               =>
             array(
-                PluginRegularFolderRange::items                => $folderItems,
-                PluginRegularFolderRange::total                => count($folderItems),
-                PluginRegularFolderRange::count                => count($folderItems),
-                PluginRegularFolderRange::more_items_available => false,
-                PluginRegularFolderRange::from_ndx             => 0
+                PluginRegularFolderRange::items                  => $folderItems,
+                PluginRegularFolderRange::total                  => count($folderItems),
+                PluginRegularFolderRange::count                  => count($folderItems),
+                PluginRegularFolderRange::more_items_available   => false,
+                PluginRegularFolderRange::from_ndx               => 0
                 ),
             PluginRegularFolderView::view_params                 => $this->getTag($name, "view_params",  $getFieldCallBack),
             PluginRegularFolderView::base_view_item_params       => $this->getTag($name, "base_view_item_params",  $getFieldCallBack),
@@ -115,8 +117,24 @@ class TemplateManager
             PluginFolderView::data      => $availableTemplates
         );
         return $a;
-
     }
+
+    public function getMovieInfoTemplate($name, $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){
+        $external =  $this->getTag($name, "external", $getFieldCallBack);
+        $params =  $this->getTag($name, "params", $getFieldCallBack);
+        $movie =  $this->getTag($name, "movie", $getFieldCallBack);
+        
+        $template = $external;
+        $template['params'] = $params;
+        $template['movie'] = $movie;
+        $ret = array(
+            PluginFolderView::view_kind => PLUGIN_FOLDER_VIEW_MOVIE,
+            PluginFolderView::multiple_views_supported => false,
+            PluginFolderView::data      => $template        
+        );
+        return $ret;
+    }
+
 
 }
 

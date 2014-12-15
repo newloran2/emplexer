@@ -1,9 +1,7 @@
 
 <?php
 require_once 'AutoLoad.php';
-
 class Emplexer implements DunePlugin {
-
     public $stream_name;
     private $availableScreens;
 
@@ -20,7 +18,9 @@ class Emplexer implements DunePlugin {
     
     function __destruct()
     {
-        shell_exec('kill $(pgrep lem-dune.bin)');
+        if (!DEV){
+            shell_exec('kill $(pgrep lem-dune.bin)');
+        }
     }
 
     public function get_folder_view($media_url, &$plugin_cookies) {
@@ -48,15 +48,15 @@ class Emplexer implements DunePlugin {
                     "caption"          => _("Shared Content"),
                     "media_url"        => "myPlex",
                     "view_item_params" => array()
-                 ),
-                 array(
+                ),
+                array(
                     "caption"          => "testGcomps",
                     "media_url"        => "testGcomps",
                     "view_item_params" => array()
-                 )
+                )
             )
-            
-        );
+
+            );
             // array_push($a['data']['initial_range']['items'], array(
             //     "caption"=> "Channels",
             //     "media_url"=> "/video",
@@ -87,7 +87,7 @@ class Emplexer implements DunePlugin {
 
             // $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
             // $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);
-
+            hd_print_r("valor = ", $a);
             return $a;
 
         } else if (strstr(strtolower($media_url), 'nfs')) {
@@ -182,11 +182,10 @@ class Emplexer implements DunePlugin {
         //     return ActionFactory::open_folder($user_input->selected_media_url);
         // }
         return $menu->generateScreen();
+
         // return ActionFactory::launch_media_url(Client::getInstance()->getUrl(null, (string)"http://www.google.com"));
     }
 }
 
 
 ?>
-
-

@@ -1,0 +1,71 @@
+* Listagem
+** TODO Adicionar filtros acumulados como na versão da web
+* Templates
+** DONE Suporte para json encadeado
+** TODO Suporte para expresões no template.
+*** EX: data->Video[1]->attibutes()->id > 100
+** TODO Modo de adicionar um elemento condicionalmente: ex colocar um icone especifico caso o tio do item seja movie.
+** DONE O templateManager presisa estar desatrelado dos campos do plex, pois outras telas precisarão utilizar-lo.
+** TODO Adicionar suporte para multiplos views (poder trocar a aparecina com o botão A do controle remoto) 
+** TODO Melhorar os templates que já estão disponiveis
+** TODO Adicionar o suporte para template externo
+*** TODO Esse template deve herdar o template base e deve ser possivel alterar apenas algumas coisas nesse template:  
+**** EX: alterar o tamanho dos thumbnails que aparecem na tela de listagem de episódios da serie
+*** TODO Esse template externo e interno também deve ter a possibilidade de definir quais os campos do xml o emplexer vai consumir para fazer o playback de um canal.
+* GComps
+** TODO Criar classes para emcapsular GComps
+** TODO Criar alguma tela de teste com GComps
+* subtitleManager
+** TODO Criar classe abstrata para download de legendas.
+** TODO Essa classe deve proveum uma lista de metodos abstratos que seriam a parte de comunicação com o servidor.
+** TODO Essa classe deve prover uma lista de metodos que seriam usadas por todas (ou maioria) das classes que a implementarem (ex: criação do hash do arquivo.)
+* PlayBackManager
+** TODO Criar classe que centralize o parse e qualquer modificação de url para playback
+* FileSystemManager
+** TODO Criar estruturas de classes para gerenciar montagem e navegação no dune por file system tanto remoto quanto local.
+* Trailers
+** TODO Adicionar uma função para ver o trailer de um filme (poder listar os trailer a partir da tela de info)
+*** O acesso a essa listagem estará na tela de info, caso os extras estejam disponíveis o botã da direita vai entrar na listagem.
+* Https (Dune não suporta https)
+** TODO Httpfs
+*** TODO user o seguinte comando para montar  o device fuse mknod /dev/fuse c 10 22
+*** TODO Tentar modificar o httpfs para ter suporte a multiplos links
+*** TODO Talvez desenvolver um cliente para plex baseado em fuse que posibilite usar o plex como um sistema de arquivos
+**** TODO Tunel https baseado em Lem
+***** TODO Fazer um fork do lem e adicionar lá qualquer mudança feita no código.
+***** TODO Submeter os pull requests com as alterações feitas no lem para o projeto princial
+***** DONE Compilar o módulo lem-ssl para ter acesso a requests https (mac e dune)
+***** DONE Mudar o módulo de http download para poder usar o lem-ssl
+***** TODO Desenvolver um forma com o lem de receber uma url (http e https) 
+***** DONE Fazer o download e conforme for baixando mandar isso devolta para o cliente.
+****** TODO um novo script mais baixo nivel foi feito precisa de mais testes.
+***** DONE É necessário burlar o sistema do hattaway, pois o objeto Response atualmente acumula o conteudo antes de mandar para o cliente.
+****** DONE Foi adicionado uma propriedade chunk no response do Hataway, caso essa property seja preenchida com uma função o sistema vai utilizar essa função para pegar o chunk.
+***** DONE É preciso fazer uma forma de o hattaway não enviar os headers default apos eu enviar dados.
+* ImageTranscodeManager
+** DONE Usar libgd juntamente com o lem para poder processar imagens dentro do dune (OK)
+** TODO Fazer um módulo lua que use o libgd e leia um template json para gerar uma imagem(50%)
+* TrascodeSessionManager:
+** TODO Criar classe que possa ser configurada atravéz de algum arquivo de configuração para gerenciar sessões transcodificadas do plex.
+** TODO Esse arquivo de config tem que indicar condicionais com base no xml de detalhe do video para decidir se irá fazer uma sessão transcodificada ou não.
+** TODO Coisas como (se o audio codec for aac transcodificar deve ser possivel)
+*** Mais exemplos:
+#+BEGIN_SRC bash
+    ls -l
+#+END_SRC
+    #+BEGIN_SRC lua
+        if (vcodec == hi10p) transcode
+        if (container == newmkvcontainernotsupportedbydune) transcode
+        if (vcodec == hi10p || sub == ass) transcode
+    #+END_SRC
+* Suporte para myPlex
+** TODO Fazer sistema de login no myPlex
+** TODO Fazer sistema de login com pin no myPLex.
+** TODO Alterar listagems para adicionar os headers do myPlex.
+** TODO Adicionar na Listagem inicial as localizações do myPlex, se tiver servidores locais deve usar apartir de lá
+** TODO caso a url de playBack do myPLex for https devo mandar para o Tunel lem pois o dune não suporta https
+
+
+
+
+
