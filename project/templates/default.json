@@ -1,4 +1,4 @@
- {
+{
     "base": {
         "items": {
             "caption": "plex_item_field_expr::attributes()->titleSort||plex_item_field_expr::attributes()->title||plex_item_field_expr::attributes()->name",
@@ -39,41 +39,52 @@
     },
     "movie": {
         "inherits": "base",
-        "items": {
-            "view_item_params": {
-                "icon_path": "plex_thumb_item_field::thumb::200::300::true"
-            }
-        },
-        "view_params": {
-            "num_cols": 6,
-            "num_rows": 2,
-            "paint_sandwich": true,
-            "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
-            "sandwich_mask": "cut_icon://{name=sandwich_mask}",
-            "sandwich_cover": "cut_icon://{name=sandwich_cover}",
-            "sandwich_width": 200,
-            "sandwich_height": 400,
-            "sandwich_icon_upscale_enabled": true,
-            "sandwich_icon_keep_aspect_ratio": true,
-            "paint_item_info_in_details": true,
-            "paint_icon_selection_box": false,
-            "item_paint_caption_within_icon": true,
-            "content_box_padding_left": 50
-        },
-        "base_view_item_params": {
-            "item_paint_icon": true,
-            "item_padding_top": 0,
-            "item_padding_bottom": 0,
-            "icon_valign": 1,
-            "item_paint_caption": false,
-            "icon_scale_factor": 1,
-            "icon_sel_scale_factor": 1.2,
-            "item_layout": 1
-        },
-        "not_loaded_view_item_params": {
-            "item_paint_caption_within_icon": true,
-            "icon_path": "plugin_file://icons/poster.png"
-        }
+        "templates": {
+            "teste":{
+                "items": {
+                    "view_item_params": {
+                        "icon_path": "plex_thumb_item_field::thumb::200::300::true"
+                    }
+                },
+                "view_params": {
+                    "num_cols": 6,
+                    "num_rows": 2,
+                    "paint_sandwich": true,
+                    "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
+                    "sandwich_mask": "cut_icon://{name=sandwich_mask}",
+                    "sandwich_cover": "cut_icon://{name=sandwich_cover}",
+                    "sandwich_width": 200,
+                    "sandwich_height": 400,
+                    "sandwich_icon_upscale_enabled": true,
+                    "sandwich_icon_keep_aspect_ratio": true,
+                    "paint_item_info_in_details": true,
+                    "paint_icon_selection_box": false,
+                    "item_paint_caption_within_icon": true,
+                    "content_box_padding_left": 50
+                },
+                "base_view_item_params": {
+                    "item_paint_icon": true,
+                    "item_padding_top": 0,
+                    "item_padding_bottom": 0,
+                    "icon_valign": 1,
+                    "item_paint_caption": false,
+                    "icon_scale_factor": 1,
+                    "icon_sel_scale_factor": 1.2,
+                    "item_layout": 1
+                },
+                "not_loaded_view_item_params": {
+                    "item_paint_caption_within_icon": true,
+                    "icon_path": "plugin_file://icons/poster.png"
+                }
+            },
+	    "teste2":{
+		"inherits":"teste",
+		"view_params":{
+		    "num_cols": 10,
+		    "num_rols": 5
+		}
+	    }
+	}
     },
     "show": {
         "inherits": "movie",
@@ -196,7 +207,7 @@
         "movie": {
             "actors_str": "plex_field_roles_expr::Video->Role",
             "budget": "",
-            "country": "plex_field_expr::Video->Country->attributes()->tag1||null",q
+            "country": "plex_field_expr::Video->Country->attributes()->tag1||null",
             "description": "plex_field_expr::Video->attributes()->summary||",
             "details": {
                 "     Aspect Ratio": "plex_field_expr::Video->Media->attributes()->aspectRatio||-",
