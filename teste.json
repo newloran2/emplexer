@@ -1,0 +1,178 @@
+{
+    "data": {
+        "view_kind": "view_gcomps",
+        "data": {
+            "window_def": {
+                "background_url": "http://192.168.2.8:32400/library/metadata/43969/art/1391819257",
+                "comp_defs": [
+                    {
+                        "id": "button1",
+                        "geom_def": {
+                            "role": "unset",
+                            "w": -1,
+                            "h": 100,
+                            "align_def": {
+                                "x": 500,
+                                "y": 200
+                            }
+                        },
+                        "kind": "button",
+                        "specific_def": {
+                            "caption": "erik clemente",
+                            "caption_centered": true,
+                            "selected": false
+                        }
+                    },
+                    {
+                        "id": "scrollPane1",
+                        "geom_def": {
+                            "role": "unset",
+                            "w": 600,
+                            "h": -1,
+                            "align_def": {
+                                "x": 100,
+                                "y": 100
+                            }
+                        },
+                        "kind": "scroll_pane",
+                        "specific_def": {
+                            "panel": {
+                                "children": [
+                                    {
+                                        "id": "button2",
+                                        "geom_def": {
+                                            "role": "unset",
+                                            "w": -1,
+                                            "h": 100,
+                                            "align_def": {
+                                                "x": 0,
+                                                "y": 0
+                                            }
+                                        },
+                                        "kind": "button",
+                                        "specific_def": {
+                                            "caption": "monica clemente",
+                                            "caption_centered": true,
+                                            "selected": false
+                                        }
+                                    },
+                                    {
+                                        "id": "button3",
+                                        "geom_def": {
+                                            "role": "unset",
+                                            "w": -1,
+                                            "h": 100,
+                                            "align_def": {
+                                                "x": 0,
+                                                "y": 60
+                                            }
+                                        },
+                                        "kind": "button",
+                                        "specific_def": {
+                                            "caption": "edna santos clemente",
+                                            "caption_centered": true,
+                                            "selected": false
+                                        }
+                                    }
+                                ]
+                            },
+                            "view_width": 600,
+                            "view_height": 500
+                        }
+                    },
+                    {
+                        "id": "scrollBar2",
+                        "geom_def": {
+                            "role": "unset",
+                            "w": -1,
+                            "h": 100,
+                            "align_def": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "kind": "scrollbar",
+                        "specific_def": {
+                            "scroll_pane_id": "scrollPane1",
+                            "vertical": true
+                        }
+                    },
+                    {
+                        "id": "image1",
+                        "geom_def": {
+                            "role": "bottom"
+                        },
+                        "kind": "image",
+                        "specific_def": {
+                            "url": "http://192.168.2.8:32400/library/metadata/43980/thumb/1381977789"
+                        }
+                    },
+                    {
+                        "id": "label1",
+                        "geom_def": {
+                            "role": "unset",
+                            "w": 1920,
+                            "h": -1,
+                            "align_def": {
+                                "x": 0,
+                                "y": 900
+                            }
+                        },
+                        "kind": "label",
+                        "specific_def": {
+                            "text": "The story is set in December of 2199, when the streets are full of anticipation for the end of the year and the start of the new one. Amid the celebrations, word spreads that Ragna the Bloodedge, an SS-class rebel with the highest ever bounty on his head, has appeared in the 13th Hierarchical City of Kagutsuchi. The apparent aim of Ragna or the 'Grim Reaper' is the destruction of the system controlling the world. To collect the bounty, a motley array of unrivaled fighters converge on Kagutsuchi.",
+                            "font_size": 1,
+                            "text_color": "red",
+                            "max_num_lines": 4
+                        }
+                    }
+                ]
+            },
+            "actions": {
+                "key_enter": {
+                    "handler_string_id": "change_gcomps",
+                    "data": {
+                        "change_defs": [
+                            {
+                                "id": "button1",
+                                "selected": true,
+                                "transition": "default",
+                                "geom_def": {
+                                    "role": "unset",
+                                    "w": 300,
+                                    "h": -1,
+                                    "align_def": {
+                                        "x": 400,
+                                        "y": 600
+                                    }
+                                }
+                            }
+                        ],
+                        "post_action": {
+                            "handler_string_id": "show_popup_menu",
+                            "data": {
+                                "menu_items": [
+                                    {
+                                        "caption": "isso é um teste1"
+                                    },
+                                    {
+                                        "caption": "isso é um teste2"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "data_type": "plugin_folder_view",
+    "error_action": null,
+    "has_data": true,
+    "is_error": false,
+    "plugin_cookies": {
+        "nfsIps": "192.168.2.9",
+        "plexIp": "192.168.2.8",
+        "plexPort": "32400"
+    }
+}

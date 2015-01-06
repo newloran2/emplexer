@@ -2,16 +2,29 @@
 ** TODO Adicionar filtros acumulados como na versão da web
 * Templates
 ** DONE Suporte para json encadeado
+** TODO fazer com que o template seja todo mixado apenas na primeira execução, hoje cada bloco é mixado durante a execução e o bloco não é cacheado para as demais execuções.
 ** TODO Suporte para expresões no template.
 *** EX: data->Video[1]->attibutes()->id > 100
+    Feito via plex_item_field_expr ou plex_field_expr
+*** DONE Implementar
+*** TODO Fazer testes no dune
 ** TODO Modo de adicionar um elemento condicionalmente: ex colocar um icone especifico caso o tio do item seja movie.
 ** DONE O templateManager presisa estar desatrelado dos campos do plex, pois outras telas precisarão utilizar-lo.
-** TODO Adicionar suporte para multiplos views (poder trocar a aparecina com o botão A do controle remoto) 
+** TODO Adicionar suporte para multiplos views (poder trocar a aparecina com o botão A do controle remoto)
+*** DONE multiplos templates devem estar dentro de um bloco templates, cada subtemplate deve ter um nome e podem herdar um outro subtemplate do mesmo template, herança de subtemplates de outro template não será permitido, o bloco de herança dos templates deve ficar intacto e funcionanodo como funcioan agora.
+*** DONE Adaptar todos os templates para o novo formato
+*** DONE Adicionar o evento de troca de template em todas as screens
+    Não tenho como saber exatamente se deu certo, apenas o que fiz foi indicar que se ouver mais de um subtemplate o multiple_views_supported será true.
+    Isso se não me engano faz com que o dune mostre o botão de troca de view e caso o mesmo seja precionado o evento get_next_folder_view seja chamado.
+*** TODO implementar o next_folder_view para troca da screen para o próximo subtemplate 
+*** TODO implementar uma forma de ordenação dos subtemplates para que aja uma ordem.
+*** TODO Testar no Dune 
 ** TODO Melhorar os templates que já estão disponiveis
 ** TODO Adicionar o suporte para template externo
 *** TODO Esse template deve herdar o template base e deve ser possivel alterar apenas algumas coisas nesse template:  
 **** EX: alterar o tamanho dos thumbnails que aparecem na tela de listagem de episódios da serie
 *** TODO Esse template externo e interno também deve ter a possibilidade de definir quais os campos do xml o emplexer vai consumir para fazer o playback de um canal.
+
 * GComps
 ** TODO Criar classes para emcapsular GComps
 ** TODO Criar alguma tela de teste com GComps
@@ -64,7 +77,8 @@
 ** TODO Alterar listagems para adicionar os headers do myPlex.
 ** TODO Adicionar na Listagem inicial as localizações do myPlex, se tiver servidores locais deve usar apartir de lá
 ** TODO caso a url de playBack do myPLex for https devo mandar para o Tunel lem pois o dune não suporta https
-
+* NFS/SMB/Local File system
+** TODO Adicionar no setup inicial uma pergunta para saber se o plex media server está instalado no mesmo lugar onde os arquivos de midia estão.
 
 
 
