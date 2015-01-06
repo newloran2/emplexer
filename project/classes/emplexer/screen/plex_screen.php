@@ -19,27 +19,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
     }
 
     public function generateScreen(){
-
-        $viewGroup = (string)$this->data->attributes()->viewGroup;
-        if ((isset($this->data->attributes()->content)
-            &&$this->data->attributes()->content == "plugins")
-            ||(isset($this->data->attributes()->identifier)
-            && !strstr((string)$this->data->attributes()->identifier, "library"))){
-            $viewGroup = 'plugins';
-        }
-        if ($this->data->attributes()->size == 1 && isset($this->data->Video) && !isset($this->key)){
-            // $viewGroup = 'play';
-            $viewGroup = 'vodplay';
-        }
-        if ($this->data->attributes()->size == 1 && isset($this->data->Video) && isset($this->key)){
-            $viewGroup = 'info';
-        }
-        if (!$viewGroup && strstr($this->path, 'metadata')){
-            $viewGroup = 'play';
-        }
-        $viewGroup = isset($viewGroup) && $viewGroup !== '' ? $viewGroup : 'secondary';
-        hd_print("viewGroup = $viewGroup");
-        $data = $this->getTemplateByType($viewGroup);
+        $data = $this->getTemplateByType($this->getViewGroup());
         return $data;
     }
 
@@ -92,7 +72,6 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
             $url = sprintf("http://192.168.2.41:3005/download?url=%s", urlencode($url));
         }
         hd_print("valor de url = $url");
-	config
         $vodInfo = array(
             PluginVodInfo::id                  => 1,
             PluginVodInfo::name                => (string)$item->attributes()->title,

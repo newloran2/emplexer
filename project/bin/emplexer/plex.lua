@@ -69,7 +69,7 @@ function plex:startRegister(serverName)
 		sock:settimeout(1)
 
 		while continue do
-			-- print ("chamando", collectgarbage("count"))
+			print ("chamando", collectgarbage("count"))
 			sock:sendto(hello_broadcast_string,ip, port)
 			sleep(5)
 		end

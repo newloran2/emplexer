@@ -35,13 +35,13 @@ class GuiControlText extends AbstractGuiControl
     public function getSpecificDef(){
         return array
                 (
-                    GuiTextFieldDef::initial_value => $this->initialValue,
-                    GuiTextFieldDef::width => $this->width,
-                    GuiTextFieldDef::numeric => 0 ,
-                    GuiTextFieldDef::password =>  0,
-                    GuiTextFieldDef::has_osk =>  0,
-                    GuiTextFieldDef::always_active=>  0,
-                    GuiTextFieldDef::apply_action =>  null,
+                    GuiTextFieldDef::initial_value  => $this->initialValue,
+                    GuiTextFieldDef::width          => $this->width,
+                    GuiTextFieldDef::numeric        => 0 ,
+                    GuiTextFieldDef::password       =>  0,
+                    GuiTextFieldDef::has_osk        =>  0,
+                    GuiTextFieldDef::always_active  =>  0,
+                    GuiTextFieldDef::apply_action   =>  null,
                     GuiTextFieldDef::confirm_action =>  null,
                 );
     }

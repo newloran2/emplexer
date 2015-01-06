@@ -14,6 +14,7 @@ abstract class BaseScreen implements TemplateCallbackInterface
 	protected $data;
 	protected $nextTemplate = false;
 	protected $templates =array();
+    protected $viewGroup;
 
 	function __construct($key=null, $nextTemplate=false) {
 		if (!$key || $key === 'main')
@@ -25,13 +26,37 @@ abstract class BaseScreen implements TemplateCallbackInterface
 
 		$this->templates = json_decode(Config::getInstance()->templateViewNumber);
 
-	}
 
+          $this->viewGroup = (string)$this->data->attributes()->viewGroup;
+        if ((isset($this->data->attributes()->content)
+            &&$this->data->attributes()->content == "plugins")
+            ||(isset($this->data->attributes()->identifier)
+            && !strstr((string)$this->data->attributes()->identifier, "library"))){
+            $this->viewGroup = 'plugins';
+        }
+        if ($this->data->attributes()->size == 1 && isset($this->data->Video) && !isset($this->key)){
+            // $this->viewGroup = 'play';
+            $this->viewGroup = 'vodplay';
+        }
+        if ($this->data->attributes()->size == 1 && isset($this->data->Video) && isset($this->key)){
+            $this->viewGroup = 'info';
+        }
+        if (!$this->viewGroup && strstr($this->path, 'metadata')){
+            $this->viewGroup = 'play';
+        }
+        $this->viewGroup = isset($this->viewGroup) && $this->viewGroup !== '' ? $this->viewGroup : 'secondary';
+        hd_print("viewGroup = $this->viewGroup");
+
+	}
+    public function getViewGroup(){
+      
+        return $this->viewGroup;
+    }
+    
 	public function getTemplateByType($type){
 		hd_print(__METHOD__);
 		$fun = 'template'.ucwords($type);
-		return $this->$fun();
-        
+	    return $this->$fun();
 	}
 
 	private function getTemplateIndexAndUpdate($key){

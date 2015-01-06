@@ -31,9 +31,9 @@ class TranslationManager
             hd_print("error: selected language are not supported $lang");
             $lang = "translations_en.json";
         }
-	hd_print("caminho: ". ROOT_PATH . "/translations/$lang");
+        //hd_print("caminho: ". ROOT_PATH . "/translations/$lang");
 	$this->translationTable = json_decode(file_get_contents(ROOT_PATH . "/translations/$lang"), true);
-	hd_print_r("translationtable", $this->translationTable);
+	//hd_print_r("translationtable", $this->translationTable);
     }
 
 

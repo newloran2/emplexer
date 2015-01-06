@@ -30,7 +30,7 @@ class Config {
 
     public function setPluginCookies(&$pluginCookies){
         $this->pluginCookies = $pluginCookies;
-        hd_print_r(__METHOD__, $pluginCookies);
+//        hd_print_r(__METHOD__, $pluginCookies);
 
         if (isset($pluginCookies->plexIp) && isset($pluginCookies->plexPort) && !filter_var($pluginCookies->plexIp, FILTER_VALIDATE_IP)|| !filter_var($pluginCookies->plexPort, FILTER_VALIDATE_INT)){
 

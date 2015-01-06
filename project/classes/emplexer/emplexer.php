@@ -22,9 +22,9 @@ class Emplexer implements DunePlugin {
             shell_exec('kill $(pgrep lem-dune.bin)');
         }
     }
-
-    public function get_folder_view($media_url, &$plugin_cookies) {
-        hd_print_r('this->availableScreens = ' , $this->availableScreens);
+    
+    public function getScreen($media_url, &$plugin_cookies){
+         hd_print_r('this->availableScreens = ' , $this->availableScreens);
         hd_print(__METHOD__ . " MediaURL = $media_url");
         Config::getInstance()->setPluginCookies($plugin_cookies);
         Client::getInstance()->startEmplexerServerAndRegisterAsPlayer();
@@ -87,7 +87,7 @@ class Emplexer implements DunePlugin {
 
             // $a['data']['initial_range']['total'] = count($a['data']['initial_range']['items']);
             // $a['data']['initial_range']['count'] = count($a['data']['initial_range']['items']);
-            hd_print_r("valor = ", $a);
+            //            hd_print_r("valor = ", $a);
             return $a;
 
         } else if (strstr(strtolower($media_url), 'nfs')) {
@@ -98,15 +98,19 @@ class Emplexer implements DunePlugin {
         } else {
             $menu =   new PlexScreen($media_url);
         }
-
-        return $menu->generateScreen();
+        return $menu;
+           
+    }
+    public function get_folder_view($media_url, &$plugin_cookies) {
+        $a= $this->getScreen($media_url, $plugin_cookies);
+        //echo "valor de a =\n";
+        //        print_r($a);
+        return $a->generateScreen();
     }
 
     public function get_next_folder_view($media_url, &$plugin_cookies) {
-        hd_print(__METHOD__);
-        Config::getInstance()->setPluginCookies($plugin_cookies);
-        $menu =   new PlexScreen($media_url, true);
-
+        $menu = $this->getScreen($media_url, $plugin_cookies);
+        TemplateManager::getInstance()->setNextTemplateByType($menu->getViewGroup());
         return $menu->generateScreen();
     }
 

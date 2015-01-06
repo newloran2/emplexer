@@ -4,7 +4,7 @@ define('ROOT_PATH', __DIR__);
 define('DEV', false);
 function hd_print_r($text, $data){
     $trace=debug_backtrace()[0];
-    hd_print(sprintf("[%s:%d] %s", $trace['file'], $trace['line'], $text));
+    hd_print(sprintf("[%s:%d] %s", basename($trace['file']), $trace['line'], $text));
     hd_print(print_r($data, true));
 }
 

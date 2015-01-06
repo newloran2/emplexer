@@ -101,21 +101,22 @@ class DefaultDunePluginFw extends DunePluginFw
         {
             hd_print("Error: Exception caught: " . $e->getMessage());
             HD::print_backtrace();
-
-            return
-                array
-                (
-                    PluginOutputData::has_data => false,
-                    PluginOutputData::plugin_cookies => $call_ctx->plugin_cookies,
-                    PluginOutputData::is_error => true,
-                    PluginOutputData::error_action =>
-                        ActionFactory::show_error(
-                            true,
-                            'System error',
-                            array(
-                                'Unhandled PHP plugin error.',
-                                'Call the PHP plugin vendor.'))
-                );
+            $errorModal = new ErrorModal($e);
+            return $errorModal->generate();
+            // return
+                 //     array
+                 //     (
+               //         PluginOutputData::has_data => false,
+           //         PluginOutputData::plugin_cookies => $call_ctx->plugin_cookies,
+           //         PluginOutputData::is_error => true,
+           //         PluginOutputData::error_action =>
+           //             ActionFactory::show_error(
+               //                 true,
+           //                 'System error',
+           //                 array(
+               //                     'Unhandled PHP plugin error.',
+           //                     $e->getMessage()))
+           //     );
         }
 
         // Note: change_tv_favorites() may return NULL even if it's completed

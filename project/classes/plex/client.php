@@ -300,11 +300,10 @@ class Client
         hd_print("Não tem vou buscar");
 
 
-        $url = sprintf('%s/%s', $this->myPlexBaseUr, '/users/sign_in.xml');
-
+        $url = sprintf('%s/%s', $this->myPlexBaseUr, '/users/sign_in.json');
         $opts = array( CURLOPT_HTTPHEADER =>
                         array(
-                            'X-Plex-Client-Identifier:sdsdsdsds',
+                            'X-Plex-Client-Identifier:precisa mudar',
                             'X-Plex-Client-Platform:DuneOS',
                             'X-Plex-Device-Name:Dune',
                             'X-Plex-Model:1',
@@ -320,10 +319,9 @@ class Client
 
         $data = $this->get($url, $opts);
         if ($data){
-            $xml = simplexml_load_string($data);
-            hd_print(print_r($xml, true));
-            Config::getInstance()->myPlexToken = $xml["authentication-token"];
-            return $xml["authentication-token"];
+            hd_print(print_r($data, true));
+            Config::getInstance()->myPlexToken = $data->user->authentication_token;
+            return $data->user->authentication_token;
         }
 
         return null;

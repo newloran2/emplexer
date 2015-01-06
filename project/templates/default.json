@@ -1,194 +1,64 @@
 {
     "base": {
-        "items": {
-            "caption": "plex_item_field_expr::attributes()->titleSort||plex_item_field_expr::attributes()->title||plex_item_field_expr::attributes()->name",
-            "media_url": "plex_image_item_field::key||plex_image_item_field::address",
-            "teste": "plex_item_field_expr::attributes()->type",
-            "view_item_params": null
-        },
-        "view_params": {
-            "num_cols": 1,
-            "num_rows": 20,
-            "paint_path_box": false,
-            "paint_scrollbar": false,
-            "paint_help_line": false,
-            "paint_details": false,
-            "content_box_x": 30,
-            "content_box_y": 30,
-            "content_box_width": 1820,
-            "content_box_height": 1012,
-            "paint_content_box_background": false
-        },
-        "base_view_item_params": {
-            "item_paint_icon": false,
-            "item_paint_caption": true,
-            "item_layout": 0
-        },
-        "not_loaded_view_item_params": null
-    },
-    "servers": {
-        "inherits": "base",
-        "items": {
-            "caption": "plex_item_xpath::string(@name)",
-            "media_url": "plex_item_xpath::concat(@scheme, '://',@host, ':',@port, '/library/sections?X-Plex-Token=', @accessToken)",
-            "view_item_params": null
-        }
-    },
-    "secondary": {
-        "inherits": "base"
-    },
-    "movie": {
-        "inherits": "base",
         "templates": {
-            "teste":{
-                "items": {
-                    "view_item_params": {
-                        "icon_path": "plex_thumb_item_field::thumb::200::300::true"
-                    }
-                },
-                "view_params": {
-                    "num_cols": 6,
-                    "num_rows": 2,
-                    "paint_sandwich": true,
-                    "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
-                    "sandwich_mask": "cut_icon://{name=sandwich_mask}",
-                    "sandwich_cover": "cut_icon://{name=sandwich_cover}",
-                    "sandwich_width": 200,
-                    "sandwich_height": 400,
-                    "sandwich_icon_upscale_enabled": true,
-                    "sandwich_icon_keep_aspect_ratio": true,
-                    "paint_item_info_in_details": true,
-                    "paint_icon_selection_box": false,
-                    "item_paint_caption_within_icon": true,
-                    "content_box_padding_left": 50
-                },
+            "simple_list": {
                 "base_view_item_params": {
-                    "item_paint_icon": true,
-                    "item_padding_top": 0,
-                    "item_padding_bottom": 0,
-                    "icon_valign": 1,
-                    "item_paint_caption": false,
-                    "icon_scale_factor": 1,
-                    "icon_sel_scale_factor": 1.2,
-                    "item_layout": 1
+                    "item_layout": 0,
+                    "item_paint_caption": true,
+                    "item_paint_icon": false
                 },
-                "not_loaded_view_item_params": {
-                    "item_paint_caption_within_icon": true,
-                    "icon_path": "plugin_file://icons/poster.png"
+                "items": {
+                    "caption": "plex_item_field_expr::attributes()->titleSort||plex_item_field_expr::attributes()->title||plex_item_field_expr::attributes()->name",
+                    "media_url": "plex_image_item_field::key||plex_image_item_field::address",
+                    "teste": "plex_item_field_expr::attributes()->type"
+                },
+                "not_loaded_view_item_params": null,
+                "view_params": {
+                    "content_box_height": 1012,
+                    "content_box_width": 1820,
+                    "content_box_x": 30,
+                    "content_box_y": 30,
+                    "num_cols": 1,
+                    "num_rows": 20,
+                    "paint_content_box_background": false,
+                    "paint_details": false,
+                    "paint_help_line": false,
+                    "paint_path_box": false,
+                    "paint_scrollbar": false
                 }
-            },
-	    "teste2":{
-		"inherits":"teste",
-		"view_params":{
-		    "num_cols": 10,
-		    "num_rols": 5
-		}
-	    }
+            }
 	}
-    },
-    "show": {
-        "inherits": "movie",
-        "items": {
-            "view_item_params": {
-                "icon_path": "plex_image_item_field::banner"
-            }
-        },
-        "view_params": {
-            "num_cols": 2,
-            "num_rows": 5,
-            "sandwich_width": 750,
-            "sandwich_height": 150,
-            "content_box_padding_left": 70
-        },
-        "not_loaded_view_item_params": {
-            "unset": true,
-            "item_paint_caption_within_icon": true
-        }
-    },
-    "season": {
-        "inherits": "movie",
-        "items": {
-            "view_item_params": {
-                "icon_path": "plex_thumb_item_field::thumb::200::300::true||plex_thumb_field::thumb::200::300"
-            }
-        },
-        "view_params": {
-            "background_path": "plex_image_field::art",
-            "background_width": 1920,
-            "background_height": 1080,
-            "background_order": "before_all",
-            "optimize_full_screen_background": true,
-            "paint_content_box_background": false
-        }
     },
     "episode": {
         "inherits": "movie",
-        "items": {
-            "view_item_params": {
-                "icon_path": "plex_thumb_item_field::thumb::360::300::true"
+        "templates": {
+            "episode_thumbs": {
+                "base_view_item_params": {
+                    "icon_sel_scale_factor": 1.6,
+                    "item_caption_font_size": 1
+                },
+                "inherits": "movie_posters",
+                "items": {
+                    "view_item_params": {
+                        "icon_path": "plex_thumb_item_field::thumb::360::300::true"
+                    }
+                },
+                "not_loaded_view_item_params": {
+                    "item_caption_font_size": 1
+                },
+                "view_params": {
+                    "background_height": 1080,
+                    "background_order": "before_all",
+                    "background_path": "plex_image_field::art",
+                    "background_width": 1920,
+                    "content_box_padding_left": 50,
+                    "num_cols": 4,
+                    "num_rows": 3,
+                    "optimize_full_screen_background": true,
+                    "sandwich_height": 240,
+                    "sandwich_width": 290
+                }
             }
-        },
-        "view_params": {
-            "num_cols": 4,
-            "num_rows": 3,
-            "sandwich_width": 290,
-            "sandwich_height": 240,
-            "background_path": "plex_image_field::art",
-            "background_width": 1920,
-            "background_height": 1080,
-            "background_order": "before_all",
-            "optimize_full_screen_background": true,
-            "content_box_padding_left": 50
-        },
-        "not_loaded_view_item_params": {
-            "item_caption_font_size": 1
-        },
-        "base_view_item_params": {
-            "item_caption_font_size": 1,
-            "icon_sel_scale_factor": 1.6
-        }
-    },
-    "photo": {
-        "inherits": "episode",
-        "view_params": {
-            "sandwich_width": 200,
-            "sandwich_height": 150
-        }
-    },
-    "plugins": {
-        "inherits": "episode",
-        "async_icon_loading": false,
-        "items": {
-            "media_url": "plex_item_xpath://@key",
-            "view_item_params": {
-                "icon_path": "plex_thumb_item_field::thumb::300::300"
-            }
-        },
-        "base_view_item_params": {
-            "item_paint_caption": true
-        },
-        "view_params": {
-            "num_rows": 4,
-            "paint_sandwich": false,
-            "sandwich_width": 200,
-            "sandwich_height": 145
-        }
-    },
-    "nfsScreen": {
-        "inherits": "base",
-        "async_icon_loading": false,
-        "items": {
-            "media_url": "{{value}}",
-            "caption": "{{key}}"
-        },
-        "base_view_item_params": {
-            "num_cols": 1,
-            "num_rows": 20
-        },
-        "view_params": {
-            "unset": true,
-            "num_cols": 1,
-            "num_rows": 10
         }
     },
     "info": {
@@ -198,11 +68,6 @@
             "right_button_action": null,
             "right_button_caption": "plex_field_expr::Video->Extras ? 'Extras' : null",
             "series_media_url": "url"
-        },
-        "params": {
-            "paint_content_box_background": true,
-            "paint_path_box": false,
-            "background_url": "http://192.168.2.8:32400/library/metadata/32309/art/1406888453"
         },
         "movie": {
             "actors_str": "plex_field_roles_expr::Video->Role",
@@ -215,10 +80,10 @@
                 "     Codec": "plex_field_expr::Video->Media->attributes()->videoCodec||-",
                 "     Container": "plex_field_expr::Video->Media->attributes()->container||-",
                 "     Height": "plex_field_expr::Video->Media->attributes()->height||-",
-                "     Width": "plex_field_expr::Video->Media->attributes()->width||-",
+                "     Video": "_",
                 "     Video Frame Rate": "plex_field_expr::Video->Media->attributes()->videoFrameRate||-",
                 "     Video Resolution": "teste",
-                "     Video": "_"
+                "     Width": "plex_field_expr::Video->Media->attributes()->width||-"
             },
             "directors_str": "plex_field_expr::Video->Director[0]->attributes()->tag / 1000/60 ",
             "genres_str": "plex_field_expr::Video->Genre[0]->attributes()->tag",
@@ -231,6 +96,176 @@
             "rate_mpaa": "plex_field_expr::Video->attributes()->contentRating||null",
             "scenarios_str": "",
             "year": 2012
+        },
+        "params": {
+            "background_url": "http://192.168.2.8:32400/library/metadata/32309/art/1406888453",
+            "paint_content_box_background": true,
+            "paint_path_box": false
+        }
+    },
+    "movie": {
+        "inherits": "base",
+        "templates": {
+            "movie_posters": {
+                "base_view_item_params": {
+                    "icon_scale_factor": 1,
+                    "icon_sel_scale_factor": 1.2,
+                    "icon_valign": 1,
+                    "item_layout": 1,
+                    "item_padding_bottom": 0,
+                    "item_padding_top": 0,
+                    "item_paint_caption": false,
+                    "item_paint_icon": true
+                },
+                "inherits": "simple_list",
+                "items": {
+                    "view_item_params": {
+                        "icon_path": "plex_thumb_item_field::thumb::200::300::true"
+                    }
+                },
+                "not_loaded_view_item_params": {
+                    "icon_path": "plugin_file://icons/poster.png",
+                    "item_paint_caption_within_icon": true
+                },
+                "view_params": {
+                    "content_box_padding_left": 50,
+                    "item_paint_caption_within_icon": true,
+                    "num_cols": 6,
+                    "num_rows": 2,
+                    "paint_icon_selection_box": false,
+                    "paint_item_info_in_details": true,
+                    "paint_sandwich": true,
+                    "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
+                    "sandwich_cover": "cut_icon://{name=sandwich_cover}",
+                    "sandwich_height": 400,
+                    "sandwich_icon_keep_aspect_ratio": true,
+                    "sandwich_icon_upscale_enabled": true,
+                    "sandwich_mask": "cut_icon://{name=sandwich_mask}",
+                    "sandwich_width": 200
+                }
+            },
+            "movie_posters_and_details": {
+                "inherits": "movie_posters",
+                "view_params": {
+                    "num_cols": 10,
+                    "num_rols": 5
+                }
+            }
+        }
+    },
+    "nfsScreen": {
+        "inherits": "base",
+        "templates": {
+            "nfsScreen_simple_list": {
+                "async_icon_loading": false,
+                "base_view_item_params": {
+                    "num_cols": 1,
+                    "num_rows": 20
+                },
+                "inherits": "simple_list",
+                "items": {
+                    "caption": "{{key}}",
+                    "media_url": "{{value}}"
+                },
+                "view_params": {
+                    "num_cols": 1,
+                    "num_rows": 10,
+                    "unset": true
+                }
+            }
+        }
+    },
+    "photo": {
+        "inherits": "episode",
+        "templates": {
+            "photos_thumbs": {
+                "inherits": "episode_thumbs",
+                "view_params": {
+                    "sandwich_height": 150,
+                    "sandwich_width": 200
+                }
+            }
+        }
+    },
+    "plugins": {
+        "inherits": "episode",
+        "templates": {
+            "plugins_thumb": {
+                "async_icon_loading": false,
+                "base_view_item_params": {
+                    "item_paint_caption": true
+                },
+                "items": {
+                    "media_url": "plex_item_xpath://@key",
+                    "view_item_params": {
+                        "icon_path": "plex_thumb_item_field::thumb::300::300"
+                    }
+                },
+                "view_params": {
+                    "num_rows": 4,
+                    "paint_sandwich": false,
+                    "sandwich_height": 145,
+                    "sandwich_width": 200
+                }
+            }
+        }
+    },
+    "season": {
+        "inherits": "movie",
+        "templates": {
+            "season_posters": {
+                "items": {
+                    "view_item_params": {
+                        "icon_path": "plex_thumb_item_field::thumb::200::300::true||plex_thumb_field::thumb::200::300"
+                    }
+                },
+                "view_params": {
+                    "background_height": 1080,
+                    "background_order": "before_all",
+                    "background_path": "plex_image_field::art",
+                    "background_width": 1920,
+                    "optimize_full_screen_background": true,
+                    "paint_content_box_background": false
+                }
+            }
+        }
+    },
+    "secondary": {
+        "inherits": "base"
+    },
+    "servers": {
+        "inherits": "base",
+        "templates": {
+            "servers_simple_list": {
+                "items": {
+                    "caption": "plex_item_xpath::string(@name)",
+                    "media_url": "plex_item_xpath::concat(@scheme, '://',@host, ':',@port, '/library/sections?X-Plex-Token=', @accessToken)",
+                    "view_item_params": null
+                }
+            }
+        }
+    },
+    "show": {
+        "inherits": "movie",
+        "templates": {
+            "show_banners": {
+                "items": {
+                    "view_item_params": {
+                        "icon_path": "plex_image_item_field::banner"
+                    }
+                },
+                "not_loaded_view_item_params": {
+                    "item_paint_caption_within_icon": true,
+                    "unset": true
+                },
+                "view_params": {
+                    "content_box_padding_left": 70,
+                    "num_cols": 2,
+                    "num_rows": 5,
+                    "sandwich_height": 150,
+                    "sandwich_width": 750
+                }
+            }
         }
     }
 }

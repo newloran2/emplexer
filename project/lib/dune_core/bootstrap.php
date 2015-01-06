@@ -7,7 +7,7 @@ function hd_print($str)
 {
     global $HD_NEW_LINE;
     $trace=debug_backtrace()[0];
-    $str= sprintf("[%s:%d] %s", $trace['file'], $trace['line'], $str);
+    $str= sprintf("[%s:%d] %s", basename($trace['file']), $trace['line'], $str);
     file_put_contents("/tmp/emplexer.log", $str . $HD_NEW_LINE ,FILE_APPEND );
     // echo $str . $HD_NEW_LINE;
 }
