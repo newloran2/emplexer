@@ -13,6 +13,13 @@ end
 _M = {}
 
 local plex ={}
+local metatable = {
+   __call = function(self, arg)
+	 print("opa fui chamado uma função", arg)
+   end
+}
+ 
+setmetatable(plex, metatable)
 
 function plex:getPlexServers( )
 	broadcast_string ="M-SEARCH * HTTP/1.1\r\n\r\n"
@@ -57,7 +64,7 @@ function plex:startRegister(serverName)
 
 -- 		local hello_broadcast_string =
 -- "HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: blablablablabla2\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3000\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1\r\nProtocol-Version: 1\r\nProtocol-Capabilities: navigation,playback,timeline"
-		local hello_broadcast_string ="HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: emplexer\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3005\r\nProduct: emplexer\r\nProtocol: plex\r\nVersion: 1\r\nProtocol-Version: 1\r\nProtocol-Capabilities: navigation,playback,timeline"
+		local hello_broadcast_string ="HELLO * HTTP/1.0\r\nContent-Type: plex/media-player\r\nResource-Identifier: 97512d2c-e5c8-4cd8-85ef-deef2c092b35\r\nDevice-Class: HTPC\r\nName: "..serverName.."\r\nPort: 3005\r\nProduct: Plex Home Theater\r\nProtocol: plex\r\nVersion: 1\r\nProtocol-Version: 1\r\nProtocol-Capabilities: navigation,playback,timeline,mirror,playqueues\r\nVersion: 1.2.2"
 		local bye_broadcast_string ="BYE * HTTP/1.0\r\n"
 		local port =32413
 		local ip="255.255.255.255"
@@ -131,6 +138,41 @@ function plex:timeline(ip, port, key, time, duration, state)
 	c = nil
 
 end
+
+
+
+function plex:ok(res)
+   plex:headers(res)
+   plex:xmlHeader(res)
+   res:add('<Response code="200" status="OK" />')
+end
+
+function plex:resources(res)
+   plex:headers(res)
+   
+end
+
+
+
+function plex:xmlHeader(res)
+   res:add('<?xml version="1.0" encoding="utf-8" ?>')
+end
+
+function plex:headers(res) 
+   res.headers["Content-type"]= "application/x-www-form-urlencoded"
+   res.headers["Access-Control-Allow-Origin"]= "*"
+   res.headers["X-Plex-Version"]= 1
+   res.headers["X-Plex-Client-Identifier"]= "emplexer"
+   res.headers["X-Plex-Provides"]= "player"
+   res.headers["X-Plex-Product"]= "emplexer"
+   res.headers["X-Plex-Device-Name"]= "emplexer"
+   res.headers["X-Plex-Platform"]= "DuneOs"
+   res.headers["X-Plex-Model"]= "emplexer"
+   res.headers["X-Plex-Device"]= "PC"
+
+   
+end
+
 
 _M = plex
 

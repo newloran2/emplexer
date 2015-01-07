@@ -240,14 +240,14 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
                 } else  if ($field[0] === "plex_image_item_field"){
                     if (!isset($item->attributes()->{$field[1]})) continue;
-                    hd_print("currentPath = $currentPath");
+                    //                    hd_print("currentPath = $currentPath");
                     $ret = Client::getInstance()->getUrl($currentPath, $item->attributes()->{$field[1]});
 
                 } else if ($field[0] === "plex_item_field"){
                     if (!isset($item->attributes()->{$field[1]})) continue;
                     $ret = $item->attributes()->{$field[1]};
                 } else if ($field[0] === "plex_item_field_expr"){
-                    hd_print_r("valor de ret para $field: " , $item);
+
                     
                     $ret = $this->getPlexFiledExpression($item,$field);
                     if (!isset($ret)) continue;
@@ -333,7 +333,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
 
     protected function getPlexFiledExpression($data,$field){
         $val = $field[1];
-        hd_print_r("valor de data", $data);
+
         $negate = $val[0] == '!' ? true :  false;
         if ($negate){
             $val = substr($val,1);

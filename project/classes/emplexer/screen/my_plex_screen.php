@@ -8,7 +8,6 @@ class MyPlexScreen extends PlexScreen{
             $key = "https://plex.tv/pms/servers?auth_token=mYCSANu3fqky815q6AbL";
         }
         parent::__construct($key);
-        hd_print_r("data-> ", $this->data);
     }
 
     public function generateScreen() {

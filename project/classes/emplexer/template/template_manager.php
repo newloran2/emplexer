@@ -23,6 +23,7 @@ class TemplateManager
 
     protected function reloadTemplate(){
         $this->templateJson = json_decode(file_get_contents($this->templateFile), true);
+
         HD::print_backtrace();
         $this->mixTemplate();
     }
@@ -33,7 +34,9 @@ class TemplateManager
         //mix all external inheritance
         foreach($this->templateJson as $key => $value ){
             $mix = array();
-            array_unshift($mix, $value['templates']);
+            if (isset($value['templates'])){
+                array_unshift($mix, $value['templates']);
+            }
             $current = $this->templateJson[$key];
             while (isset($current['inherits'])){
                 $b = $this->templateJson[$current['inherits']]['templates'];
@@ -43,15 +46,19 @@ class TemplateManager
             $mix = array_replace_recursive($mix);
             foreach($mix as $k => $v){
                 foreach($v as $ki => $vi) {
-                    $a[$key]['templates'][$ki] = $vi;    
+                    $a[$key]['templates'][$ki] = $vi;
                 }
             }
+            if (isset($this->templateJson[$key]['default_template'])){
+                $a[$key]['default_template'] = $this->templateJson[$key]['default_template'];
+            } 
+            
+            
         }
 
         //mix all internal inheritance
         $mix =array();
         foreach (array_reverse($a) as $key => $value) {
-            $b=array();
             foreach ($value['templates'] as $k => $v) {
                 $teste = array();
                 array_unshift($teste, $v); 
@@ -61,6 +68,9 @@ class TemplateManager
                     $current = isset($current['inherits']) ? $value['templates'][$current['inherits']] : null;
                 }
                 $mix[$key]['templates'][$k]=call_user_func_array('array_replace_recursive', $teste);
+                if (isset($a[$key]['default_template'])){
+                    $mix[$key]['default_template'] = $this->templateJson[$key]['default_template'];
+                }
             }
         }
         $this->templateJson = $mix;        
@@ -69,8 +79,6 @@ class TemplateManager
         
     }
     
-
-
     public static function getInstance(){
         if (!isset(self::$instance)){
             self::$instance =  new TemplateManager();
@@ -82,62 +90,6 @@ class TemplateManager
         return self::$instance;
     }
 
-    private function getTag1($template, $tag){
-        $arrays = array();
-        $n = $template;
-        //if template are not seted the base are used instead
-        if (!isset($this->templateJson[$n])){
-            $n="base";
-        }
-        $currentTemplate = Config::getInstance()->${n};
-
-        /*
-          This a complicated block.
-          To do the inherits behaviour i append all inherits tree in the arrays variable.
-          that append is in reverse order becouse the last element replace the previous.
-          eg:
-          "base":{
-          "name": "emplexer"
-          "age": 1
-          }
-
-          "child":{
-          "inherits":"base",
-          "name": "emplexer2"
-          "age": 2
-          }
-
-          "grandson":{
-          "inherits":"child",
-          "name": "emplexer3"
-          "age": 1
-          }
-
-          at the end of the parser the name field will be emplexer3 because the grandson inherits child and override the field name of the chield and chield
-          inherits the base and override the name field.
-
-          This behaviour are done recursively in all elements
-        */
-          
-        do{
-            array_unshift($arrays, $this->templateJson[$n]);
-            if (isset($this->templateJson[$n]['inherits']) && (!isset($this->templateJson[$n][$tag]['unset']) || !$this->templateJson[$n][$tag]['unset'])){
-                $n= $this->templateJson[$n]['inherits'];
-            } else {
-                $n= null;
-            }
-
-        }while (isset($n));
-        $a = call_user_func_array('array_replace_recursive', $arrays);
-        $arrays = array();
-        array_unshift($arrays, $inherits);
-        
-        $a = call_user_func_array('array_replace_recursive', $arrays);
-        return $a;
-    }
-    
-
-
     private function walk(&$item, $key, $data){
         $getFieldCallBack = $data[0];
         $upItem           = $data[1];
@@ -146,7 +98,17 @@ class TemplateManager
     }
 
     private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){
-        $currentTemplate = Config::getInstance()->${template};
+        $currentTemplate = Config::getInstance()->$template;
+        $currentTemplate = !isset($currentTemplate) && isset($this->templateJson[$template]['default_template'])? $this->templateJson[$template]['default_template'] : null;
+        if (!isset($currentTemplate)){
+            if (!isset($this->templateJson[$template]['default_template'])){
+                hd_print("[warning] Something goes worng, the $template not have a default template, using base default_template instead");
+            }
+            $currentTemplate =  !isset($currentTemplate) ? $this->templateJson['base']['default_template']  : $currentTemplate;
+        }
+
+
+
         $t = $this->templateJson[$template]['templates'][$currentTemplate];
         array_walk_recursive($t,array($this, 'walk'), array($getFieldCallBack, $item, $json));
         $a= isset($t[$tag]) ?  $t[$tag] : null;
@@ -154,7 +116,7 @@ class TemplateManager
     }
 
     public function getTemplate($name, $getMediaUrlCallback, $getDataCallback, $getFieldCallBack){
-        $currentTemplate = Config::getInstance()->${name};
+        $currentTemplate = Config::getInstance()->$name;
         $itens       = array();
         $folderItems = array();
         $data        = call_user_func($getDataCallback);

@@ -209,8 +209,7 @@ class Client
     public function getUrl($lastKey, $newKey)
     {
         $decLastKey = parse_url($lastKey);
-        hd_print_r("teste de print", $decLastKey);
-        hd_print("parametros   lastKey= $lastKey,  newKey = $newKey");
+        //        hd_print("parametros   lastKey= $lastKey,  newKey = $newKey");
         /* HD::print_backtrace(); */
         // hd_print(__METHOD__ . ":" . $this->plexIp  );
         //
@@ -220,12 +219,12 @@ class Client
 
 
         if (strpos($newKey, "http") === 0 ||strpos($newKey, "https") === 0){
-            hd_print('strpos($newKey, "http") === 0 ||strpos($newKey, "https") === 0');
+            //            hd_print('strpos($newKey, "http") === 0 ||strpos($newKey, "https") === 0');
             return $newKey;
         }
 
         if ((strpos($lastKey, "http") === 0 || strpos($lastKey, "https") ===0) && strpos($newKey, "/library") === 0){
-            hd_print_r('strpos($lastKey, "http") === 0 || strpos($lastKey, "https") ===0 && strpos($newKey, "/library") === 0' . "  lastKey = $lastKey , newKey = $newKey" , $decLastKey);
+            //            hd_print_r('strpos($lastKey, "http") === 0 || strpos($lastKey, "https") ===0 && strpos($newKey, "/library") === 0' . "  lastKey = $lastKey , newKey = $newKey" , $decLastKey);
 
             $urlWithoutQueryParams = sprintf("%s://%s:%s", $decLastKey['scheme'],$decLastKey['host'],$decLastKey['port']);
             $separator = strpos($newKey , '?' ) === false ? '?' : '&';
@@ -235,10 +234,10 @@ class Client
         }
 
         if ((strpos($lastKey, "http") === 0 || strpos($lastKey, "https") ===0) && strpos($newKey, "/") === 0){
-            hd_print_r('strpos($lastKey, "http") === 0 || strpos($lastKey, "https") ===0 && strpos($newKey, "/") === 0' . "  lastKey = $lastKey , newKey = $newKey", $decLastKey);
+            //            hd_print_r('strpos($lastKey, "http") === 0 || strpos($lastKey, "https") ===0 && strpos($newKey, "/") === 0' . "  lastKey = $lastKey , newKey = $newKey", $decLastKey);
 
             $urlWithoutQueryParams = sprintf("%s://%s:%s", $decLastKey['scheme'],$decLastKey['host'],$decLastKey['port']);
-            hd_print("urlWithoutQueryParams = $urlWithoutQueryParams newKey = $newKey");
+            //            hd_print("urlWithoutQueryParams = $urlWithoutQueryParams newKey = $newKey");
             $separator = strpos($newKey , '?' ) === false ? '?' : '&';
             return sprintf("%s%s%s", $urlWithoutQueryParams, $newKey, isset($decLastKey['query'])? $separator .$decLastKey['query'] : '' );
             $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
@@ -247,18 +246,18 @@ class Client
 
 
         if ((strpos($lastKey, "http") === 0 || strpos($lastKey, "https") === 0)  && strpos($newKey, "/") !== 0){
-            hd_print('strpos($lastKey, "http") === 0 || strpos($lastKey, "https") === 0  && strpos($newKey, "/") !== 0');
+            //            hd_print('strpos($lastKey, "http") === 0 || strpos($lastKey, "https") === 0  && strpos($newKey, "/") !== 0');
             $urlWithoutQueryParams = sprintf("%s://%s:%s%s", $decLastKey['scheme'],$decLastKey['host'],$decLastKey['port'],$decLastKey['path']);
             $separator = strpos($newKey , '?' ) === false ? '?' : '&';
             return sprintf("%s/%s%s", $urlWithoutQueryParams, $newKey, isset($decLastKey['query'])? '?'.$decLastKey['query'] : '' );
         }
         if (strpos($newKey, "/") !== 0){
-            hd_print('strpos($newKey, "/") !== 0');
+            //            hd_print('strpos($newKey, "/") !== 0');
             /* HD::print_backtrace(); */
             return $newKey;
             $url = sprintf("http://%s:%d%s/%s", $this->plexIp, $this->plexPort, $lastKey, $newKey);
         } else {
-            hd_print("else");
+            //            hd_print("else");
             /* HD::print_backtrace(); */
             $url = sprintf("http://%s:%d%s", $this->plexIp, $this->plexPort, $newKey);
         }
