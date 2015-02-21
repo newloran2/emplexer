@@ -49,7 +49,6 @@ abstract class BaseScreen implements TemplateCallbackInterface
 
 	}
     public function getViewGroup(){
-      
         return $this->viewGroup;
     }
     

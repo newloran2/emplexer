@@ -13,7 +13,8 @@
     $jsonData = isset($_POST['data'])? ($_POST['data']) : getopt("d:")['d'];
     
 	file_put_contents("/tmp/out.json", "\n\n vou postar o conteudo do post\n\n");
-file_put_contents("/tmp/out.json", print_r($jsonData, true));
+file_put_contents("/tmp/out.json", print_r($jsonData, true), FILE_APPEND);
+file_put_contents("/tmp/out.json", "\n terminou\n\n", FILE_APPEND);
 	$data =json_decode($jsonData);
 	// hd_print_r("data = ", $data);
 	// var_dump("data");
@@ -43,9 +44,6 @@ file_put_contents("/tmp/out.json", print_r($jsonData, true));
 		$optionMediaUrl =  $data->input_data;
 	}
 
-
-
-
 	$entry = null;
 
 
@@ -65,9 +63,8 @@ file_put_contents("/tmp/out.json", print_r($jsonData, true));
 
 
 	file_put_contents("/tmp/out.json", json_encode($output), FILE_APPEND);
-
 	$out = DunePluginFw::$instance->call_plugin(json_encode($output));
-echo json_encode(json_decode($out), JSON_PRETTY_PRINT);
+    echo json_encode(json_decode($out), JSON_PRETTY_PRINT);
 	file_put_contents("/tmp/out.json", "\n\n", FILE_APPEND);
 	file_put_contents("/tmp/out.json", $out, FILE_APPEND);
 	// print (DefaultDunePluginFw::$plugin_class_name ) . "\n";

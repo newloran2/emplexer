@@ -30,60 +30,60 @@ Response.__index = Response
 M.Response = Response
 
 function Response:body_chunked()
-	if self._body then return self._body end
+   if self._body then return self._body end
 
-	local conn = self.conn
-	local rope, i = {}, 0
-	local line, err
-	while true do
-		line, err = conn:read('*l')
-		print ("line " , line)
-		if not line then return nil, err end
+   local conn = self.conn
+   local rope, i = {}, 0
+   local line, err
+   while true do
+      line, err = conn:read('*l')
+      print ("line " , line)
+      if not line then return nil, err end
 
-		local len = tonumber(line, 16)
-		if not len then return nil, 'expectation failed' end
-		if len == 0 then break end
+      local len = tonumber(line, 16)
+      if not len then return nil, 'expectation failed' end
+      if len == 0 then break end
 
-		local data, err = conn:read(len)
-		if not data then return nil, err end
+      local data, err = conn:read(len)
+      if not data then return nil, err end
 
-		i = i + 1
-		rope[i] = data
+      i = i + 1
+      rope[i] = data
 
-		line, err = conn:read('*l')
-		if not line then return nil, err end
-	end
+      line, err = conn:read('*l')
+      if not line then return nil, err end
+   end
 
-	line, err = conn:read('*l')
-	if not line then return nil, err end
+   line, err = conn:read('*l')
+   if not line then return nil, err end
 
-	rope = concat(rope)
-	self._body = rope
-	return rope
+   rope = concat(rope)
+   self._body = rope
+   return rope
 end
 
 function Response:body()
-	if self._body then return self._body end
-	if self.headers['transfer-encoding'] == 'chunked' then
-		return self:body_chunked()
-	end
+   if self._body then return self._body end
+   if self.headers['transfer-encoding'] == 'chunked' then
+      return self:body_chunked()
+   end
 
-	local len, body, err = self.headers['content-length']
-	if len then
-		len = tonumber(len)
-		if not len then return nil, 'invalid content length' end
-		body, err = self.conn:read(len)
-	else
-		if self.headers['connection'] == 'close' then
-			body, err = self.client:read('*a')
-		else
-			return nil, 'no content length specified'
-		end
-	end
-	if not body then return nil, err end
+   local len, body, err = self.headers['content-length']
+   if len then
+      len = tonumber(len)
+      if not len then return nil, 'invalid content length' end
+      body, err = self.conn:read(len)
+   else
+      if self.headers['connection'] == 'close' then
+	 body, err = self.client:read('*a')
+      else
+	 return nil, 'no content length specified'
+      end
+   end
+   if not body then return nil, err end
 
-	self._body = body
-	return body
+   self._body = body
+   return body
 end
 
 local Client = {}
@@ -91,11 +91,11 @@ Client.__index = Client
 M.Client = Client
 
 function M.new()
-	return setmetatable({
-		proto = false,
-		domain = false,
-		conn = false,
-	}, Client)
+   return setmetatable({
+	 proto = false,
+	 domain = false,
+	 conn = false,
+		       }, Client)
 end
 
 -- local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: keep-alive\r\n"
@@ -103,126 +103,131 @@ local req_get = "GET %s HTTP/1.1\r\nHost: %s\r\n"
 local req_post = "POST %s HTTP/1.1\r\nHost: %s\r\n"
 
 local function close(self)
-	local c = self.conn
-	if c then
-		self.conn = false
-		return c:close()
-	end
-	return true
+   local c = self.conn
+   if c then
+      self.conn = false
+      print ("closing connection")
+      return c:close()
+   end
+   return true
 end
 Client.close = close
 
 local function fail(self, err)
-	self.proto = false
-	close(self)
-	return nil, err
+   self.proto = false
+   close(self)
+   return nil, err
 end
 
 
 local function doTheRequest(self,url, type, data, headers)
-	-- print ("chamou o doTheRequest", url)
-	local proto, domain, port , uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+):([0-9]+)(/.*)')
-	if not port then
-		proto, domain, uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+)(/.*)')
-	end
+   -- print ("chamou o doTheRequest", url)
+   local proto, domain, port , uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+):([0-9]+)(/.*)')
+   if not port then
+      proto, domain, uri = url:match('([a-zA-Z0-9]+)://([a-zA-Z0-9.]+)(/.*)')
+   end
 
-	local h = headers or {}
-	if not proto then
-		error('Invalid URL', 2)
-	end
+   local h = headers or {}
+   if not proto then
+      error('Invalid URL', 2)
+   end
 
-	local c, err
-	local req = nil
-	if (type == "get") then
-		req = req_get:format(uri, domain)
-	else
-		req = req_post:format(uri, domain)
-	end
+   local c, err
+   local req = nil
+   if (type == "get") then
+      req = req_get:format(uri, domain)
+   else
+      req = req_post:format(uri, domain)
+   end
 
-	local res
+   local res
 
-	if headers then
-		for key,value in pairs(headers) do
-			req = req .. key ..": " .. value .. "\r\n"
-		end
-	end
-	req = req .. "Connection: close\r\n\r\n"
-	if (type == "post") then
-		req =  req .. data
-	end
+   if headers then
+      for key,value in pairs(headers) do
+	 req = req .. key ..": " .. value .. "\r\n"
+      end
+   end
+   if (headers == nil or  headers["Connection"] == nil) then
+      req = req .. "Connection: close\r\n\r\n"
+   end
+   
+   if (type == "post") then
+      req =  req .. data
+   end
 
 
-	if proto == self.proto and domain == self.domain then
-		c = self.conn
-		if c:write(req) then
-			res = c:read('HTTPResponse')
-		end
-	end
+   if proto == self.proto and domain == self.domain then
+      c = self.conn
+      if c:write(req) then
+	 res = c:read('HTTPResponse')
+      end
+   end
 
-	if not res then
-		c = self.conn
-		if c then
-			c:close()
-		end
+   if not res then
+      print ("não tive uma resposta vou desconectar e conectar novamente")
+      c = self.conn
+      if c then
+	 c:close()
+      end
 
-		if proto == 'http' then
-			c, err = io.tcp.connect(domain, port or '80')
-			port  = port and port or '80'
-		elseif proto == 'https' then
-			local ssl = self.ssl
-			if not ssl then
-				error('No ssl context defined', 2)
-			end
-			c, err = ssl:connect(domain, port or '443')
-			port  = port and port or '443'
-		else
-			error('Unknown protocol', 2)
-		end
-		if not c then return fail(self, err) end
+      if proto == 'http' then
+	 c, err = io.tcp.connect(domain, port or '80')
+	 port  = port and port or '80'
+      elseif proto == 'https' then
+	 local ssl = self.ssl
+	 if not ssl then
+	    error('No ssl context defined', 2)
+	 end
+	 c, err = ssl:connect(domain, port or '443')
+	 port  = port and port or '443'
+      else
+	 error('Unknown protocol', 2)
+      end
+      if not c then return fail(self, err) end
 
-		local ok
-		ok, err = c:write(req)
-		if not ok then return fail(self, err) end
+      local ok
+      ok, err = c:write(req)
+      if not ok then return fail(self, err) end
 
-		res, err = c:read('HTTPResponse')
-		if not res then return fail(self, err) end
-	end
-	res.conn = c
-	setmetatable(res, Response)
+      res, err = c:read('HTTPResponse')
+      if not res then return fail(self, err) end
+   end
+   res.conn = c
+   setmetatable(res, Response)
 
-	self.proto = proto
-	self.domain = domain
-	self.port = port
-	self.conn = c
-	return res
+   self.proto = proto
+   self.domain = domain
+   self.port = port
+   self.conn = c
+   return res
 end
 
 
 function Client:get(url, headers)
-	return doTheRequest(self, url, "get", nil, headers)
+   return doTheRequest(self, url, "get", nil, headers)
 end
 
 function Client:post(url, data, headers)
-	headers['Content-Length'] = #data
-	headers['Content-Type'] = 'application/x-www-form-urlencoded'
-	return doTheRequest(self, url,"post", data, headers)
+   headers['Content-Length'] = #data
+   headers['Content-Type'] = 'application/x-www-form-urlencoded'
+   return doTheRequest(self, url,"post", data, headers)
 end
 
 function Client:download(url, filename)
-	local res, err = self:get(url)
-	if not res then return res, err end
+   local res, err = self:get(url)
+   if not res then return res, err end
 
-	local file
-	file, err = io.open(filename, 'w')
-	if not file then return file, err end
+   local file
+   file, err = io.open(filename, 'w')
+   if not file then return file, err end
 
-	local ok
-	ok, err = file:write(res:body())
-	if not ok then return ok, err end
-	ok, err = file:close()
-	if not ok then return ok, err end
+   local ok
+   ok, err = file:write(res:body())
+   if not ok then return ok, err end
+   ok, err = file:close()
+   if not ok then return ok, err end
 
-	return true
+   return true
 end
 
 return M

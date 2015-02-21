@@ -104,8 +104,8 @@ class Emplexer implements DunePlugin {
     public function get_folder_view($media_url, &$plugin_cookies) {
         $a= $this->getScreen($media_url, $plugin_cookies);
         //echo "valor de a =\n";
-        //        print_r($a);
-        return $a->generateScreen();
+        //print_r($a);
+        return getType($a) !== "object" ? $a :  $a->generateScreen();
     }
 
     public function get_next_folder_view($media_url, &$plugin_cookies) {

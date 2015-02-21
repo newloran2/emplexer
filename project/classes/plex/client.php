@@ -178,7 +178,6 @@ class Client
             $url = urlencode($url);
         }
         $a=sprintf("http://%s:%d/photo/:/transcode?width=%d&height=%d&url=%s", $this->plexIp, $this->plexPort,$with, $height, $url );
-        return sprintf("http://192.168.2.41:8081/teste?url=%s", urlencode($a));
         return sprintf("http://%s:%d/photo/:/transcode?width=%d&height=%d&url=%s", $this->plexIp, $this->plexPort,$with, $height, $url );
     }
 

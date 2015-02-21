@@ -1,8 +1,11 @@
 {
     "base": {
-	"default_template": "simple_list",
+	      "default_template": "simple_list",
+            "view_order":[
+                "simple_list"
+            ],
         "templates": {
-            "simple_list": {
+	          "simple_list":{
                 "base_view_item_params": {
                     "item_layout": 0,
                     "item_paint_caption": true,
@@ -10,9 +13,11 @@
                 },
                 "items": {
                     "caption": "plex_item_field_expr::attributes()->titleSort||plex_item_field_expr::attributes()->title||plex_item_field_expr::attributes()->name",
-                    "media_url": "plex_image_item_field::key||plex_image_item_field::address"
+                    "media_url": "plex_image_item_field::key||plex_image_item_field::address",
+                    "template": "simple_list", 
+		                "view_item_params":[]
                 },
-                "not_loaded_view_item_params": null,
+                "not_loaded_view_item_params": [],
                 "view_params": {
                     "content_box_height": 1012,
                     "content_box_width": 1820,
@@ -22,26 +27,55 @@
                     "num_rows": 20,
                     "paint_content_box_background": false,
                     "paint_details": false,
-                    "paint_help_line": false,
+                    "paint_help_line": true,
                     "paint_path_box": false,
                     "paint_scrollbar": false
                 }
             }
-	}
+	      }
+    },
+    "show": {
+        "inherits": "movie",
+        "view_order": ["show_banners","simple_list"],
+        "templates": {
+            "show_banners": {
+                "inherits": "movie_posters",
+                "items": {
+                    "view_item_params": {
+                        "icon_path": "plex_image_item_field::banner"
+                    }
+                },
+                "not_loaded_view_item_params": {
+                    "item_paint_caption_within_icon": true,
+                    "unset": true
+                },
+                "view_params": {
+                    "content_box_padding_left": 70,
+                    "num_cols": 2,
+                    "num_rows": 5,
+                    "sandwich_height": 150,
+                    "sandwich_width": 750
+                }
+            }
+        }
     },
     "episode": {
         "inherits": "movie",
-	"default_template": "episode_thumbs",
+	      "default_template": "episode_thumbs",
+            "view_order":[
+                "simple_list",
+                "episode_thumbs"
+            ],
         "templates": {
             "episode_thumbs": {
                 "base_view_item_params": {
-                    "icon_sel_scale_factor": 1.6,
+                    "icon_sel_scale_factor": 1.3,
                     "item_caption_font_size": 1
                 },
                 "inherits": "movie_posters",
                 "items": {
                     "view_item_params": {
-                        "icon_path": "plex_thumb_item_field::thumb::360::300::true"
+                        "icon_path": "plex_thumb_item_field::thumb::160::100::true"
                     }
                 },
                 "not_loaded_view_item_params": {
@@ -106,9 +140,15 @@
     },
     "movie": {
         "inherits": "base",
-	"default_template": "movie_posters",
+	      "default_template": "movie_posters",
+        "view_order":[
+            "simple_list",
+            "movie_posters",
+            "movie_posters_and_details"
+        ],
         "templates": {
             "movie_posters": {
+		            "template_index" : 2,
                 "base_view_item_params": {
                     "icon_scale_factor": 1,
                     "icon_sel_scale_factor": 1.2,
@@ -122,7 +162,7 @@
                 "inherits": "simple_list",
                 "items": {
                     "view_item_params": {
-                        "icon_path": "plex_thumb_item_field::thumb::200::300::true"
+                        "icon_path": "plex_thumb_item_field::thumb::200::250::true"
                     }
                 },
                 "not_loaded_view_item_params": {
@@ -135,7 +175,7 @@
                     "num_cols": 6,
                     "num_rows": 2,
                     "paint_icon_selection_box": false,
-                    "paint_item_info_in_details": true,
+                    "paint_item_info_in_details": false,
                     "paint_sandwich": true,
                     "sandwich_base": "gui_skin://special_icons/sandwich_base.aai",
                     "sandwich_cover": "cut_icon://{name=sandwich_cover}",
@@ -148,16 +188,21 @@
             },
             "movie_posters_and_details": {
                 "inherits": "movie_posters",
+		            "template_index":2,
                 "view_params": {
-                    "num_cols": 10,
-                    "num_rols": 5
+                    "num_cols": 10, 
+                    "num_rows": 5,
+                    "paint_item_info_in_details": true,
+                    "paint_details": true
                 }
             }
         }
     },
     "nfsScreen": {
         "inherits": "base",
-	"default_template": "nfsScreen_simple_list",
+        "view_order":[
+            "nfsScreen_simple_list"
+        ],
         "templates": {
             "nfsScreen_simple_list": {
                 "async_icon_loading": false,
@@ -180,7 +225,7 @@
     },
     "photo": {
         "inherits": "episode",
-	"default_template": "photos_thumbs",
+        "view_order":["photos_thumbs"],
         "templates": {
             "photos_thumbs": {
                 "inherits": "episode_thumbs",
@@ -190,10 +235,14 @@
                 }
             }
         }
-    },
+    }, 
     "plugins": {
         "inherits": "episode",
-	"default_template": "plugins_thumb",
+	      "default_template": "plugins_thumb",
+        "view_order":[
+            "simple_list",
+            "plugins_thumb"
+        ],
         "templates": {
             "plugins_thumb": {
                 "async_icon_loading": false,
@@ -217,12 +266,18 @@
     },
     "season": {
         "inherits": "movie",
-	"default_template": "season_posters",
+	      "default_template": "season_posters",
+        "view_order":[
+            "season_posters",
+            "simple_list"
+        ],
         "templates": {
             "season_posters": {
+                "inherits": "simple_list",
                 "items": {
                     "view_item_params": {
-                        "icon_path": "plex_thumb_item_field::thumb::200::300::true||plex_thumb_field::thumb::200::300"
+                        "icon_path": "plex_thumb_item_field::thumb::200::300::true||plex_thumb_field::thumb::200::300",
+                        "unset": true
                     }
                 },
                 "view_params": {
@@ -237,41 +292,19 @@
         }
     },
     "secondary": {
-        "inherits": "base"
+        "inherits": "base",
+        "view_order": ["simple_list"]
     },
     "servers": {
         "inherits": "base",
-	"default_template": "servers_simple_list",
+	      "default_template": "servers_simple_list",
+        "view_order":["servers_simple_list"],
         "templates": {
             "servers_simple_list": {
                 "items": {
                     "caption": "plex_item_xpath::string(@name)",
                     "media_url": "plex_item_xpath::concat(@scheme, '://',@host, ':',@port, '/library/sections?X-Plex-Token=', @accessToken)",
                     "view_item_params": null
-                }
-            }
-        }
-    },
-    "show": {
-        "inherits": "movie",
-	"default_template": "show_banners",
-        "templates": {
-            "show_banners": {
-                "items": {
-                    "view_item_params": {
-                        "icon_path": "plex_image_item_field::banner"
-                    }
-                },
-                "not_loaded_view_item_params": {
-                    "item_paint_caption_within_icon": true,
-                    "unset": true
-                },
-                "view_params": {
-                    "content_box_padding_left": 70,
-                    "num_cols": 2,
-                    "num_rows": 5,
-                    "sandwich_height": 150,
-                    "sandwich_width": 750
                 }
             }
         }

@@ -16,7 +16,7 @@
 *** DONE Adicionar o evento de troca de template em todas as screens
     Não tenho como saber exatamente se deu certo, apenas o que fiz foi indicar que se ouver mais de um subtemplate o multiple_views_supported será true.
     Isso se não me engano faz com que o dune mostre o botão de troca de view e caso o mesmo seja precionado o evento get_next_folder_view seja chamado.
-*** TODO implementar o next_folder_view para troca da screen para o próximo subtemplate 
+*** DONE implementar o next_folder_view para troca da screen para o próximo subtemplate 
 *** TODO implementar uma forma de ordenação dos subtemplates para que aja uma ordem.
 *** TODO Testar no Dune 
 ** TODO Melhorar os templates que já estão disponiveis

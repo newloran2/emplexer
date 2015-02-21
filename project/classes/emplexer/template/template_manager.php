@@ -14,6 +14,7 @@ class TemplateManager
     private $templateFile ;
     private $templateJson;
     private static $instance;
+    
 
     private function __construct()
     {
@@ -49,13 +50,11 @@ class TemplateManager
                     $a[$key]['templates'][$ki] = $vi;
                 }
             }
-            if (isset($this->templateJson[$key]['default_template'])){
-                $a[$key]['default_template'] = $this->templateJson[$key]['default_template'];
-            } 
-            
+            if (isset($this->templateJson[$key]['view_order'])){
+                $a[$key]['view_order'] = $this->templateJson[$key]['view_order'];
+            }             
             
         }
-
         //mix all internal inheritance
         $mix =array();
         foreach (array_reverse($a) as $key => $value) {
@@ -68,15 +67,12 @@ class TemplateManager
                     $current = isset($current['inherits']) ? $value['templates'][$current['inherits']] : null;
                 }
                 $mix[$key]['templates'][$k]=call_user_func_array('array_replace_recursive', $teste);
-                if (isset($a[$key]['default_template'])){
-                    $mix[$key]['default_template'] = $this->templateJson[$key]['default_template'];
+                if (isset($a[$key]['view_order'])){
+                    $mix[$key]['view_order'] = $this->templateJson[$key]['view_order'];
                 }
             }
         }
-        $this->templateJson = $mix;        
-        
-
-        
+        $this->templateJson = $mix;
     }
     
     public static function getInstance(){
@@ -98,20 +94,14 @@ class TemplateManager
     }
 
     private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){
-        $currentTemplate = Config::getInstance()->$template;
-        $currentTemplate = !isset($currentTemplate) && isset($this->templateJson[$template]['default_template'])? $this->templateJson[$template]['default_template'] : null;
-        if (!isset($currentTemplate)){
-            if (!isset($this->templateJson[$template]['default_template'])){
-                hd_print("[warning] Something goes worng, the $template not have a default template, using base default_template instead");
-            }
-            $currentTemplate =  !isset($currentTemplate) ? $this->templateJson['base']['default_template']  : $currentTemplate;
-        }
-
-
-
+        $currentTemplate =  $this->getCurrentTemplate($template);
+        hd_print("valor de currentTemplate = " . $currentTemplate);
+        
         $t = $this->templateJson[$template]['templates'][$currentTemplate];
+        hd_print_r("valor de currentTemplate dentro de getTag $currentTemplate template =", $t);
         array_walk_recursive($t,array($this, 'walk'), array($getFieldCallBack, $item, $json));
         $a= isset($t[$tag]) ?  $t[$tag] : null;
+        hd_print("valor de a dentro de getTag $a");
         return $a;
     }
 
@@ -142,8 +132,10 @@ class TemplateManager
             PluginRegularFolderView::not_loaded_view_item_params => $this->getTag($name, "not_loaded_view_item_params",  $getFieldCallBack),
         );
 
+        
         $a = array(
-            PluginFolderView::multiple_views_supported => count($this->templateJson[$currentTemplate]['templates']) > 1 ? 1 : 0,
+            PluginFolderView::multiple_views_supported => count($this->templateJson[$currentTemplate]['view_order']) > 1 ? 1 : 1,
+            //            PluginFolderView::multiple_views_supported => count($this->templateJson[$currentTemplate]['templates']) > 1 ? 1 : 0,
             PluginFolderView::view_kind => PLUGIN_FOLDER_VIEW_REGULAR,
             PluginFolderView::data      => $availableTemplates
 
@@ -174,8 +166,25 @@ class TemplateManager
     }
 
     public function setNextTemplateByType($type){
-        foreach ($this->templateJson[$type]['templates'] as $key => $value){
+        $index  = Config::getInstance()->$type;
+        $count = count($this->templateJson[$type]['view_order']);
+        $index == null ? 0 : $index;
+        if (++$index > $count-1){
+            $index = 0;
         }
+        Config::getInstance()->$type =  $index;
+    }
+
+    public function getCurrentTemplate($template){
+        $index = Config::getInstance()->$template !=null ? Config::getInstance()->$template : 0;
+        //if $index  >  count(view_order)-1 something very strange happend.
+        //in this case i will set the next valid template
+        if ($index > count($this->templateJson[$template]['view_order'])-1){
+            $this->setNextTemplateByType($template);
+        }
+        $currentTemplate = $this->templateJson[$template]['view_order'][$index];
+        echo "$template valor de currentTEmpalte $curreddntTemplate\n\n";
+        return $currentTemplate;
     }
     
 }

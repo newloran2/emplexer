@@ -15,7 +15,6 @@ package.cpath = basedir .. 'mac/?.so;'.. basedir..'mac/lua/?.so;' ..basedir.. 'e
 print(package.path)
 print(package.cpath)
 
-
 local utils    = require 'lem.utils'
 local io       = require 'lem.io'
 local hathaway = require 'lem.hathaway'
