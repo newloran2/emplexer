@@ -245,9 +245,7 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
                     if (!isset($item->attributes()->{$field[1]})) continue;
                     $ret = $item->attributes()->{$field[1]};
                } else if ($field[0] === "plex_detailed_info"){
-                    $title = $item->attributes()->title;
-                    $summary = $item->attributes()->summary;
-                    $ret =  sprintf("%s|%s", $title, $summary);
+                    $ret = $this->getItemDetailedInfo($item);
                 } else if ($field[0] === "plex_item_field_expr"){
                     $ret = $this->getPlexFiledExpression($item,$field);
                     if (!isset($ret)) continue;
@@ -371,7 +369,24 @@ class PlexScreen extends BaseScreen implements ScreenInterface, TemplateCallback
         
     }        
 
+    public function getItemDetailedInfo($item){
+        $title = $item->attributes()->title;
+        $summary = $item->attributes()->summary;
+        $duration = isset($item->attributes()->duration) ? $item->attributes()->duration : 0;
+        $viewOffset = isset($item->attributes()->viewOffset) ? $item->attributes()->viewOffset : 0;
+        if ($duration > 0){
+            $percent = intval($viewOffset/$duration * 100);
+        }
+        $rating = $item->attributes()->rating;
 
+        $ret = $title;
+        $ret .= sprintf("|%s: %s",_("Total viewd"), "$percent%");
+        if (isset($rating)){
+            $ret .= "|rating: $rating";  
+        }
+        $ret .= "|||$summary";
+        return $ret;
+     }
 }
 
 

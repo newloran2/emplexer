@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 function _($key)
 {
     return TranslationManager::getInstance()->getTranslation($key);
@@ -41,7 +37,7 @@ class HD
     
     public static function print_info()
     {
-        $version = `grep -i "<version>.*</version>" dune_plugin.xml|sed 's/[<>\/version]//g'`;
+        $version = `grep -i "<version>.*</version>" ../dune_plugin.xml|sed 's/[<>\/version]//g'`;
         $version = str_replace(array("\n", "\r"),"", $version);
         $version_index = `grep -i "<version_index>.*</version_index>" dune_plugin.xml|sed 's/[<>\/version_index]//g'`;
         $version_index = str_replace(array("\n", "\r"),"", $version_index);
