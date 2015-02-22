@@ -24,7 +24,7 @@ class Emplexer implements DunePlugin {
     }
     
     public function getScreen($media_url, &$plugin_cookies){
-         hd_print_r('this->availableScreens = ' , $this->availableScreens);
+         // hd_print_r('this->availableScreens = ' , $this->availableScreens);
         hd_print(__METHOD__ . " MediaURL = $media_url");
         Config::getInstance()->setPluginCookies($plugin_cookies);
         Client::getInstance()->startEmplexerServerAndRegisterAsPlayer();
@@ -107,13 +107,18 @@ class Emplexer implements DunePlugin {
         //print_r($a);
         return getType($a) !== "object" ? $a :  $a->generateScreen();
     }
-
+    
     public function get_next_folder_view($media_url, &$plugin_cookies) {
         $menu = $this->getScreen($media_url, $plugin_cookies);
         TemplateManager::getInstance()->setNextTemplateByType($menu->getViewGroup());
         return $menu->generateScreen();
     }
-
+    public static function getNextFolderView(&$user_input){
+        // hd_print_r("valor de user_input", $user_input);
+        TemplateManager::getInstance()->setNextTemplateByType($user_input->viewGroup);
+        return ActionFactory::invalidate_folders(array($user_input->parent_media_url), ActionFactory::open_folder($user_input->parent_media_url));
+        
+    }
     public function get_tv_info($media_url, &$plugin_cookies) {
         hd_print(__METHOD__);
         Config::getInstance()->setPluginCookies($plugin_cookies);

@@ -95,13 +95,9 @@ class TemplateManager
 
     private function getTag($template, $tag, $getFieldCallBack, &$item = null,  $json=null){
         $currentTemplate =  $this->getCurrentTemplate($template);
-        hd_print("valor de currentTemplate = " . $currentTemplate);
-        
         $t = $this->templateJson[$template]['templates'][$currentTemplate];
-        hd_print_r("valor de currentTemplate dentro de getTag $currentTemplate template =", $t);
         array_walk_recursive($t,array($this, 'walk'), array($getFieldCallBack, $item, $json));
         $a= isset($t[$tag]) ?  $t[$tag] : null;
-        hd_print("valor de a dentro de getTag $a");
         return $a;
     }
 
@@ -183,7 +179,6 @@ class TemplateManager
             $this->setNextTemplateByType($template);
         }
         $currentTemplate = $this->templateJson[$template]['view_order'][$index];
-        echo "$template valor de currentTEmpalte $curreddntTemplate\n\n";
         return $currentTemplate;
     }
     

@@ -70,7 +70,7 @@ class Config {
         }
 
         arsort($retArray);
-        hd_print_r("o Valor de ret array é :" , $retArray);
+        // hd_print_r("o Valor de ret array é :" , $retArray);
         foreach($retArray as $key  => $value){
             if (strpos($url, $key) === 0){
                 $a = explode('|', $value);
